@@ -1,0 +1,164 @@
+.hclose.button {
+    -fx-background-color: transparent;
+    -fx-font-size:0.0001px;
+}
+
+.list-cell:filled:selected:focused,.list-cell:filled:selected {
+    -fx-background-color: #E6E6E6;
+    -fx-text-fill: black !important;
+}
+.list-cell { -fx-text-fill: black;}
+.list-cell:odd { -fx-background-color: White;}
+.list-cell:even { -fx-background-color: White;}
+.list-cell:filled:hover {
+    -fx-background-color: WhiteSmoke;
+}
+
+.button-help {
+    -fx-background-color: white;
+    -fx-border-color: lightgray;
+    -fx-border-radius: 3px;
+    -fx-background-radius: 3px;
+}
+
+.titled-pane > .title {
+    -fx-background-color: transparent;
+}
+
+.titled-pane > .title > .arrow-button .arrow {
+    -fx-focus-color:transparent;
+}
+
+.titled-pane > *.content {
+    -fx-border-color: transparent;
+    -fx-background-color: transparent;
+}
+
+.button-cancel {
+    -fx-background-color: white;
+    -fx-border-color: lightgray;
+    -fx-border-radius: 3px;
+    -fx-background-radius: 3px;
+}
+
+.button-finish {
+    -fx-background-color: royalblue;
+    -fx-border-color: royalblue;
+    -fx-text-fill:white;
+    -fx-border-radius: 3px;
+    -fx-background-radius: 3px;
+}
+
+.button-foc:focused{
+    -fx-border-width: 3px;
+    -fx-border-width: 3px;-fx-border-color: #577cee;
+}
+
+.text-area{
+    -fx-padding: 0;
+    -fx-background-insets: 0;
+    -fx-background-color: transparent, white, transparent, white;
+}
+
+.text-area .content {
+    -fx-padding: 0;
+    -fx-background-color: transparent, white, transparent, white;
+}
+
+.text-area:focused {
+    -fx-background-color: transparent, white, transparent, white;
+}
+
+.text-area .scroll-bar:vertical {
+    -fx-pref-width: 1;
+    -fx-opacity: 0;
+}
+.text-area .scroll-bar:horizontal {
+    -fx-pref-height: 1;
+    -fx-opacity: 0;
+}
+
+.custom-menu-button {
+    -fx-background-color: blue;
+    -fx-text-fill: white;
+    -fx-border: none;
+}
+
+.custom-menu-button:hover {
+    -fx-background-color: lightblue;
+}
+
+.split-pane *.split-pane-divider {
+    -fx-padding: 0 1 0 1;
+}
+
+.list-view .scroll-bar:vertical,
+.list-view .scroll-bar:horizontal{
+    -fx-pref-width: 0;
+}
+
+.toolBt {
+    -fx-padding: 0;
+    -fx-font-size: 0.001px;
+    -fx-background-radius: 3px;
+    -fx-background-color: transparent;
+}
+
+.toolBt2 {
+    -fx-padding: 0;
+    -fx-font-size: 0.001px;
+    -fx-background-radius: 3px;
+    -fx-background-color: transparent;
+}
+
+.toolBt:hover {
+    -fx-background-color: #dddddd;
+}
+
+.code{
+    -fx-text-fill: red;
+    -fx-background-color: red;
+    -fx-padding: 30;
+}
+
+.table-view{
+    -fx-font-size: 14;
+    -fx-border-width: 1 0 1 0;
+    -fx-border-color: lightgray;
+    -fx-background-color: transparent;
+}
+
+.table-view *.scroll-bar:horizontal *.increment-button,
+.table-view *.scroll-bar:horizontal *.decrement-button {
+    -fx-background-color: null;
+    -fx-background-radius: 0;
+    -fx-background-insets: 0;
+    -fx-padding: 0;
+}
+
+.table-view *.scroll-bar:horizontal *.increment-arrow,
+.table-view *.scroll-bar:horizontal *.decrement-arrow {
+    -fx-background-color: null;
+    -fx-background-radius: 0;
+    -fx-background-insets: 0;
+    -fx-padding: 0;
+    -fx-shape: null;
+}
+
+.table-view *.scroll-bar:vertical *.increment-button,
+.table-view *.scroll-bar:vertical *.decrement-button {
+    -fx-pref-width: 16;
+    -fx-background-color: null;
+    -fx-background-radius: 5px;
+    -fx-background-insets: 0;
+    -fx-padding: 6;
+}
+
+.table-view *.scroll-bar:vertical *.increment-arrow,
+.table-view *.scroll-bar:vertical *.decrement-arrow {
+    -fx-background-radius: 0;
+    -fx-background-insets: 0;
+    -fx-padding: 0;
+    -fx-shape: null;
+    -fx-pref-height: 0;
+}
