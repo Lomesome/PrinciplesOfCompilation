@@ -21,7 +21,6 @@ import javafx.stage.*;
 import org.fxmisc.richtext.CodeArea;
 import pers.lomesome.compliation.model.PropertyWord;
 import pers.lomesome.compliation.model.Word;
-import pers.lomesome.compliation.tool.Lexical;
 import pers.lomesome.compliation.tool.LexicalAnalyzer;
 import pers.lomesome.compliation.controller.*;
 import pers.lomesome.compliation.view.mywidgets.LaxicalAnalyzerTableView;
@@ -183,7 +182,7 @@ public class CodeInterface {
                             textArea.setText("Lexical Analyzer Start!!!\n");
                         }
                         File openFile = (File) tabPane.getSelectionModel().getSelectedItem().getUserData();
-                        Lexical lexicalAnalyzer = new Lexical(openFile.getPath());
+                        LexicalAnalyzer lexicalAnalyzer = new LexicalAnalyzer(openFile.getPath());
                         lexicalAnalyzer.pretreatment();
                         wordList.clear();
 
