@@ -2,7 +2,7 @@
 ## 编译原理课设
 
 ### 基于java开发
-
+#### （目前实现词法分析）
 1.状态转换图
 
 ![Image text](https://github.com/Lomesome/PrinciplesOfCompilation/blob/master/StateTransitionDiagram.png)
