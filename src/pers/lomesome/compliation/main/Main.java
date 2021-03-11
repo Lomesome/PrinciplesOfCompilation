@@ -10,7 +10,7 @@ public class Main extends Application {
 
     @Override
     public void init() {
-        FinalAttribute.initToken();
+        FinalAttribute.initToken(); //加载关键字、运算符、界符的token值
     }
 
     @Override

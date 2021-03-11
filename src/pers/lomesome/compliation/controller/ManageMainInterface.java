@@ -4,7 +4,7 @@ import pers.lomesome.compliation.view.MainInterface;
 
 public class ManageMainInterface {
 
-    private static MainInterface mainGui;
+    private static MainInterface mainGui;  //保存当前程序运行的主界面的状态
 
     public static MainInterface getMainGui() {
         return mainGui;

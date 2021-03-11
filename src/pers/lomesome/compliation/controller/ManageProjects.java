@@ -6,7 +6,7 @@ import java.util.Map;
 
 public class ManageProjects {
 
-    public static Map<String,MyProject> ProjectsMap = new LinkedHashMap<>();
+    public static Map<String,MyProject> ProjectsMap = new LinkedHashMap<>(); //保存所有工程
 
     public static void setProjectsMap(LinkedHashMap<String,MyProject> projectsMap) {
         ProjectsMap = projectsMap;

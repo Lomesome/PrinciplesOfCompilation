@@ -32,16 +32,16 @@ public class FileUtil {
     }
 
     public static void deleteDir(File file) {
-        if (!file.exists()) {
+        if (!file.exists()) { //如果该文件夹不存在则直接返回
             return;
         }
-        if (!file.isFile()) {
+        if (!file.isFile()) { //如果是文件夹递归删除该文件夹内的子文件
             File[] files = file.listFiles();
             assert files != null;
             for (File value : files) {
                 deleteDir(value);
             }
         }
-        boolean delete = file.delete();
+        boolean delete = file.delete(); //如果是文件就删除
     }
 }

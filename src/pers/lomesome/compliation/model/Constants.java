@@ -1,5 +1,9 @@
 package pers.lomesome.compliation.model;
 
+/*
+    定义各种常量，避免程序内出现魔法数值
+ */
+
 public final class Constants {
     public final static int STATE_BEGIN = 0;
     public final static int STATE_1 = 1;

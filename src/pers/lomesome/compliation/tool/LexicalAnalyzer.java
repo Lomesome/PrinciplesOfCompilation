@@ -21,63 +21,78 @@ public class LexicalAnalyzer {
         this.content = ReadAndWriteFile.readFileContent(fileName).toCharArray();
     }
 
+    //判断是否是下划线
     private boolean isUnderline(char ch) {
         return ch == '_';
     }
 
+    //判断是否是点
     private boolean isSpot(char ch) {
         return ch == '.';
     }
 
+    //判断是否是E｜e
     private boolean isE_e(char ch) {
         return ch == 'E' || ch == 'e';
     }
 
+    //判断是否是X｜x
     private boolean isX_x(char ch) {
         return ch == 'X' || ch == 'x';
     }
 
+    //判断是否是+｜-
     private boolean isAdd_Sub(char ch) {
         return ch == '+' || ch == '-';
     }
 
+    //判断是否是字母
     private boolean isLetter(char ch) {
         return (ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z');
     }
 
+    //判断指定范围的数字
     private boolean isDigit(char ch, char min, char max) {
         return ch >= min && ch <= max;
     }
 
+    //判断是否是数字
     private boolean isDigit(char ch) {
         return ch >= '0' && ch <= '9';
     }
 
+    //判断是否是除号
     private boolean isDiv(char ch) {
         return ch == '/';
     }
 
+    //判断是否是换行符
     private boolean isWrap(char ch) {
         return ch == '\n';
     }
 
+    //判断是否是乘号
     private boolean isMul(char ch) {
         return ch == '*';
     }
 
+    //判断是否是单引号
     private boolean isSingleQuote(char ch) {
         return ch == '\'';
     }
 
+    //判断是否是双引号
     private boolean isDoubleQuote(char ch) {
         return ch == '"';
     }
 
+    //判断是否是数字结尾（包括界符、运算符、空字符）
     private boolean isNumEnd(char ch) {
         String end = "()[]!*/%+-<>=&|. \n;,{}";
         return end.indexOf(ch) >= 0 || ch == (char) -1;
     }
 
+    //判断是否是空字符
     private boolean isWhiteSpace(char ch) {
         if (ch == '\n') {
             row += 1;
@@ -86,6 +101,7 @@ public class LexicalAnalyzer {
         } else return ch == '\t' || ch == '\f' || ch == '\0' || ch == ' ';
     }
 
+    //判断是否是分界符
     private boolean isDelimiter(char ch) {
         for(String s: FinalAttribute.getDelimiter()){
             if(s.charAt(0) == ch){
@@ -95,6 +111,7 @@ public class LexicalAnalyzer {
         return false;
     }
 
+    //判断是否是运算符
     private boolean isOperator(char ch) {
         for(String s: FinalAttribute.getOperator()){
             if(s.charAt(0) == ch){
@@ -104,6 +121,7 @@ public class LexicalAnalyzer {
         return false;
     }
 
+    //判断是否是结束状态
     private boolean isEndState(int state) {
         switch (state) {
             case Constants.STATE_2:
@@ -152,21 +170,24 @@ public class LexicalAnalyzer {
         }
     }
 
+    //获取下一个字符
     private char getNextChar() {
-        col += 1;
-        index += 1;
+        col += 1; //当前列标加1
+        index += 1; //当前字符位置加1
         return content[index];
     }
 
+    //回退上一个字符
     private void backLastChar() {
-        col -= 1;
-        index -= 1;
-        word.deleteCharAt(word.length() - 1);
+        col -= 1;  //当前列标减1
+        index -= 1;  //当前字符位置减1
+        word.deleteCharAt(word.length() - 1); //删除word的最后一个字符
     }
 
+    //识别关键字、标识符
     private void recognizeId(char ch) {
         word = new StringBuilder();
-        char state = Constants.STATE_BEGIN;
+        char state = Constants.STATE_BEGIN; //初始状态
         while (!isEndState(state)) {
             switch (state) {
                 case Constants.STATE_BEGIN:
@@ -193,9 +214,10 @@ public class LexicalAnalyzer {
         }
     }
 
+    //识别所有数值
     private void recognizeNum(char ch) {
         word = new StringBuilder();
-        char state = Constants.STATE_BEGIN;
+        char state = Constants.STATE_BEGIN; //初始状态
         while (!isEndState(state)) {
             switch (state) {
                 case Constants.STATE_BEGIN:
@@ -313,9 +335,10 @@ public class LexicalAnalyzer {
         }
     }
 
+    //识别'/'、注释
     private void recognizeMulAndNotes(char ch) {
         word = new StringBuilder();
-        char state = Constants.STATE_BEGIN;
+        char state = Constants.STATE_BEGIN; //初始状态
         while (!isEndState(state)) {
             switch (state) {
                 case Constants.STATE_BEGIN:
@@ -375,9 +398,10 @@ public class LexicalAnalyzer {
         }
     }
 
+    //识别字符
     private void recognizeChar(char ch) {
         word = new StringBuilder();
-        char state = Constants.STATE_BEGIN;
+        char state = Constants.STATE_BEGIN; //初始状态
         while (!isEndState(state)) {
             switch (state) {
                 case Constants.STATE_BEGIN:
@@ -411,9 +435,10 @@ public class LexicalAnalyzer {
         }
     }
 
+    //识别字符串
     public void recognizeString(char ch) {
         word = new StringBuilder();
-        char state = Constants.STATE_BEGIN;
+        char state = Constants.STATE_BEGIN; //初始状态
         while (!isEndState(state)) {
             switch (state) {
                 case Constants.STATE_BEGIN:
@@ -445,9 +470,10 @@ public class LexicalAnalyzer {
         }
     }
 
+    //识别分界符
     private void recognizeDelimiter(char ch) {
         word = new StringBuilder();
-        char state = Constants.STATE_BEGIN;
+        char state = Constants.STATE_BEGIN; //初始状态
         while (!isEndState(state)) {
             if (state == Constants.STATE_BEGIN) {
                 switch (ch) {
@@ -470,9 +496,10 @@ public class LexicalAnalyzer {
         words.add(new Word(word.toString(), Constants.DELIMITER, row, col));
     }
 
+    //识别运算符
     private void recognizeOperator(char ch) {
         word = new StringBuilder();
-        char state = Constants.STATE_BEGIN;
+        char state = Constants.STATE_BEGIN; //初始状态
         while (!isEndState(state)) {
             switch (state) {
                 case Constants.STATE_BEGIN:
@@ -583,6 +610,7 @@ public class LexicalAnalyzer {
         words.add(new Word(word.toString(), Constants.OPERATOR, row, col));
     }
 
+    //预处理
     private void pretreatment() {
         char ch;
         while (index < content.length - 1) {
@@ -609,22 +637,24 @@ public class LexicalAnalyzer {
         }
     }
 
+    //词法分析启动入口
     public void runAnalyzer(){
         this.pretreatment();
     }
+
+    //返回词法分析后的列表
     public List<Word> getWords() {
         return words;
     }
 
+    //返回词法分析后的错误信息
     public List<Word> getErrorMsgList() {
         return errorMsgList;
     }
 
     public static void main(String[] args) {
         FinalAttribute.initToken();
-
         LexicalAnalyzer lexicalAnalyzer = new LexicalAnalyzer(ReadAndWriteFile.readFileContent("/Users/leiyunhong/Desktop/test.txt"));
-
         lexicalAnalyzer.pretreatment();
         for (Word word : lexicalAnalyzer.getWords()) {
             System.out.println(word);
