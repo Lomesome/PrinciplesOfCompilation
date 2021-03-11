@@ -21,8 +21,8 @@ import javafx.stage.*;
 import org.fxmisc.richtext.CodeArea;
 import pers.lomesome.compliation.model.PropertyWord;
 import pers.lomesome.compliation.model.Word;
-import pers.lomesome.compliation.tool.LexicalAnalyzer;
 import pers.lomesome.compliation.controller.*;
+import pers.lomesome.compliation.tool.LexicalAnalyzer;
 import pers.lomesome.compliation.view.mywidgets.LaxicalAnalyzerTableView;
 import pers.lomesome.compliation.view.mywidgets.MyButton;
 import pers.lomesome.compliation.view.mywidgets.MyCodeArea;
@@ -48,7 +48,7 @@ public class CodeInterface {
     private final Map<String,TextArea> textAreaMap = new HashMap<>();
     private final List<Word> errorMsgList = new ArrayList<>();
 
-    public void init() {
+    private void init() {
         for (String s : FileUtil.findAll()) {
             addTab(new File(s));
         }
@@ -80,7 +80,7 @@ public class CodeInterface {
         rootStage.show();
     }
 
-    public MenuBar setMenuBar() {
+    private MenuBar setMenuBar() {
         //创建MenuBar
         MenuBar menuBar = new MenuBar();
 
@@ -183,13 +183,11 @@ public class CodeInterface {
                         }
                         File openFile = (File) tabPane.getSelectionModel().getSelectedItem().getUserData();
                         LexicalAnalyzer lexicalAnalyzer = new LexicalAnalyzer(openFile.getPath());
-                        lexicalAnalyzer.pretreatment();
+                        lexicalAnalyzer.runAnalyzer();
                         wordList.clear();
 
                         for (Word word : lexicalAnalyzer.getWords()) {
-                            Platform.runLater(() -> {
-                                wordList.addAll(new PropertyWord(word.getType(), String.valueOf(word.getTypenum()), word.getWord()));
-                            });
+                            Platform.runLater(() -> wordList.addAll(new PropertyWord(word.getType(), String.valueOf(word.getTypenum()), word.getWord())));
                         }
 
                         errorMsgList.clear();
@@ -198,10 +196,7 @@ public class CodeInterface {
 
                             errorArea.clear();
                             for (Word word : lexicalAnalyzer.getErrorMsgList()) {
-                                Platform.runLater(() -> {
-
-                                    errorArea.appendText((word.getType() + " " + "第"+ word.getRow() + "行,第" + (word.getCol() - word.getWord().length()) + "列: " + word.getWord()) + "\n");
-                                });
+                                Platform.runLater(() -> errorArea.appendText((word.getType() + " " + "第"+ word.getRow() + "行,第" + (word.getCol() - word.getWord().length()) + "列: " + word.getWord()) + "\n"));
                             }
                         }
 
@@ -214,13 +209,11 @@ public class CodeInterface {
             }
         };
 
-        lexicalAnalysis.setOnAction(event -> {
-            lexicalAnalyzerService.restart();
-        });
+        lexicalAnalysis.setOnAction(event -> lexicalAnalyzerService.restart());
         return menuBar;
     }
 
-    public void makeTools() {
+    private void makeTools() {
         BorderPane toolsBar = new BorderPane();
 
         MyButton start = new MyButton("/resources/images/start.png", "toolBt");
@@ -250,9 +243,7 @@ public class CodeInterface {
                             });
                             Thread.sleep(500);
 
-                            Platform.runLater(() -> {
-                                textArea.appendText("Process finished with exit code 0\n");
-                            });
+                            Platform.runLater(() -> textArea.appendText("Process finished with exit code 0\n"));
 
                             long endTime = System.currentTimeMillis();
                             long useTime = endTime - startTime - 500;
@@ -306,7 +297,7 @@ public class CodeInterface {
         rootBorderPane.setTop(toolsBar);
     }
 
-    public void leftMenu() {
+    private void leftMenu() {
         VerticalLabel projectLabel = new VerticalLabel(VerticalDirection.UP);
         projectLabel.setPadding(new Insets(10, 10, 10, 10));
         projectLabel.setUserData("nochoose");
@@ -340,7 +331,7 @@ public class CodeInterface {
         rootBorderPane.setLeft(vBox);
     }
 
-    public void rightMenu() {
+    private void rightMenu() {
         VerticalLabel tableLabel = new VerticalLabel(VerticalDirection.DOWN);
         tableLabel.setPadding(new Insets(10, 10, 10, 10));
         tableLabel.setUserData("nochoose");
@@ -381,7 +372,7 @@ public class CodeInterface {
         rootBorderPane.setRight(borderPane);
     }
 
-    public void center() {
+    private void center() {
         leftRightSplitPane.setDividerPositions(0.2f);
         leftRightSplitPane.getItems().addAll(tabPane);
         centerSplitPane.setOrientation(Orientation.VERTICAL);
@@ -390,7 +381,7 @@ public class CodeInterface {
         rootBorderPane.setCenter(centerSplitPane);
     }
 
-    public void bottomMenu() {
+    private void bottomMenu() {
 
         final ToggleGroup group = new ToggleGroup();
         MyButton delete = new MyButton("/resources/images/delete_.png", "toolBt2");
@@ -409,9 +400,7 @@ public class CodeInterface {
             }
         });
 
-        delete.setOnMouseExited(event -> {
-            delete.setStyle("-fx-background-color: transparent");
-        });
+        delete.setOnMouseExited(event -> delete.setStyle("-fx-background-color: transparent"));
 
         group.selectedToggleProperty().addListener((a, o, n) -> {
             if (n == null) {
@@ -434,10 +423,10 @@ public class CodeInterface {
                     outArea.textProperty().addListener((observable, oldValue, newValue) -> {
                         if (newValue.length() == 0){
                             delete.setUserData("notext");
-                            Platform.runLater(()->{delete.setImageView("/resources/images/delete_.png");});
+                            Platform.runLater(()-> delete.setImageView("/resources/images/delete_.png"));
                         }else {
                             delete.setUserData("text");
-                            Platform.runLater(()->{delete.setImageView("/resources/images/delete.png");});
+                            Platform.runLater(()-> delete.setImageView("/resources/images/delete.png"));
                         }
                     });
                     textAreaMap.put(choosename, outArea);
@@ -491,16 +480,14 @@ public class CodeInterface {
         hbox.setStyle("-fx-border-width: 0 0 1 0;-fx-border-color: lightgray");
         Label tips = new Label();
         tips.setPadding(new Insets(1,0,1,30));
-        logList.addListener((ListChangeListener)(o)->{
-            tips.setText((String) o.getList().get(o.getList().size()-1));
-        });
+        logList.addListener((ListChangeListener)(o)-> tips.setText((String) o.getList().get(o.getList().size()-1)));
 
         VBox vBox = new VBox(hbox, tips);
         HBox.setMargin(run, new Insets(0, 0, 0, 25));
         rootBorderPane.setBottom(vBox);
     }
 
-    public void initTreeView() {
+    private void initTreeView() {
 
         contextMenu = new ContextMenu();
 
@@ -593,13 +580,14 @@ public class CodeInterface {
         findFileAndFolderList(new File(OpenProject.getMyProject().getPath() + "/" + OpenProject.getMyProject().getName()), rootNode);
     }
 
-    public void findFileAndFolderList(File dir, TreeItem<File> pNode) {
+    private void findFileAndFolderList(File dir, TreeItem<File> pNode) {
         if (!dir.exists() || !dir.isDirectory()) {// 判断是否存在目录
             return;
         }
         String[] files = dir.list();// 读取目录下的所有目录文件信息
-        for (int i = 0; i < files.length; i++) {// 循环，添加文件名或回调自身
-            File file = new File(dir, files[i]);
+        assert files != null;
+        for (String s : files) {// 循环，添加文件名或回调自身
+            File file = new File(dir, s);
             if (file.isFile()) {// 如果是文件
                 if (!file.getName().equals(".DS_Store")) {
                     addNode(file, pNode);
@@ -620,13 +608,13 @@ public class CodeInterface {
         }
         treeImageview.setFitWidth(18);
         treeImageview.setFitHeight(18);
-        TreeItem<File> newNode = new TreeItem<File>(new File(newFile.getPath()), treeImageview);
+        TreeItem<File> newNode = new TreeItem<>(new File(newFile.getPath()), treeImageview);
         newNode.setExpanded(true);
         pNode.getChildren().add(newNode);
         return newNode;
     }
 
-    public void addTab(File myFile) {
+    private void addTab(File myFile) {
         Tab code = new Tab(myFile.getName());
         code.setUserData(myFile);
         code.setContent(new MyCodeArea(myFile));
@@ -635,7 +623,7 @@ public class CodeInterface {
 
     final class TextFieldTreeCellImpl extends TreeCell<File> {
 
-        public TextFieldTreeCellImpl() {
+        private TextFieldTreeCellImpl() {
 
             this.setOnMouseClicked(event -> {
                 if (event.getButton() == MouseButton.SECONDARY) {

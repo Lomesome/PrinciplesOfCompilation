@@ -11,8 +11,9 @@ public class FileUtil {
             return;
         }
         String[] files = dir.list();// 读取目录下的所有目录文件信息
-        for (int i = 0; i < files.length; i++) {// 循环，添加文件名或回调自身
-            File file = new File(dir, files[i]);
+        assert files != null;
+        for (String s : files) {// 循环，添加文件名或回调自身
+            File file = new File(dir, s);
             if (file.isFile()) {// 如果是文件
                 if (!file.getName().equals(".DS_Store"))
                     fileNames.add(dir + "/" + file.getName());// 添加文件全路径名
@@ -31,17 +32,16 @@ public class FileUtil {
     }
 
     public static void deleteDir(File file) {
-
         if (!file.exists()) {
             return;
         }
-
         if (!file.isFile()) {
             File[] files = file.listFiles();
-            for (int i = 0; i < files.length; i++) {
-                deleteDir(files[i]);
+            assert files != null;
+            for (File value : files) {
+                deleteDir(value);
             }
         }
-        file.delete();
+        boolean delete = file.delete();
     }
 }

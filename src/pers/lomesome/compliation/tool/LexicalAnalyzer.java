@@ -1,167 +1,92 @@
 package pers.lomesome.compliation.tool;
 
+import pers.lomesome.compliation.controller.ReadAndWriteFile;
 import pers.lomesome.compliation.model.FinalAttribute;
 import pers.lomesome.compliation.model.Constants;
 import pers.lomesome.compliation.model.Word;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.PushbackReader;
 import java.util.ArrayList;
 import java.util.List;
 
 public class LexicalAnalyzer {
-    private PushbackReader pushbackReader = null;
     private StringBuilder word = null;
     private final List<Word> words = new ArrayList<>();
     private final List<Word> errorMsgList = new ArrayList<>();
-    private final static int BUFFERSIZE = 2;
-    private final static char FILETAIL = (char) -1;
     private int row = 1;
     private int col = 1;
+    private final char[] content;
+    private int index = -1;
 
-    //构造函数，输入是文件名
+    //构造函数，输入是文件内容
     public LexicalAnalyzer(String fileName) {
-        File fp = new File(fileName);
-
-        //文件阅读器
-        try {
-            FileReader fr = new FileReader(fp);
-            pushbackReader = new PushbackReader(fr, BUFFERSIZE); //用可以回退的回退流封装
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
+        this.content = ReadAndWriteFile.readFileContent(fileName).toCharArray();
     }
 
-    public boolean isUnderline(char ch) {
-        if (ch == '_') {
-            return true;
-        } else {
-            return false;
-        }
+    private boolean isUnderline(char ch) {
+        return ch == '_';
     }
 
-    public boolean isSpot(char ch) {
-        if (ch == '.') {
-            return true;
-        } else {
-            return false;
-        }
+    private boolean isSpot(char ch) {
+        return ch == '.';
     }
 
-    public boolean isE_e(char ch) {
-        if (ch == 'E' || ch == 'e') {
-            return true;
-        } else {
-            return false;
-        }
+    private boolean isE_e(char ch) {
+        return ch == 'E' || ch == 'e';
     }
 
-    public boolean isX_x(char ch) {
-        if (ch == 'X' || ch == 'x') {
-            return true;
-        } else {
-            return false;
-        }
+    private boolean isX_x(char ch) {
+        return ch == 'X' || ch == 'x';
     }
 
-    public boolean isAdd_Sub(char ch) {
-        if (ch == '+' || ch == '-') {
-            return true;
-        } else {
-            return false;
-        }
+    private boolean isAdd_Sub(char ch) {
+        return ch == '+' || ch == '-';
     }
 
-    public boolean isLetter(char ch) {
-        if ((ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z')) {
-            return true;
-        } else {
-            return false;
-        }
+    private boolean isLetter(char ch) {
+        return (ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z');
     }
 
-    public boolean isDigit(char ch, char min, char max) {
-        if (ch >= min && ch <= max) {
-            return true;
-        } else {
-            return false;
-        }
+    private boolean isDigit(char ch, char min, char max) {
+        return ch >= min && ch <= max;
     }
 
-    public boolean isDigit(char ch) {
-        if (ch >= '0' && ch <= '9') {
-            return true;
-        } else {
-            return false;
-        }
+    private boolean isDigit(char ch) {
+        return ch >= '0' && ch <= '9';
     }
 
-    public boolean isDiv(char ch) {
-        if (ch == '/') {
-            return true;
-        } else {
-            return false;
-        }
+    private boolean isDiv(char ch) {
+        return ch == '/';
     }
 
-    public boolean isWrap(char ch) {
-        if (ch == '\n') {
-            return true;
-        } else {
-            return false;
-        }
+    private boolean isWrap(char ch) {
+        return ch == '\n';
     }
 
-    public boolean isMul(char ch) {
-        if (ch == '*') {
-            return true;
-        } else {
-            return false;
-        }
+    private boolean isMul(char ch) {
+        return ch == '*';
     }
 
-    public boolean isSingleQuote(char ch) {
-        if (ch == '\'') {
-            return true;
-        } else {
-            return false;
-        }
+    private boolean isSingleQuote(char ch) {
+        return ch == '\'';
     }
 
-    public boolean isDoubleQuote(char ch) {
-        if (ch == '"') {
-            return true;
-        } else {
-            return false;
-        }
+    private boolean isDoubleQuote(char ch) {
+        return ch == '"';
     }
 
-
-    public boolean isNumEnd(char ch) {
+    private boolean isNumEnd(char ch) {
         String end = "()[]!*/%+-<>=&|. \n;,{}";
-        if (end.indexOf(ch) >= 0 || ch == (char) -1) {
-            return true;
-        } else {
-            return false;
-        }
+        return end.indexOf(ch) >= 0 || ch == (char) -1;
     }
 
-    public boolean isWhiteSpace(char ch) {
+    private boolean isWhiteSpace(char ch) {
         if (ch == '\n') {
             row += 1;
             col = 1;
             return true;
-        } else if (ch == '\t' || ch == '\f' || ch == '\0' || ch == ' ') {
-            return true;
-        } else {
-            return false;
-        }
+        } else return ch == '\t' || ch == '\f' || ch == '\0' || ch == ' ';
     }
 
-    public boolean isDelimiter(char ch) {
+    private boolean isDelimiter(char ch) {
         for(String s: FinalAttribute.getDelimiter()){
             if(s.charAt(0) == ch){
                 return true;
@@ -170,7 +95,7 @@ public class LexicalAnalyzer {
         return false;
     }
 
-    public boolean isOperator(char ch) {
+    private boolean isOperator(char ch) {
         for(String s: FinalAttribute.getOperator()){
             if(s.charAt(0) == ch){
                 return true;
@@ -179,7 +104,7 @@ public class LexicalAnalyzer {
         return false;
     }
 
-    public boolean isEndState(int state) {
+    private boolean isEndState(int state) {
         switch (state) {
             case Constants.STATE_2:
             case Constants.STATE_5:
@@ -227,27 +152,19 @@ public class LexicalAnalyzer {
         }
     }
 
-    public char getNextChar() {
-        try {
-            col += 1;
-            return (char) pushbackReader.read();
-        } catch (IOException e) {
-            return FILETAIL;
-        }
+    private char getNextChar() {
+        col += 1;
+        index += 1;
+        return content[index];
     }
 
-    public void backLastChar(char ch) {
-        try {
-            pushbackReader.unread(ch);
-            word.deleteCharAt(word.length() - 1);
-            col -= 1;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    private void backLastChar() {
+        col -= 1;
+        index -= 1;
+        word.deleteCharAt(word.length() - 1);
     }
 
-
-    public void recognizeId(char ch) {
+    private void recognizeId(char ch) {
         word = new StringBuilder();
         char state = Constants.STATE_BEGIN;
         while (!isEndState(state)) {
@@ -268,7 +185,7 @@ public class LexicalAnalyzer {
             }
             word.append(ch);
         }
-        backLastChar(ch);
+        backLastChar();
         if (FinalAttribute.findToken(word.toString()) == Constants.IDENTIFIER_TOKEN) {
             words.add(new Word(Constants.IDENTIFIER_TOKEN, word.toString(), Constants.IDENTIFIER, row, col));
         } else {
@@ -276,7 +193,7 @@ public class LexicalAnalyzer {
         }
     }
 
-    public void recognizeNum(char ch) {
+    private void recognizeNum(char ch) {
         word = new StringBuilder();
         char state = Constants.STATE_BEGIN;
         while (!isEndState(state)) {
@@ -379,7 +296,7 @@ public class LexicalAnalyzer {
             }
             word.append(ch);
         }
-        backLastChar(ch);
+        backLastChar();
         switch (state) {
             case Constants.STATE_5:
             case Constants.STATE_8:
@@ -396,7 +313,7 @@ public class LexicalAnalyzer {
         }
     }
 
-    public void recognizeMulAndNotes(char ch) {
+    private void recognizeMulAndNotes(char ch) {
         word = new StringBuilder();
         char state = Constants.STATE_BEGIN;
         while (!isEndState(state)) {
@@ -421,7 +338,7 @@ public class LexicalAnalyzer {
                     if (isWrap(ch)) {
                         row += 1;
                         state = Constants.STATE_31;
-                    } else if (ch == FILETAIL) {
+                    } else if (index == content.length - 1) {
                         state = Constants.STATE_31;
                     } else {
                         state = Constants.STATE_30;
@@ -453,12 +370,12 @@ public class LexicalAnalyzer {
             word.append(ch);
         }
         if (state == Constants.STATE_29) {
-            backLastChar(ch);
+            backLastChar();
             words.add(new Word(word.toString(), Constants.OPERATOR, row, col));
         }
     }
 
-    public void recognizeChar(char ch) {
+    private void recognizeChar(char ch) {
         word = new StringBuilder();
         char state = Constants.STATE_BEGIN;
         while (!isEndState(state)) {
@@ -488,7 +405,7 @@ public class LexicalAnalyzer {
                 words.add(new Word(Constants.CHARACTER_TOKEN, word.toString(), Constants.CHARACTER, row, col));
                 break;
             case Constants.STATE_68:
-                backLastChar(ch);
+                backLastChar();
                 errorMsgList.add(new Word(Constants.ERROR_TOKEN, word.toString(), "error: 缺少单引号 ", row, col));
                 break;
         }
@@ -522,32 +439,38 @@ public class LexicalAnalyzer {
                 words.add(new Word(Constants.STRING_TOKEN, word.toString(), Constants.STRING, row, col));
                 break;
             case Constants.STATE_64:
-                backLastChar(ch);
+                backLastChar();
                 errorMsgList.add(new Word(Constants.ERROR_TOKEN, word.toString(), "error: 缺少双引号 ", row, col));
                 break;
         }
     }
 
-    public void recognizeDelimiter(char ch) {
+    private void recognizeDelimiter(char ch) {
         word = new StringBuilder();
         char state = Constants.STATE_BEGIN;
         while (!isEndState(state)) {
-            switch (state) {
-                case Constants.STATE_BEGIN:
-                    switch (ch){
-                        case '{' : state = Constants.STATE_58;break;
-                        case '}' : state = Constants.STATE_59;break;
-                        case ';' : state = Constants.STATE_60;break;
-                        case ',' : state = Constants.STATE_61;break;
-                    }
-                    break;
+            if (state == Constants.STATE_BEGIN) {
+                switch (ch) {
+                    case '{':
+                        state = Constants.STATE_58;
+                        break;
+                    case '}':
+                        state = Constants.STATE_59;
+                        break;
+                    case ';':
+                        state = Constants.STATE_60;
+                        break;
+                    case ',':
+                        state = Constants.STATE_61;
+                        break;
+                }
             }
             word.append(ch);
         }
         words.add(new Word(word.toString(), Constants.DELIMITER, row, col));
     }
 
-    public void recognizeOperator(char ch) {
+    private void recognizeOperator(char ch) {
         word = new StringBuilder();
         char state = Constants.STATE_BEGIN;
         while (!isEndState(state)) {
@@ -654,20 +577,16 @@ public class LexicalAnalyzer {
             case Constants.STATE_52:
             case Constants.STATE_55:
             case Constants.STATE_57:
-                backLastChar(ch);
+                backLastChar();
                 break;
         }
         words.add(new Word(word.toString(), Constants.OPERATOR, row, col));
     }
 
-    public void pretreatment() {
+    private void pretreatment() {
         char ch;
-        while (true) {
-
+        while (index < content.length - 1) {
             ch = getNextChar();
-            if (ch == FILETAIL) {
-                break;
-            }
             if (isWhiteSpace(ch)) {
                 continue;
             } else if (isUnderline(ch) || isLetter(ch)) {
@@ -690,6 +609,9 @@ public class LexicalAnalyzer {
         }
     }
 
+    public void runAnalyzer(){
+        this.pretreatment();
+    }
     public List<Word> getWords() {
         return words;
     }
@@ -698,10 +620,10 @@ public class LexicalAnalyzer {
         return errorMsgList;
     }
 
-
     public static void main(String[] args) {
         FinalAttribute.initToken();
-        LexicalAnalyzer lexicalAnalyzer = new LexicalAnalyzer("/Users/leiyunhong/Desktop/test.txt");
+
+        LexicalAnalyzer lexicalAnalyzer = new LexicalAnalyzer(ReadAndWriteFile.readFileContent("/Users/leiyunhong/Desktop/test.txt"));
 
         lexicalAnalyzer.pretreatment();
         for (Word word : lexicalAnalyzer.getWords()) {

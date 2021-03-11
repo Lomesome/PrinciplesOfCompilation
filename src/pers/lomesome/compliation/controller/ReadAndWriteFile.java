@@ -1,7 +1,6 @@
 package pers.lomesome.compliation.controller;
 
 import pers.lomesome.compliation.model.MyProject;
-
 import java.io.*;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -13,7 +12,7 @@ public class ReadAndWriteFile {
         StringBuilder sbf = new StringBuilder();
         try {
             reader = new BufferedReader(new FileReader(file));
-            int data = -1;
+            int data;
             while ((data = reader.read()) != -1) {
                 sbf.append((char) data);
             }

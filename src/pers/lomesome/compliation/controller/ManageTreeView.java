@@ -1,7 +1,6 @@
 package pers.lomesome.compliation.controller;
 
 import javafx.scene.control.TreeView;
-
 import java.io.File;
 
 public class ManageTreeView {

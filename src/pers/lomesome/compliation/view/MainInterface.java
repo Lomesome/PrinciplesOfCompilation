@@ -28,7 +28,7 @@ public class MainInterface {
     private final ObservableList<MyProject> obList = FXCollections.observableArrayList();
     private final Stage rootStage = new Stage();
 
-    public void init() {
+    private void init() {
         ReadAndWriteFile.readObj();
         Set<Map.Entry<String, MyProject>> sets = ManageProjects.getProjectsMap().entrySet();        //获取HashMap键值对
         for (Map.Entry<String, MyProject> set : sets) {                //遍历HashMap键值对
@@ -39,8 +39,7 @@ public class MainInterface {
     public MainInterface() {
         init();
         BorderPane borderPane = new BorderPane();
-        ListView listView = new ListView(obList);
-
+        ListView<MyProject> listView = new ListView<>(obList);
         listView.setPrefWidth(300);
         listView.setStyle("-fx-padding: 0;-fx-background-color: white;");
         listView.setCellFactory(new Callback<ListView<MyProject>, ListCell<MyProject>>() {
@@ -135,19 +134,15 @@ public class MainInterface {
         rootStage.show();
     }
 
-    public HBox makeLabelBox(String imagePath, String name) {
+    private HBox makeLabelBox(String imagePath, String name) {
         HBox hBox = new HBox(5);
         VBox.setMargin(hBox, new Insets(25, 0, 0, 150));
         ImageView imageView = new ImageView(this.getClass().getResource(imagePath).toString());
         imageView.setFitHeight(16);
         imageView.setFitWidth(16);
         Label nameLabel = new Label(name);
-        nameLabel.setOnMouseEntered(event -> {
-            nameLabel.setStyle("-fx-text-fill: royalblue");
-        });
-        nameLabel.setOnMouseExited(event -> {
-            nameLabel.setStyle("-fx-text-fill: black");
-        });
+        nameLabel.setOnMouseEntered(event -> nameLabel.setStyle("-fx-text-fill: royalblue"));
+        nameLabel.setOnMouseExited(event -> nameLabel.setStyle("-fx-text-fill: black"));
 
         nameLabel.setOnMouseClicked(event -> {
             switch (name) {
@@ -169,13 +164,12 @@ public class MainInterface {
                             myProject = new MyProject(strings[strings.length - 1], path.toString());
                             ManageProjects.getProjectsMap().put(path + strings[strings.length - 1], myProject);
                             addObList(myProject);
-                            ReadAndWriteFile.save(ManageProjects.getProjectsMap());
                         } else {
                             myProject = ManageProjects.getProjectsMap().get(path + strings[strings.length - 1]);
                             obList.remove(myProject);
                             obList.add(0, myProject);
-                            ReadAndWriteFile.save(ManageProjects.getProjectsMap());
                         }
+                        ReadAndWriteFile.save(ManageProjects.getProjectsMap());
                         OpenProject.setMyProject(myProject);
                         new CodeInterface();
                         rootStage.close();
