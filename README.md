@@ -3,11 +3,8 @@
 
 ### 基于java开发
 #### （目前实现词法分析）
-1.状态转换图
-
-![Image text](https://github.com/Lomesome/PrinciplesOfCompilation/blob/master/StateTransitionDiagram.png)
-
-2.字符对应token表
+  
+1.字符对应token表
 
 <table border=0 cellpadding=0 cellspacing=0 width=456 style='border-collapse:
  collapse;table-layout:fixed;width:341pt'>
@@ -286,3 +283,7 @@
  </tr>
  <![endif]>
 </table>
+
+2.状态转换图
+
+  ![Image text](https://github.com/Lomesome/PrinciplesOfCompilation/blob/master/StateTransitionDiagram.png)
