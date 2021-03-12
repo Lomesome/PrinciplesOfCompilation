@@ -9,264 +9,280 @@
 
 2.字符对应token表
 
-<table border='0' cellpadding='0' cellspacing='0' width='432' style='border-collapse: 
- collapse;table-layout:fixed;width:324pt'>
- <col width='72' span='6' style='width:54pt'>
- <tr height='18' style='mso-height-source:userset;height:13.5pt' id='r0'>
-<td height='18' class='x21' width='72' style='height:13.5pt;width:54pt;'>类别</td>
-<td class='x21' width='72' style='width:54pt;'>单词</td>
-<td class='x21' width='72' style='width:54pt;'>编码</td>
-<td class='x22' width='72' style='width:54pt;'>类别</td>
-<td class='x22' width='72' style='width:54pt;'>单词</td>
-<td class='x22' width='72' style='width:54pt;'>编码</td>
+<table border=0 cellpadding=0 cellspacing=0 width=456 style='border-collapse:
+ collapse;table-layout:fixed;width:341pt'>
+ <col width=87 style='mso-width-source:userset;mso-width-alt:2773;width:65pt'>
+ <col width=71 span=2 style='width:53pt'>
+ <col width=85 style='mso-width-source:userset;mso-width-alt:2730;width:64pt'>
+ <col width=71 span=2 style='width:53pt'>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl63 width=87 style='height:15.0pt;width:65pt'>类别</td>
+  <td class=xl63 width=71 style='width:53pt'>单词</td>
+  <td class=xl63 width=71 style='width:53pt'>编码</td>
+  <td class=xl63 width=85 style='width:64pt'>类别</td>
+  <td class=xl63 width=71 style='width:53pt'>单词</td>
+  <td class=xl63 width=71 style='width:53pt'>编码</td>
  </tr>
- <tr height='18' style='mso-height-source:userset;height:13.5pt' id='r1'>
-<td rowspan='32' height='576' class='x24' style='height:432pt;'>关键字</td>
-<td>char</td>
-<td class='x21'>101</td>
-<td rowspan='2' height='36' class='x24' style='height:27pt;'>单词类别</td>
-<td>标识符</td>
-<td class='x21'>700</td>
+ <tr height=20 style='height:15.0pt'>
+  <td rowspan=32 height=640 class=xl63 style='height:480.0pt'>关键字</td>
+  <td>char</td>
+  <td class=xl63>101</td>
+  <td rowspan=41 class=xl63>运算符</td>
+  <td>(</td>
+  <td class=xl63>201</td>
  </tr>
- <tr height='18' style='mso-height-source:userset;height:13.5pt' id='r2'>
-<td>int</td>
-<td class='x21'>102</td>
-<td>实数</td>
-<td class='x21'>800</td>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 style='height:15.0pt'>int</td>
+  <td class=xl63>102</td>
+  <td>)</td>
+  <td class=xl63>202</td>
  </tr>
- <tr height='18' style='mso-height-source:userset;height:13.5pt' id='r3'>
-<td>float</td>
-<td class='x21'>103</td>
-<td rowspan='37' height='666' class='x24' style='height:499.5pt;'>运算符</td>
-<td>+</td>
-<td class='x21'>201</td>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 style='height:15.0pt'>float</td>
+  <td class=xl63>103</td>
+  <td>[</td>
+  <td class=xl63>203</td>
  </tr>
- <tr height='18' style='mso-height-source:userset;height:13.5pt' id='r4'>
-<td>break</td>
-<td class='x21'>104</td>
-<td>-</td>
-<td class='x21'>202</td>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 style='height:15.0pt'>break</td>
+  <td class=xl63>104</td>
+  <td>]</td>
+  <td class=xl63>204</td>
  </tr>
- <tr height='18' style='mso-height-source:userset;height:13.5pt' id='r5'>
-<td>const</td>
-<td class='x21'>105</td>
-<td>*</td>
-<td class='x21'>203</td>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 style='height:15.0pt'>const</td>
+  <td class=xl63>105</td>
+  <td>!</td>
+  <td class=xl63>205</td>
  </tr>
- <tr height='18' style='mso-height-source:userset;height:13.5pt' id='r6'>
-<td>return</td>
-<td class='x21'>106</td>
-<td>/</td>
-<td class='x21'>204</td>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 style='height:15.0pt'>return</td>
+  <td class=xl63>106</td>
+  <td>*</td>
+  <td class=xl63>206</td>
  </tr>
- <tr height='18' style='mso-height-source:userset;height:13.5pt' id='r7'>
-<td>void</td>
-<td class='x21'>107</td>
-<td>%</td>
-<td class='x21'>205</td>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 style='height:15.0pt'>void</td>
+  <td class=xl63>107</td>
+  <td>/</td>
+  <td class=xl63>207</td>
  </tr>
- <tr height='18' style='mso-height-source:userset;height:13.5pt' id='r8'>
-<td>continue </td>
-<td class='x21'>108</td>
-<td class='x23'>++</td>
-<td class='x21'>206</td>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 style='height:15.0pt'>continue<span
+  style='mso-spacerun:yes'> </span></td>
+  <td class=xl63>108</td>
+  <td>%</td>
+  <td class=xl63>208</td>
  </tr>
- <tr height='18' style='mso-height-source:userset;height:13.5pt' id='r9'>
-<td>do</td>
-<td class='x21'>109</td>
-<td class='x23'>--</td>
-<td class='x21'>207</td>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 style='height:15.0pt'>do</td>
+  <td class=xl63>109</td>
+  <td>+</td>
+  <td class=xl63>209</td>
  </tr>
- <tr height='18' style='mso-height-source:userset;height:13.5pt' id='r10'>
-<td>while </td>
-<td class='x21'>110</td>
-<td>&gt;</td>
-<td class='x21'>208</td>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 style='height:15.0pt'>while<span
+  style='mso-spacerun:yes'> </span></td>
+  <td class=xl63>110</td>
+  <td>-</td>
+  <td class=xl63>210</td>
  </tr>
- <tr height='18' style='mso-height-source:userset;height:13.5pt' id='r11'>
-<td>if</td>
-<td class='x21'>111</td>
-<td>&gt;=</td>
-<td class='x21'>209</td>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 style='height:15.0pt'>if</td>
+  <td class=xl63>111</td>
+  <td>++</td>
+  <td class=xl63>211</td>
  </tr>
- <tr height='18' style='mso-height-source:userset;height:13.5pt' id='r12'>
-<td>else</td>
-<td class='x21'>112</td>
-<td>&lt;</td>
-<td class='x21'>210</td>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 style='height:15.0pt'>else</td>
+  <td class=xl63>112</td>
+  <td>--</td>
+  <td class=xl63>212</td>
  </tr>
- <tr height='18' style='mso-height-source:userset;height:13.5pt' id='r13'>
-<td>for</td>
-<td class='x21'>113</td>
-<td>&lt;=</td>
-<td class='x21'>211</td>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 style='height:15.0pt'>for</td>
+  <td class=xl63>113</td>
+  <td>&lt;</td>
+  <td class=xl63>213</td>
  </tr>
- <tr height='18' style='mso-height-source:userset;height:13.5pt' id='r14'>
-<td>auto</td>
-<td class='x21'>114</td>
-<td class='x23' x:str="'==">==</td>
-<td class='x21'>212</td>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 style='height:15.0pt'>auto</td>
+  <td class=xl63>114</td>
+  <td>&lt;=</td>
+  <td class=xl63>214</td>
  </tr>
- <tr height='18' style='mso-height-source:userset;height:13.5pt' id='r15'>
-<td>case</td>
-<td class='x21'>115</td>
-<td>!=</td>
-<td class='x21'>213</td>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 style='height:15.0pt'>case</td>
+  <td class=xl63>115</td>
+  <td>&gt;</td>
+  <td class=xl63>215</td>
  </tr>
- <tr height='18' style='mso-height-source:userset;height:13.5pt' id='r16'>
-<td>default</td>
-<td class='x21'>116</td>
-<td>&amp;&amp;</td>
-<td class='x21'>214</td>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 style='height:15.0pt'>default</td>
+  <td class=xl63>116</td>
+  <td>&gt;=</td>
+  <td class=xl63>216</td>
  </tr>
- <tr height='18' style='mso-height-source:userset;height:13.5pt' id='r17'>
-<td>double</td>
-<td class='x21'>117</td>
-<td>||</td>
-<td class='x21'>215</td>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 style='height:15.0pt'>double</td>
+  <td class=xl63>117</td>
+  <td>==</td>
+  <td class=xl63>217</td>
  </tr>
- <tr height='18' style='mso-height-source:userset;height:13.5pt' id='r18'>
-<td>enum</td>
-<td class='x21'>118</td>
-<td>!</td>
-<td class='x21'>216</td>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 style='height:15.0pt'>enum</td>
+  <td class=xl63>118</td>
+  <td>!=</td>
+  <td class=xl63>218</td>
  </tr>
- <tr height='18' style='mso-height-source:userset;height:13.5pt' id='r19'>
-<td>extern</td>
-<td class='x21'>119</td>
-<td>&amp;</td>
-<td class='x21'>217</td>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 style='height:15.0pt'>extern</td>
+  <td class=xl63>119</td>
+  <td>&amp;&amp;</td>
+  <td class=xl63>219</td>
  </tr>
- <tr height='18' style='mso-height-source:userset;height:13.5pt' id='r20'>
-<td>goto</td>
-<td class='x21'>120</td>
-<td>|</td>
-<td class='x21'>218</td>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 style='height:15.0pt'>goto</td>
+  <td class=xl63>120</td>
+  <td>||</td>
+  <td class=xl63>220</td>
  </tr>
- <tr height='18' style='mso-height-source:userset;height:13.5pt' id='r21'>
-<td>long</td>
-<td class='x21'>121</td>
-<td>~</td>
-<td class='x21'>219</td>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 style='height:15.0pt'>long</td>
+  <td class=xl63>121</td>
+  <td>=</td>
+  <td class=xl63>221</td>
  </tr>
- <tr height='18' style='mso-height-source:userset;height:13.5pt' id='r22'>
-<td>register </td>
-<td class='x21'>122</td>
-<td>^</td>
-<td class='x21'>220</td>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 style='height:15.0pt'>register<span
+  style='mso-spacerun:yes'> </span></td>
+  <td class=xl63>122</td>
+  <td>+=</td>
+  <td class=xl63>222</td>
  </tr>
- <tr height='18' style='mso-height-source:userset;height:13.5pt' id='r23'>
-<td>short</td>
-<td class='x21'>123</td>
-<td>&lt;&lt;</td>
-<td class='x21'>221</td>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 style='height:15.0pt'>short</td>
+  <td class=xl63>123</td>
+  <td>-=</td>
+  <td class=xl63>223</td>
  </tr>
- <tr height='18' style='mso-height-source:userset;height:13.5pt' id='r24'>
-<td>signed</td>
-<td class='x21'>124</td>
-<td>&gt;&gt;</td>
-<td class='x21'>222</td>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 style='height:15.0pt'>signed</td>
+  <td class=xl63>124</td>
+  <td>*=</td>
+  <td class=xl63>224</td>
  </tr>
- <tr height='18' style='mso-height-source:userset;height:13.5pt' id='r25'>
-<td>sizeof</td>
-<td class='x21'>125</td>
-<td x:str="'=">=</td>
-<td class='x21'>223</td>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 style='height:15.0pt'>sizeof</td>
+  <td class=xl63>125</td>
+  <td>/=</td>
+  <td class=xl63>225</td>
  </tr>
- <tr height='18' style='mso-height-source:userset;height:13.5pt' id='r26'>
-<td>static</td>
-<td class='x21'>126</td>
-<td class='x23'>+=</td>
-<td class='x21'>224</td>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 style='height:15.0pt'>static</td>
+  <td class=xl63>126</td>
+  <td>%=</td>
+  <td class=xl63>226</td>
  </tr>
- <tr height='18' style='mso-height-source:userset;height:13.5pt' id='r27'>
-<td>struct</td>
-<td class='x21'>127</td>
-<td class='x23'>-=</td>
-<td class='x21'>225</td>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 style='height:15.0pt'>struct</td>
+  <td class=xl63>127</td>
+  <td>&amp;=</td>
+  <td class=xl63>227</td>
  </tr>
- <tr height='18' style='mso-height-source:userset;height:13.5pt' id='r28'>
-<td>switch</td>
-<td class='x21'>128</td>
-<td>*=</td>
-<td class='x21'>226</td>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 style='height:15.0pt'>switch</td>
+  <td class=xl63>128</td>
+  <td>|=</td>
+  <td class=xl63>228</td>
  </tr>
- <tr height='18' style='mso-height-source:userset;height:13.5pt' id='r29'>
-<td>typedef</td>
-<td class='x21'>129</td>
-<td>/=</td>
-<td class='x21'>227</td>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 style='height:15.0pt'>typedef</td>
+  <td class=xl63>129</td>
+  <td>^=</td>
+  <td class=xl63>229</td>
  </tr>
- <tr height='18' style='mso-height-source:userset;height:13.5pt' id='r30'>
-<td>union</td>
-<td class='x21'>130</td>
-<td>%=</td>
-<td class='x21'>228</td>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 style='height:15.0pt'>union</td>
+  <td class=xl63>130</td>
+  <td>&gt;&gt;=</td>
+  <td class=xl63>230</td>
  </tr>
- <tr height='18' style='mso-height-source:userset;height:13.5pt' id='r31'>
-<td>unsigned </td>
-<td class='x21'>131</td>
-<td>&amp;=</td>
-<td class='x21'>229</td>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 style='height:15.0pt'>unsigned<span
+  style='mso-spacerun:yes'> </span></td>
+  <td class=xl63>131</td>
+  <td>&lt;&lt;=</td>
+  <td class=xl63>231</td>
  </tr>
- <tr height='18' style='mso-height-source:userset;height:13.5pt' id='r32'>
-<td>volatile </td>
-<td class='x21'>132</td>
-<td>|=</td>
-<td class='x21'>230</td>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 style='height:15.0pt'>volatile<span
+  style='mso-spacerun:yes'> </span></td>
+  <td class=xl63>132</td>
+  <td>&amp;</td>
+  <td class=xl63>232</td>
  </tr>
- <tr height='18' style='mso-height-source:userset;height:13.5pt' id='r33'>
-<td rowspan='4' height='72' class='x24' style='height:54pt;'>界符</td>
-<td>{</td>
-<td class='x21'>301</td>
-<td>^=</td>
-<td class='x21'>231</td>
+ <tr height=20 style='height:15.0pt'>
+  <td rowspan=4 height=80 class=xl63 style='height:60.0pt'>界符</td>
+  <td>{</td>
+  <td class=xl63>301</td>
+  <td>|</td>
+  <td class=xl63>233</td>
  </tr>
- <tr height='18' style='mso-height-source:userset;height:13.5pt' id='r34'>
-<td>}</td>
-<td class='x21'>302</td>
-<td>&gt;&gt;=</td>
-<td class='x21'>232</td>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 style='height:15.0pt'>}</td>
+  <td class=xl63>302</td>
+  <td>~</td>
+  <td class=xl63>234</td>
  </tr>
- <tr height='18' style='mso-height-source:userset;height:13.5pt' id='r35'>
-<td>;</td>
-<td class='x21'>303</td>
-<td>&lt;&lt;=</td>
-<td class='x21'>233</td>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 style='height:15.0pt'>;</td>
+  <td class=xl63>303</td>
+  <td>^</td>
+  <td class=xl63>235</td>
  </tr>
- <tr height='18' style='mso-height-source:userset;height:13.5pt' id='r36'>
-<td>,</td>
-<td class='x21'>304</td>
-<td>(</td>
-<td class='x21'>234</td>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 style='height:15.0pt'>,</td>
+  <td class=xl63>304</td>
+  <td>&lt;&lt;</td>
+  <td class=xl63>236</td>
  </tr>
- <tr height='18' style='mso-height-source:userset;height:13.5pt' id='r37'>
-<td rowspan='3' height='54' class='x24' style='height:40.5pt;'>单词类别</td>
-<td>整数</td>
-<td class='x21'>400</td>
-<td>)</td>
-<td class='x21'>235</td>
+ <tr height=20 style='height:15.0pt'>
+  <td rowspan=5 height=100 class=xl63 style='height:75.0pt'>单词类别</td>
+  <td>整数</td>
+  <td class=xl63>400</td>
+  <td>&gt;&gt;</td>
+  <td class=xl63>237</td>
  </tr>
- <tr height='18' style='mso-height-source:userset;height:13.5pt' id='r38'>
-<td>字符</td>
-<td class='x21'>500</td>
-<td>[</td>
-<td class='x21'>236</td>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 style='height:15.0pt'>字符</td>
+  <td class=xl63>500</td>
+  <td>.</td>
+  <td class=xl63>238</td>
  </tr>
- <tr height='18' style='mso-height-source:userset;height:13.5pt' id='r39'>
-<td>字符串</td>
-<td class='x21'>600</td>
-<td>]</td>
-<td class='x21'>237</td>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 style='height:15.0pt'>字符串</td>
+  <td class=xl63>600</td>
+  <td colspan=2 style='mso-ignore:colspan'></td>
  </tr>
-<![if supportMisalignedColumns]>
- <tr height='0' style='display:none'>
-  <td width='72' style='width:54pt'></td>
-  <td width='72' style='width:54pt'></td>
-  <td width='72' style='width:54pt'></td>
-  <td width='72' style='width:54pt'></td>
-  <td width='72' style='width:54pt'></td>
-  <td width='72' style='width:54pt'></td>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 style='height:15.0pt'>标识符</td>
+  <td class=xl63>700</td>
+  <td colspan=2 style='mso-ignore:colspan'></td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 style='height:15.0pt'>实数</td>
+  <td class=xl63>800</td>
+  <td colspan=2 style='mso-ignore:colspan'></td>
+ </tr>
+ <![if supportMisalignedColumns]>
+ <tr height=0 style='display:none'>
+  <td width=87 style='width:65pt'></td>
+  <td width=71 style='width:53pt'></td>
+  <td width=71 style='width:53pt'></td>
+  <td width=85 style='width:64pt'></td>
+  <td width=71 style='width:53pt'></td>
+  <td width=71 style='width:53pt'></td>
  </tr>
  <![endif]>
 </table>
