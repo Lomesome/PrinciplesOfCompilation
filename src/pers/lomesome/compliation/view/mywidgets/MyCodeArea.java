@@ -21,7 +21,6 @@ public class MyCodeArea extends CodeArea {
 
         this.setUserData(file);
         IntFunction<Node> graphicFactory = line -> {
-            System.out.println(line);
             Circle circle = new Circle(4);
             circle.setFill(Color.RED);
             circle.setStroke(Color.RED);
