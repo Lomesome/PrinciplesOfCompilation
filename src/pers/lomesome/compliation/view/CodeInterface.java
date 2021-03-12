@@ -23,10 +23,7 @@ import pers.lomesome.compliation.model.PropertyWord;
 import pers.lomesome.compliation.model.Word;
 import pers.lomesome.compliation.controller.*;
 import pers.lomesome.compliation.tool.LexicalAnalyzer;
-import pers.lomesome.compliation.view.mywidgets.LaxicalAnalyzerTableView;
-import pers.lomesome.compliation.view.mywidgets.MyButton;
-import pers.lomesome.compliation.view.mywidgets.MyCodeArea;
-import pers.lomesome.compliation.view.mywidgets.VerticalLabel;
+import pers.lomesome.compliation.view.mywidgets.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
@@ -46,7 +43,6 @@ public class CodeInterface {
     private final ObservableList<String> logList = FXCollections.observableArrayList();  //记录运行log
     private final ObservableList<PropertyWord> wordList = FXCollections.observableArrayList();
     private final Map<String,TextArea> textAreaMap = new HashMap<>();
-    private final List<Word> errorMsgList = new ArrayList<>();
 
     private void init() {
         for (String s : FileUtil.findAll()) {
@@ -190,10 +186,8 @@ public class CodeInterface {
                             Platform.runLater(() -> wordList.addAll(new PropertyWord(word.getType(), String.valueOf(word.getTypenum()), word.getWord())));
                         }
 
-                        errorMsgList.clear();
                         if(((BorderPane)rootBorderPane.getRight()).getLeft() != null) {
                             TextArea errorArea = (TextArea) ((VBox) ((BorderPane) ((BorderPane) rootBorderPane.getRight()).getLeft()).getBottom()).getChildren().get(1);
-
                             errorArea.clear();
                             for (Word word : lexicalAnalyzer.getErrorMsgList()) {
                                 Platform.runLater(() -> errorArea.appendText((word.getType() + " " + "第"+ word.getRow() + "行,第" + (word.getCol() - word.getWord().length()) + "列: " + word.getWord()) + "\n"));
@@ -480,8 +474,7 @@ public class CodeInterface {
         hbox.setStyle("-fx-border-width: 0 0 1 0;-fx-border-color: lightgray");
         Label tips = new Label();
         tips.setPadding(new Insets(1,0,1,30));
-        logList.addListener((ListChangeListener)(o)-> tips.setText((String) o.getList().get(o.getList().size()-1)));
-
+        logList.addListener((ListChangeListener<? super String>) o -> tips.setText(o.getList().get(o.getList().size()-1)));
         VBox vBox = new VBox(hbox, tips);
         HBox.setMargin(run, new Insets(0, 0, 0, 25));
         rootBorderPane.setBottom(vBox);
@@ -517,10 +510,8 @@ public class CodeInterface {
                 if (theFile.isDirectory()) {
                     myFile = new File(theFile.getPath() + "/" + result.get() + ".lome");
                     addNode(myFile, treeView.getFocusModel().getFocusedItem());
-                    System.out.println(theFile.getPath());
                 } else {
                     myFile = new File(theFile.getParentFile().getPath() + "/" + result.get() + ".lome");
-                    System.out.println(theFile.getParentFile().getPath());
                     addNode(myFile, treeView.getFocusModel().getFocusedItem().getParent());
                 }
                 Tab code = new Tab(myFile.getName());
@@ -549,15 +540,15 @@ public class CodeInterface {
                     myFile = new File(theFile.getParentFile().getPath() + "/" + result.get());
                 }
                 if (!myFile.exists()) {
-                    myFile.mkdirs();
-                }
-                Tab code = new Tab(myFile.getName());
-                code.setUserData(myFile);
-                code.setContent(new MyCodeArea(myFile));
-                if (treeView.getFocusModel().getFocusedItem().getParent() != null) {
-                    addNode(myFile, treeView.getFocusModel().getFocusedItem().getParent());
-                } else {
-                    addNode(myFile, treeView.getFocusModel().getFocusedItem());
+                    if (myFile.mkdirs()){
+                        if (treeView.getFocusModel().getFocusedItem().getParent() != null) {
+                            addNode(myFile, treeView.getFocusModel().getFocusedItem().getParent());
+                        } else {
+                            addNode(myFile, treeView.getFocusModel().getFocusedItem());
+                        }
+                    }
+                }else {
+                    TipStage.informationTip("新建package错误",5, rootStage);
                 }
             }
         });

@@ -11,7 +11,7 @@ public class LaxicalAnalyzerTableView extends TableView {
     public LaxicalAnalyzerTableView(String[] cols, ObservableList<PropertyWord> list){
         this.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         for(String col : cols){
-            TableColumn theCol = new TableColumn(col);
+            TableColumn theCol = new TableColumn<>(col);
             theCol.setSortable(false);
             theCol.setResizable(false);
             // 设置宽度

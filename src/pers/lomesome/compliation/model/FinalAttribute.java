@@ -5,13 +5,13 @@ import java.util.Map;
 
 public class FinalAttribute {
     //关键字
-    private static final String[] keyword = new String[]{"char", "int", "float", "break", "const", "return", "void", "continue", "do", "while", "if", "else", "for"};
+    private static final String[] keyword = new String[]{"char", "int", "float", "break", "const", "return", "void", "continue", "do", "while", "if", "else", "for", "auto", "case", "default", "double", "enum", "extern", "goto", "long", "register", "short", "signed", "sizeof", "static", "struct", "switch", "typedef", "union", "unsigned", "volatile"};
 
     //分界符
     private static final String[] delimiter ={"{", "}", ";", ","};
 
     //运算符
-    private static final String[] operator ={"(", ")", "[", "]", "!", "*", "/", "%", "+", "-", "<", "<=", ">", ">=","==","!=","&&","||","=","."};
+    private static final String[] operator ={"(", ")", "[", "]", "!", "*", "/", "%", "+", "-", "++", "--", "<", "<=", ">", ">=", "==", "!=", "&&", "||", "=", "+=", "-=", "*=", "/=", "%=", "&=", "|=", "^=", ">>=", "<<=", "&", "|", "~", "^", "<<", ">>", "."};
 
     private static final Map<String, Integer> tokenMap = new HashMap<>();
 

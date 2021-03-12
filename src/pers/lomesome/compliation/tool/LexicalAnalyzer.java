@@ -135,26 +135,28 @@ public class LexicalAnalyzer {
             case Constants.STATE_19:
             case Constants.STATE_20:
             case Constants.STATE_21:
-            case Constants.STATE_22:
+            case Constants.STATE_23:
             case Constants.STATE_24:
-            case Constants.STATE_25:
+            case Constants.STATE_26:
             case Constants.STATE_27:
             case Constants.STATE_29:
             case Constants.STATE_31:
             case Constants.STATE_34:
-            case Constants.STATE_36:
+            case Constants.STATE_35:
+            case Constants.STATE_37:
             case Constants.STATE_38:
             case Constants.STATE_40:
+            case Constants.STATE_41:
             case Constants.STATE_42:
-            case Constants.STATE_43:
+            case Constants.STATE_44:
             case Constants.STATE_45:
             case Constants.STATE_46:
             case Constants.STATE_48:
-            case Constants.STATE_49:
+            case Constants.STATE_50:
             case Constants.STATE_51:
             case Constants.STATE_52:
             case Constants.STATE_54:
-            case Constants.STATE_55:
+            case Constants.STATE_56:
             case Constants.STATE_57:
             case Constants.STATE_58:
             case Constants.STATE_59:
@@ -162,8 +164,22 @@ public class LexicalAnalyzer {
             case Constants.STATE_61:
             case Constants.STATE_63:
             case Constants.STATE_64:
+            case Constants.STATE_65:
             case Constants.STATE_67:
             case Constants.STATE_68:
+            case Constants.STATE_69:
+            case Constants.STATE_71:
+            case Constants.STATE_72:
+            case Constants.STATE_73:
+            case Constants.STATE_74:
+            case Constants.STATE_75:
+            case Constants.STATE_76:
+            case Constants.STATE_77:
+            case Constants.STATE_78:
+            case Constants.STATE_80:
+            case Constants.STATE_81:
+            case Constants.STATE_84:
+            case Constants.STATE_85:
                 return true;
             default:
                 return false;
@@ -348,12 +364,14 @@ public class LexicalAnalyzer {
                     break;
                 case Constants.STATE_28:
                     ch = getNextChar();
-                    if (isDiv(ch)) {
+                    if ( ch == '='){
+                        state = Constants.STATE_29;
+                    } else if (isDiv(ch)) {
                         state = Constants.STATE_30;
                     } else if (isMul(ch)) {
                         state = Constants.STATE_32;
                     } else {
-                        state = Constants.STATE_29;
+                        state = Constants.STATE_35;
                     }
                     break;
                 case Constants.STATE_30:
@@ -392,8 +410,10 @@ public class LexicalAnalyzer {
             }
             word.append(ch);
         }
-        if (state == Constants.STATE_29) {
+        if (state == Constants.STATE_35) {
             backLastChar();
+            words.add(new Word(word.toString(), Constants.OPERATOR, row, col));
+        } else if (state == Constants.STATE_29){
             words.add(new Word(word.toString(), Constants.OPERATOR, row, col));
         }
     }
@@ -406,29 +426,29 @@ public class LexicalAnalyzer {
             switch (state) {
                 case Constants.STATE_BEGIN:
                     if (isSingleQuote(ch)) {
-                        state = Constants.STATE_65;
+                        state = Constants.STATE_82;
                     }
                     break;
-                case Constants.STATE_65:
+                case Constants.STATE_82:
                     ch = getNextChar();
-                    state = Constants.STATE_66;
+                    state = Constants.STATE_83;
                     break;
-                case Constants.STATE_66:
+                case Constants.STATE_83:
                     ch = getNextChar();
                     if (isSingleQuote(ch)) {
-                        state = Constants.STATE_67;
+                        state = Constants.STATE_84;
                     } else {
-                        state = Constants.STATE_68;
+                        state = Constants.STATE_85;
                     }
                     break;
             }
             word.append(ch);
         }
         switch (state) {
-            case Constants.STATE_67:
+            case Constants.STATE_84:
                 words.add(new Word(Constants.CHARACTER_TOKEN, word.toString(), Constants.CHARACTER, row, col));
                 break;
-            case Constants.STATE_68:
+            case Constants.STATE_85:
                 backLastChar();
                 errorMsgList.add(new Word(Constants.ERROR_TOKEN, word.toString(), "error: 缺少单引号 ", row, col));
                 break;
@@ -443,27 +463,27 @@ public class LexicalAnalyzer {
             switch (state) {
                 case Constants.STATE_BEGIN:
                     if (isDoubleQuote(ch)) {
-                        state = Constants.STATE_62;
+                        state = Constants.STATE_79;
                     }
                     break;
-                case Constants.STATE_62:
+                case Constants.STATE_79:
                     ch = getNextChar();
                     if (isDoubleQuote(ch)) {
-                        state = Constants.STATE_63;
+                        state = Constants.STATE_80;
                     } else if (isWrap(ch)) {
-                        state = Constants.STATE_64;
+                        state = Constants.STATE_81;
                     } else {
-                        state = Constants.STATE_62;
+                        state = Constants.STATE_79;
                     }
                     break;
             }
             word.append(ch);
         }
         switch (state) {
-            case Constants.STATE_63:
+            case Constants.STATE_80:
                 words.add(new Word(Constants.STRING_TOKEN, word.toString(), Constants.STRING, row, col));
                 break;
-            case Constants.STATE_64:
+            case Constants.STATE_81:
                 backLastChar();
                 errorMsgList.add(new Word(Constants.ERROR_TOKEN, word.toString(), "error: 缺少双引号 ", row, col));
                 break;
@@ -478,16 +498,16 @@ public class LexicalAnalyzer {
             if (state == Constants.STATE_BEGIN) {
                 switch (ch) {
                     case '{':
-                        state = Constants.STATE_58;
+                        state = Constants.STATE_75;
                         break;
                     case '}':
-                        state = Constants.STATE_59;
+                        state = Constants.STATE_76;
                         break;
                     case ';':
-                        state = Constants.STATE_60;
+                        state = Constants.STATE_77;
                         break;
                     case ',':
-                        state = Constants.STATE_61;
+                        state = Constants.STATE_78;
                         break;
                 }
             }
@@ -508,102 +528,155 @@ public class LexicalAnalyzer {
                         case ')' : state = Constants.STATE_19;break;
                         case '[' : state = Constants.STATE_20;break;
                         case ']' : state = Constants.STATE_21;break;
-                        case '!' : state = Constants.STATE_23;break;
-                        case '*' : state = Constants.STATE_26;break;
-                        case '%' : state = Constants.STATE_35;break;
-                        case '+' : state = Constants.STATE_37;break;
-                        case '-' : state = Constants.STATE_39;break;
-                        case '<' : state = Constants.STATE_41;break;
-                        case '>' : state = Constants.STATE_44;break;
-                        case '=' : state = Constants.STATE_47;break;
-                        case '&' : state = Constants.STATE_50;break;
-                        case '|' : state = Constants.STATE_53;break;
-                        case '.' : state = Constants.STATE_56;break;
+                        case '!' : state = Constants.STATE_22;break;
+                        case '*' : state = Constants.STATE_25;break;
+                        case '%' : state = Constants.STATE_36;break;
+                        case '+' : state = Constants.STATE_39;break;
+                        case '-' : state = Constants.STATE_43;break;
+                        case '<' : state = Constants.STATE_47;break;
+                        case '>' : state = Constants.STATE_53;break;
+                        case '=' : state = Constants.STATE_59;break;
+                        case '&' : state = Constants.STATE_62;break;
+                        case '|' : state = Constants.STATE_66;break;
+                        case '^' : state = Constants.STATE_70;break;
+                        case '~' : state = Constants.STATE_73;break;
+                        case '.' : state = Constants.STATE_74;break;
                     }
                     break;
-                case Constants.STATE_23:
+                case Constants.STATE_22:
                     ch = getNextChar();
                     if (ch == '=') {
-                        state = Constants.STATE_24;
+                        state = Constants.STATE_23;
                     } else {
-                        state = Constants.STATE_25;
+                        state = Constants.STATE_24;
                     }
                     break;
-                case Constants.STATE_26:
+                case Constants.STATE_25:
                     ch = getNextChar();
-                    state = Constants.STATE_27;
+                    if (ch == '=') {
+                        state = Constants.STATE_26;
+                    } else {
+                        state = Constants.STATE_27;
+                    }
                     break;
-                case Constants.STATE_35:
+                case Constants.STATE_36:
                     ch = getNextChar();
-                    state = Constants.STATE_36;
+                    if (ch == '=') {
+                        state = Constants.STATE_37;
+                    } else {
+                        state = Constants.STATE_38;
+                    }
                     break;
-                case Constants.STATE_37:
-                    ch = getNextChar();
-                    state = Constants.STATE_38;
-                    break;
+
                 case Constants.STATE_39:
-                    ch = getNextChar();
-                    state = Constants.STATE_40;
-                    break;
-                case Constants.STATE_41:
                     ch = getNextChar();
                     if (ch == '=') {
                         state = Constants.STATE_42;
+                    } else if (ch == '+') {
+                        state = Constants.STATE_41;
                     } else {
-                        state = Constants.STATE_43;
+                        state = Constants.STATE_40;
                     }
                     break;
-                case Constants.STATE_44:
+                case Constants.STATE_43:
                     ch = getNextChar();
                     if (ch == '=') {
+                        state = Constants.STATE_46;
+                    } else if (ch == '-') {
                         state = Constants.STATE_45;
                     } else {
-                        state = Constants.STATE_46;
+                        state = Constants.STATE_44;
                     }
                     break;
                 case Constants.STATE_47:
                     ch = getNextChar();
                     if (ch == '=') {
                         state = Constants.STATE_48;
-                    } else {
+                    } else if (ch == '<'){
                         state = Constants.STATE_49;
-                    }
-                    break;
-                case Constants.STATE_50:
-                    ch = getNextChar();
-                    if (ch == '&') {
-                        state = Constants.STATE_51;
                     } else {
                         state = Constants.STATE_52;
                     }
                     break;
-                case Constants.STATE_53:
+                case Constants.STATE_49:
                     ch = getNextChar();
-                    if (ch == '|') {
-                        state = Constants.STATE_54;
+                    if (ch == '=') {
+                        state = Constants.STATE_50;
                     } else {
-                        state = Constants.STATE_55;
+                        state = Constants.STATE_51;
                     }
                     break;
-                case Constants.STATE_56:
+                case Constants.STATE_53:
                     ch = getNextChar();
-                    state = Constants.STATE_57;
+                    if (ch == '=') {
+                        state = Constants.STATE_54;
+                    } else if (ch == '>'){
+                        state = Constants.STATE_55;
+                    } else {
+                        state = Constants.STATE_58;
+                    }
+                    break;
+                case Constants.STATE_55:
+                    ch = getNextChar();
+                    if (ch == '=') {
+                        state = Constants.STATE_56;
+                    } else {
+                        state = Constants.STATE_57;
+                    }
+                    break;
+                case Constants.STATE_59:
+                    ch = getNextChar();
+                    if (ch == '=') {
+                        state = Constants.STATE_60;
+                    } else {
+                        state = Constants.STATE_61;
+                    }
+                    break;
+                case Constants.STATE_62:
+                    ch = getNextChar();
+                    if (ch == '&') {
+                        state = Constants.STATE_63;
+                    } else if (ch == '=') {
+                        state = Constants.STATE_64;
+                    } else {
+                        state = Constants.STATE_65;
+                    }
+                    break;
+                case Constants.STATE_66:
+                    ch = getNextChar();
+                    if (ch == '|') {
+                        state = Constants.STATE_67;
+                    } else if (ch == '=') {
+                        state = Constants.STATE_68;
+                    } else {
+                        state = Constants.STATE_69;
+                    }
+                    break;
+                case Constants.STATE_70:
+                    ch = getNextChar();
+                    if (ch == '=') {
+                        state = Constants.STATE_71;
+                    } else {
+                        state = Constants.STATE_72;
+                    }
                     break;
             }
             word.append(ch);
         }
         switch (state){
-            case Constants.STATE_25:
+            case Constants.STATE_24:
             case Constants.STATE_27:
-            case Constants.STATE_36:
             case Constants.STATE_38:
             case Constants.STATE_40:
-            case Constants.STATE_43:
-            case Constants.STATE_46:
-            case Constants.STATE_49:
+            case Constants.STATE_44:
+            case Constants.STATE_51:
             case Constants.STATE_52:
-            case Constants.STATE_55:
             case Constants.STATE_57:
+            case Constants.STATE_58:
+            case Constants.STATE_61:
+            case Constants.STATE_65:
+            case Constants.STATE_69:
+            case Constants.STATE_72:
                 backLastChar();
                 break;
         }

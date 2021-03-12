@@ -12,8 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class NewCodeArea extends ScrollPane {
-    private List<HBox> rowBoxList = new ArrayList<>();
-    private VBox codeBox = new VBox();
+    private final List<HBox> rowBoxList = new ArrayList<>();
+    private final VBox codeBox = new VBox();
     private int line = 0;
     public NewCodeArea(){
         this.setStyle("-fx-background-color: transparent");
@@ -50,7 +50,7 @@ public class NewCodeArea extends ScrollPane {
                 row.getChildren().get(1).requestFocus();
             }else if(event.getCode() == KeyCode.BACK_SPACE){
                 if(line > 1) {
-                    int lastline = Integer.valueOf(lineLabel.getText()) - 1;
+                    int lastline = Integer.parseInt(lineLabel.getText()) - 1;
                     line -= 1;
                     rowBoxList.remove(lastline);
                     rowBoxList.get(lastline - 1).getChildren().get(1).requestFocus();
@@ -59,9 +59,7 @@ public class NewCodeArea extends ScrollPane {
             }
         });
         HBox row = new HBox(lineLabel, textField);
-        row.setOnMouseClicked(event -> {
-            textField.requestFocus();
-        });
+        row.setOnMouseClicked(event -> textField.requestFocus());
         row.setStyle("-fx-padding: 0");
         row.setAlignment(Pos.CENTER_LEFT);
         rowBoxList.add(row);
@@ -71,7 +69,7 @@ public class NewCodeArea extends ScrollPane {
     public String getText(){
         StringBuilder alltext = new StringBuilder();
         for(HBox hBox:rowBoxList){
-            alltext.append(((TextField)hBox.getChildren().get(1)).getText() + "\n");
+            alltext.append(((TextField) hBox.getChildren().get(1)).getText()).append("\n");
         }
         return alltext.toString();
     }

@@ -42,6 +42,6 @@ public class FileUtil {
                 deleteDir(value);
             }
         }
-        boolean delete = file.delete(); //如果是文件就删除
+        file.delete();
     }
 }

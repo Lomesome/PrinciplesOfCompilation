@@ -76,6 +76,26 @@ public final class Constants {
     public final static int STATE_68 = 68;
     public final static int STATE_69 = 69;
     public final static int STATE_70 = 70;
+    public final static int STATE_71 = 71;
+    public final static int STATE_72 = 72;
+    public final static int STATE_73 = 73;
+    public final static int STATE_74 = 74;
+    public final static int STATE_75 = 75;
+    public final static int STATE_76 = 76;
+    public final static int STATE_77 = 77;
+    public final static int STATE_78 = 78;
+    public final static int STATE_79 = 79;
+    public final static int STATE_80 = 80;
+    public final static int STATE_81 = 81;
+    public final static int STATE_82 = 82;
+    public final static int STATE_83 = 83;
+    public final static int STATE_84 = 84;
+    public final static int STATE_85 = 85;
+    public final static int STATE_86 = 86;
+    public final static int STATE_87 = 87;
+    public final static int STATE_88 = 88;
+    public final static int STATE_89 = 89;
+
     public final static int STATE_END = 999;
 
     public final static String KEYWORD = "关键字";

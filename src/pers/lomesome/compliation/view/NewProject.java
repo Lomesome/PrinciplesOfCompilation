@@ -57,21 +57,13 @@ public class NewProject {
         TitledPane titledPane = new TitledPane("More Setting", vBox);
         titledPane.setExpanded(false);
 
-        nameField.textProperty().addListener((arg, o, n) -> {
-            modulenameField.setText(n);
-        });
+        nameField.textProperty().addListener((arg, o, n) -> modulenameField.setText(n));
 
-        modulenameField.textProperty().addListener((arg, o, n) -> {
-            nameField.setText(n);
-        });
+        modulenameField.textProperty().addListener((arg, o, n) -> nameField.setText(n));
 
-        locationField.textProperty().addListener((arg, o, n) -> {
-            contentrootField.setText(n);
-        });
+        locationField.textProperty().addListener((arg, o, n) -> contentrootField.setText(n));
 
-        contentrootField.textProperty().addListener((arg, o, n) -> {
-            locationField.setText(n);
-        });
+        contentrootField.textProperty().addListener((arg, o, n) -> locationField.setText(n));
 
         Button pathButton = new Button("…");
 
