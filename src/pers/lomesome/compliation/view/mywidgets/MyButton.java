@@ -11,12 +11,6 @@ public class MyButton extends Button {
         this.setGraphic(makeImageView(imagePath, 20, 20));  //设置按钮上的图片
     }
 
-    public MyButton(String imagePath, String cssName, int width, int height) {
-        this.setMinSize(width, height);
-        this.getStyleClass().add(cssName);
-        this.setGraphic(makeImageView(imagePath, width - 3, height - 3));
-    }
-
     public ImageView makeImageView(String imagePath, int w, int h) {
         ImageView imageView = new ImageView(this.getClass().getResource(imagePath).toString());
         imageView.setFitWidth(w);

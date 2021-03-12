@@ -21,6 +21,11 @@ public class LexicalAnalyzer {
         this.content = ReadAndWriteFile.readFileContent(fileName).toCharArray();
     }
 
+    //判断是否是下等号
+    public boolean isEqualSign(char ch) {
+        return ch == '=';
+    }
+
     //判断是否是下划线
     private boolean isUnderline(char ch) {
         return ch == '_';
@@ -88,109 +93,37 @@ public class LexicalAnalyzer {
 
     //判断是否是数字结尾（包括界符、运算符、空字符）
     private boolean isNumEnd(char ch) {
-        String end = "()[]!*/%+-<>=&|. \n;,{}";
-        return end.indexOf(ch) >= 0 || ch == (char) -1;
+        return "()[]!*/%+-<>=&|. ^~\n;,{}".indexOf(ch) >= 0 || ch == (char) -1;
     }
 
     //判断是否是空字符
     private boolean isWhiteSpace(char ch) {
-        if (ch == '\n') {
-            row += 1;
-            col = 1;
+        if (ch == '\n') { //遇到换行符行数加1，列数置为1
+            row += 1; col = 1;
             return true;
         } else return ch == '\t' || ch == '\f' || ch == '\0' || ch == ' ';
     }
 
     //判断是否是分界符
     private boolean isDelimiter(char ch) {
-        for(String s: FinalAttribute.getDelimiter()){
-            if(s.charAt(0) == ch){
+        for (String s : FinalAttribute.getDelimiter())
+            if (s.charAt(0) == ch)
                 return true;
-            }
-        }
         return false;
     }
 
     //判断是否是运算符
     private boolean isOperator(char ch) {
-        for(String s: FinalAttribute.getOperator()){
-            if(s.charAt(0) == ch){
+        for (String s : FinalAttribute.getOperator())
+            if (s.charAt(0) == ch)
                 return true;
-            }
-        }
         return false;
-    }
-
-    //判断是否是结束状态
-    private boolean isEndState(int state) {
-        switch (state) {
-            case Constants.STATE_2:
-            case Constants.STATE_5:
-            case Constants.STATE_8:
-            case Constants.STATE_14:
-            case Constants.STATE_15:
-            case Constants.STATE_16:
-            case Constants.STATE_17:
-            case Constants.STATE_18:
-            case Constants.STATE_19:
-            case Constants.STATE_20:
-            case Constants.STATE_21:
-            case Constants.STATE_23:
-            case Constants.STATE_24:
-            case Constants.STATE_26:
-            case Constants.STATE_27:
-            case Constants.STATE_29:
-            case Constants.STATE_31:
-            case Constants.STATE_34:
-            case Constants.STATE_35:
-            case Constants.STATE_37:
-            case Constants.STATE_38:
-            case Constants.STATE_40:
-            case Constants.STATE_41:
-            case Constants.STATE_42:
-            case Constants.STATE_44:
-            case Constants.STATE_45:
-            case Constants.STATE_46:
-            case Constants.STATE_48:
-            case Constants.STATE_50:
-            case Constants.STATE_51:
-            case Constants.STATE_52:
-            case Constants.STATE_54:
-            case Constants.STATE_56:
-            case Constants.STATE_57:
-            case Constants.STATE_58:
-            case Constants.STATE_59:
-            case Constants.STATE_60:
-            case Constants.STATE_61:
-            case Constants.STATE_63:
-            case Constants.STATE_64:
-            case Constants.STATE_65:
-            case Constants.STATE_67:
-            case Constants.STATE_68:
-            case Constants.STATE_69:
-            case Constants.STATE_71:
-            case Constants.STATE_72:
-            case Constants.STATE_73:
-            case Constants.STATE_74:
-            case Constants.STATE_75:
-            case Constants.STATE_76:
-            case Constants.STATE_77:
-            case Constants.STATE_78:
-            case Constants.STATE_80:
-            case Constants.STATE_81:
-            case Constants.STATE_84:
-            case Constants.STATE_85:
-                return true;
-            default:
-                return false;
-        }
     }
 
     //获取下一个字符
     private char getNextChar() {
         col += 1; //当前列标加1
-        index += 1; //当前字符位置加1
-        return content[index];
+        return content[++index];//当前字符位置加1
     }
 
     //回退上一个字符
@@ -200,9 +133,78 @@ public class LexicalAnalyzer {
         word.deleteCharAt(word.length() - 1); //删除word的最后一个字符
     }
 
+    //判断是否是结束状态
+    private boolean isEndState(int state) {
+        switch (state) {
+            case Constants.STATE_2: backLastChar();
+                if (FinalAttribute.findToken(word.toString()) == Constants.IDENTIFIER_TOKEN) {
+                    words.add(new Word(Constants.IDENTIFIER_TOKEN, word.toString(), Constants.IDENTIFIER, row, col));
+                } else {
+                    words.add(new Word(word.toString(), Constants.KEYWORD, row, col));
+                }
+                break;
+            case Constants.STATE_5:
+            case Constants.STATE_8:
+            case Constants.STATE_14:
+            case Constants.STATE_15: backLastChar();words.add(new Word(Constants.REALNUMBER_TOKEN, word.toString(), Constants.REALNUMBER, row, col)); break;
+            case Constants.STATE_16: backLastChar();words.add(new Word(Constants.INTEGER_TOKEN, word.toString(), Constants.INTEGER, row, col));break;
+            case Constants.STATE_17: backLastChar();errorMsgList.add(new Word(Constants.ERROR_TOKEN, word.toString(), "error:数值错误 ", row, col));break;
+            case Constants.STATE_18:
+            case Constants.STATE_26:
+            case Constants.STATE_29:
+            case Constants.STATE_37:
+            case Constants.STATE_41:
+            case Constants.STATE_42:
+            case Constants.STATE_45:
+            case Constants.STATE_46:
+            case Constants.STATE_48:
+            case Constants.STATE_50:
+            case Constants.STATE_54:
+            case Constants.STATE_56:
+            case Constants.STATE_60:
+            case Constants.STATE_63:
+            case Constants.STATE_64:
+            case Constants.STATE_67:
+            case Constants.STATE_68:
+            case Constants.STATE_71:
+            case Constants.STATE_73:
+            case Constants.STATE_74: words.add(new Word(word.toString(), Constants.OPERATOR, row, col));break;
+            case Constants.STATE_19: words.add(new Word(word.toString(), Constants.OPERATOR, row, col));break;
+            case Constants.STATE_20: words.add(new Word(word.toString(), Constants.OPERATOR, row, col));break;
+            case Constants.STATE_21: words.add(new Word(word.toString(), Constants.OPERATOR, row, col));break;
+            case Constants.STATE_23: words.add(new Word(word.toString(), Constants.OPERATOR, row, col));break;
+            case Constants.STATE_24:
+            case Constants.STATE_27:
+            case Constants.STATE_35:
+            case Constants.STATE_38:
+            case Constants.STATE_40:
+            case Constants.STATE_44:
+            case Constants.STATE_51:
+            case Constants.STATE_52:
+            case Constants.STATE_57:
+            case Constants.STATE_58:
+            case Constants.STATE_61:
+            case Constants.STATE_65:
+            case Constants.STATE_69:
+            case Constants.STATE_72: backLastChar();words.add(new Word(word.toString(), Constants.OPERATOR, row, col));break;
+            case Constants.STATE_31:
+            case Constants.STATE_34: break;
+            case Constants.STATE_75:
+            case Constants.STATE_76:
+            case Constants.STATE_77:
+            case Constants.STATE_78: words.add(new Word(word.toString(), Constants.DELIMITER, row, col));break;
+            case Constants.STATE_80: words.add(new Word(Constants.STRING_TOKEN, word.toString(), Constants.STRING, row, col));break;
+            case Constants.STATE_81: backLastChar();errorMsgList.add(new Word(Constants.ERROR_TOKEN, word.toString(), "error: 缺少双引号 ", row, col));break;
+            case Constants.STATE_84: words.add(new Word(Constants.CHARACTER_TOKEN, word.toString(), Constants.CHARACTER, row, col));break;
+            case Constants.STATE_85: backLastChar();errorMsgList.add(new Word(Constants.ERROR_TOKEN, word.toString(), "error: 缺少单引号 ", row, col));break;
+            default:
+                return false;
+        }
+        return true;
+    }
+
     //识别关键字、标识符
     private void recognizeId(char ch) {
-        word = new StringBuilder();
         char state = Constants.STATE_BEGIN; //初始状态
         while (!isEndState(state)) {
             switch (state) {
@@ -222,17 +224,10 @@ public class LexicalAnalyzer {
             }
             word.append(ch);
         }
-        backLastChar();
-        if (FinalAttribute.findToken(word.toString()) == Constants.IDENTIFIER_TOKEN) {
-            words.add(new Word(Constants.IDENTIFIER_TOKEN, word.toString(), Constants.IDENTIFIER, row, col));
-        } else {
-            words.add(new Word(word.toString(), Constants.KEYWORD, row, col));
-        }
     }
 
     //识别所有数值
     private void recognizeNum(char ch) {
-        word = new StringBuilder();
         char state = Constants.STATE_BEGIN; //初始状态
         while (!isEndState(state)) {
             switch (state) {
@@ -334,26 +329,10 @@ public class LexicalAnalyzer {
             }
             word.append(ch);
         }
-        backLastChar();
-        switch (state) {
-            case Constants.STATE_5:
-            case Constants.STATE_8:
-            case Constants.STATE_14:
-            case Constants.STATE_15:
-                words.add(new Word(Constants.REALNUMBER_TOKEN, word.toString(), Constants.REALNUMBER, row, col));
-                break;
-            case Constants.STATE_16:
-                words.add(new Word(Constants.INTEGER_TOKEN, word.toString(), Constants.INTEGER, row, col));
-                break;
-            case Constants.STATE_17:
-                errorMsgList.add(new Word(Constants.ERROR_TOKEN, word.toString(), "error:数值错误 ", row, col));
-                break;
-        }
     }
 
     //识别'/'、注释
     private void recognizeMulAndNotes(char ch) {
-        word = new StringBuilder();
         char state = Constants.STATE_BEGIN; //初始状态
         while (!isEndState(state)) {
             switch (state) {
@@ -364,7 +343,7 @@ public class LexicalAnalyzer {
                     break;
                 case Constants.STATE_28:
                     ch = getNextChar();
-                    if ( ch == '='){
+                    if (isEqualSign(ch)) {
                         state = Constants.STATE_29;
                     } else if (isDiv(ch)) {
                         state = Constants.STATE_30;
@@ -410,17 +389,10 @@ public class LexicalAnalyzer {
             }
             word.append(ch);
         }
-        if (state == Constants.STATE_35) {
-            backLastChar();
-            words.add(new Word(word.toString(), Constants.OPERATOR, row, col));
-        } else if (state == Constants.STATE_29){
-            words.add(new Word(word.toString(), Constants.OPERATOR, row, col));
-        }
     }
 
     //识别字符
     private void recognizeChar(char ch) {
-        word = new StringBuilder();
         char state = Constants.STATE_BEGIN; //初始状态
         while (!isEndState(state)) {
             switch (state) {
@@ -444,20 +416,10 @@ public class LexicalAnalyzer {
             }
             word.append(ch);
         }
-        switch (state) {
-            case Constants.STATE_84:
-                words.add(new Word(Constants.CHARACTER_TOKEN, word.toString(), Constants.CHARACTER, row, col));
-                break;
-            case Constants.STATE_85:
-                backLastChar();
-                errorMsgList.add(new Word(Constants.ERROR_TOKEN, word.toString(), "error: 缺少单引号 ", row, col));
-                break;
-        }
     }
 
     //识别字符串
     public void recognizeString(char ch) {
-        word = new StringBuilder();
         char state = Constants.STATE_BEGIN; //初始状态
         while (!isEndState(state)) {
             switch (state) {
@@ -479,73 +441,53 @@ public class LexicalAnalyzer {
             }
             word.append(ch);
         }
-        switch (state) {
-            case Constants.STATE_80:
-                words.add(new Word(Constants.STRING_TOKEN, word.toString(), Constants.STRING, row, col));
-                break;
-            case Constants.STATE_81:
-                backLastChar();
-                errorMsgList.add(new Word(Constants.ERROR_TOKEN, word.toString(), "error: 缺少双引号 ", row, col));
-                break;
-        }
     }
 
     //识别分界符
     private void recognizeDelimiter(char ch) {
-        word = new StringBuilder();
         char state = Constants.STATE_BEGIN; //初始状态
         while (!isEndState(state)) {
             if (state == Constants.STATE_BEGIN) {
                 switch (ch) {
-                    case '{':
-                        state = Constants.STATE_75;
-                        break;
-                    case '}':
-                        state = Constants.STATE_76;
-                        break;
-                    case ';':
-                        state = Constants.STATE_77;
-                        break;
-                    case ',':
-                        state = Constants.STATE_78;
-                        break;
+                    case '{': state = Constants.STATE_75;break;
+                    case '}': state = Constants.STATE_76;break;
+                    case ';': state = Constants.STATE_77;break;
+                    case ',': state = Constants.STATE_78;break;
                 }
             }
             word.append(ch);
         }
-        words.add(new Word(word.toString(), Constants.DELIMITER, row, col));
     }
 
     //识别运算符
     private void recognizeOperator(char ch) {
-        word = new StringBuilder();
         char state = Constants.STATE_BEGIN; //初始状态
         while (!isEndState(state)) {
             switch (state) {
                 case Constants.STATE_BEGIN:
-                    switch (ch){
-                        case '(' : state = Constants.STATE_18;break;
-                        case ')' : state = Constants.STATE_19;break;
-                        case '[' : state = Constants.STATE_20;break;
-                        case ']' : state = Constants.STATE_21;break;
-                        case '!' : state = Constants.STATE_22;break;
-                        case '*' : state = Constants.STATE_25;break;
-                        case '%' : state = Constants.STATE_36;break;
-                        case '+' : state = Constants.STATE_39;break;
-                        case '-' : state = Constants.STATE_43;break;
-                        case '<' : state = Constants.STATE_47;break;
-                        case '>' : state = Constants.STATE_53;break;
-                        case '=' : state = Constants.STATE_59;break;
-                        case '&' : state = Constants.STATE_62;break;
-                        case '|' : state = Constants.STATE_66;break;
-                        case '^' : state = Constants.STATE_70;break;
-                        case '~' : state = Constants.STATE_73;break;
-                        case '.' : state = Constants.STATE_74;break;
+                    switch (ch) {
+                        case '(': state = Constants.STATE_18;break;
+                        case ')': state = Constants.STATE_19;break;
+                        case '[': state = Constants.STATE_20;break;
+                        case ']': state = Constants.STATE_21;break;
+                        case '!': state = Constants.STATE_22;break;
+                        case '*': state = Constants.STATE_25;break;
+                        case '%': state = Constants.STATE_36;break;
+                        case '+': state = Constants.STATE_39;break;
+                        case '-': state = Constants.STATE_43;break;
+                        case '<': state = Constants.STATE_47;break;
+                        case '>': state = Constants.STATE_53;break;
+                        case '=': state = Constants.STATE_59;break;
+                        case '&': state = Constants.STATE_62;break;
+                        case '|': state = Constants.STATE_66;break;
+                        case '^': state = Constants.STATE_70;break;
+                        case '~': state = Constants.STATE_73;break;
+                        case '.': state = Constants.STATE_74;break;
                     }
                     break;
                 case Constants.STATE_22:
                     ch = getNextChar();
-                    if (ch == '=') {
+                    if (isEqualSign(ch)) {
                         state = Constants.STATE_23;
                     } else {
                         state = Constants.STATE_24;
@@ -553,7 +495,7 @@ public class LexicalAnalyzer {
                     break;
                 case Constants.STATE_25:
                     ch = getNextChar();
-                    if (ch == '=') {
+                    if (isEqualSign(ch)) {
                         state = Constants.STATE_26;
                     } else {
                         state = Constants.STATE_27;
@@ -561,16 +503,15 @@ public class LexicalAnalyzer {
                     break;
                 case Constants.STATE_36:
                     ch = getNextChar();
-                    if (ch == '=') {
+                    if (isEqualSign(ch)) {
                         state = Constants.STATE_37;
                     } else {
                         state = Constants.STATE_38;
                     }
                     break;
-
                 case Constants.STATE_39:
                     ch = getNextChar();
-                    if (ch == '=') {
+                    if (isEqualSign(ch)) {
                         state = Constants.STATE_42;
                     } else if (ch == '+') {
                         state = Constants.STATE_41;
@@ -580,7 +521,7 @@ public class LexicalAnalyzer {
                     break;
                 case Constants.STATE_43:
                     ch = getNextChar();
-                    if (ch == '=') {
+                    if (isEqualSign(ch)) {
                         state = Constants.STATE_46;
                     } else if (ch == '-') {
                         state = Constants.STATE_45;
@@ -590,9 +531,9 @@ public class LexicalAnalyzer {
                     break;
                 case Constants.STATE_47:
                     ch = getNextChar();
-                    if (ch == '=') {
+                    if (isEqualSign(ch)) {
                         state = Constants.STATE_48;
-                    } else if (ch == '<'){
+                    } else if (ch == '<') {
                         state = Constants.STATE_49;
                     } else {
                         state = Constants.STATE_52;
@@ -600,7 +541,7 @@ public class LexicalAnalyzer {
                     break;
                 case Constants.STATE_49:
                     ch = getNextChar();
-                    if (ch == '=') {
+                    if (isEqualSign(ch)) {
                         state = Constants.STATE_50;
                     } else {
                         state = Constants.STATE_51;
@@ -608,9 +549,9 @@ public class LexicalAnalyzer {
                     break;
                 case Constants.STATE_53:
                     ch = getNextChar();
-                    if (ch == '=') {
+                    if (isEqualSign(ch)) {
                         state = Constants.STATE_54;
-                    } else if (ch == '>'){
+                    } else if (ch == '>') {
                         state = Constants.STATE_55;
                     } else {
                         state = Constants.STATE_58;
@@ -618,7 +559,7 @@ public class LexicalAnalyzer {
                     break;
                 case Constants.STATE_55:
                     ch = getNextChar();
-                    if (ch == '=') {
+                    if (isEqualSign(ch)) {
                         state = Constants.STATE_56;
                     } else {
                         state = Constants.STATE_57;
@@ -626,7 +567,7 @@ public class LexicalAnalyzer {
                     break;
                 case Constants.STATE_59:
                     ch = getNextChar();
-                    if (ch == '=') {
+                    if (isEqualSign(ch)) {
                         state = Constants.STATE_60;
                     } else {
                         state = Constants.STATE_61;
@@ -636,7 +577,7 @@ public class LexicalAnalyzer {
                     ch = getNextChar();
                     if (ch == '&') {
                         state = Constants.STATE_63;
-                    } else if (ch == '=') {
+                    } else if (isEqualSign(ch)) {
                         state = Constants.STATE_64;
                     } else {
                         state = Constants.STATE_65;
@@ -646,7 +587,7 @@ public class LexicalAnalyzer {
                     ch = getNextChar();
                     if (ch == '|') {
                         state = Constants.STATE_67;
-                    } else if (ch == '=') {
+                    } else if (isEqualSign(ch)) {
                         state = Constants.STATE_68;
                     } else {
                         state = Constants.STATE_69;
@@ -654,7 +595,7 @@ public class LexicalAnalyzer {
                     break;
                 case Constants.STATE_70:
                     ch = getNextChar();
-                    if (ch == '=') {
+                    if (isEqualSign(ch)) {
                         state = Constants.STATE_71;
                     } else {
                         state = Constants.STATE_72;
@@ -663,30 +604,13 @@ public class LexicalAnalyzer {
             }
             word.append(ch);
         }
-        switch (state){
-            case Constants.STATE_24:
-            case Constants.STATE_27:
-            case Constants.STATE_38:
-            case Constants.STATE_40:
-            case Constants.STATE_44:
-            case Constants.STATE_51:
-            case Constants.STATE_52:
-            case Constants.STATE_57:
-            case Constants.STATE_58:
-            case Constants.STATE_61:
-            case Constants.STATE_65:
-            case Constants.STATE_69:
-            case Constants.STATE_72:
-                backLastChar();
-                break;
-        }
-        words.add(new Word(word.toString(), Constants.OPERATOR, row, col));
     }
 
     //预处理
     private void pretreatment() {
         char ch;
         while (index < content.length - 1) {
+            word = new StringBuilder();
             ch = getNextChar();
             if (isWhiteSpace(ch)) {
                 continue;
@@ -702,16 +626,16 @@ public class LexicalAnalyzer {
                 recognizeString(ch);
             } else if (isDelimiter(ch)) {
                 recognizeDelimiter(ch);
-            } else if (isOperator(ch)){
+            } else if (isOperator(ch)) {
                 recognizeOperator(ch);
-            }else {
+            } else {
                 errorMsgList.add(new Word(Constants.ERROR_TOKEN, "" + ch, "error: 不能识别的字符 ", row, col));
             }
         }
     }
 
     //词法分析启动入口
-    public void runAnalyzer(){
+    public void runAnalyzer() {
         this.pretreatment();
     }
 
@@ -723,14 +647,5 @@ public class LexicalAnalyzer {
     //返回词法分析后的错误信息
     public List<Word> getErrorMsgList() {
         return errorMsgList;
-    }
-
-    public static void main(String[] args) {
-        FinalAttribute.initToken();
-        LexicalAnalyzer lexicalAnalyzer = new LexicalAnalyzer(ReadAndWriteFile.readFileContent("/Users/leiyunhong/Desktop/test.txt"));
-        lexicalAnalyzer.pretreatment();
-        for (Word word : lexicalAnalyzer.getWords()) {
-            System.out.println(word);
-        }
     }
 }

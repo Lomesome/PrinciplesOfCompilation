@@ -7,9 +7,7 @@ public class Word {
     private int row;
     private int col;
 
-    public Word() {
-
-    }
+    public Word() { }
 
     public Word(String word, String type, int row, int col) {
         this.token = FinalAttribute.findToken(word);

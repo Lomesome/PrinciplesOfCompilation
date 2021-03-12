@@ -91,12 +91,6 @@ public final class Constants {
     public final static int STATE_83 = 83;
     public final static int STATE_84 = 84;
     public final static int STATE_85 = 85;
-    public final static int STATE_86 = 86;
-    public final static int STATE_87 = 87;
-    public final static int STATE_88 = 88;
-    public final static int STATE_89 = 89;
-
-    public final static int STATE_END = 999;
 
     public final static String KEYWORD = "关键字";
     public final static String DELIMITER =  "界符";
@@ -106,7 +100,6 @@ public final class Constants {
     public final static String IDENTIFIER = "标识符";
     public final static String REALNUMBER = "实数";
     public final static String OPERATOR = "运算符";
-    public final static String ERROR = "error";
 
     public final static int INTEGER_TOKEN = 400;
     public final static int CHARACTER_TOKEN = 500;
@@ -114,5 +107,4 @@ public final class Constants {
     public final static int IDENTIFIER_TOKEN = 700;
     public final static int REALNUMBER_TOKEN = 800;
     public final static int ERROR_TOKEN = 404;
-    public final static int ERROR_NO_SINGLEQUOTE = 1000;
 }

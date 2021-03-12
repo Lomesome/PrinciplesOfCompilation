@@ -25,18 +25,15 @@ public class FinalAttribute {
     //设置关键字、分界符、运算符的token
     private static void setToken(int start, String[] strings){
         for(String s : strings){
-            tokenMap.put(s, start);
-            start++;
+            tokenMap.put(s, start++);
         }
     }
 
     //查找token
     public static int findToken(String word){
-        if(tokenMap.get(word) == null){
+        if(tokenMap.get(word) == null)
             return 700;
-        }else {
-            return tokenMap.get(word);
-        }
+        return tokenMap.get(word);
     }
 
     //获取分界符
