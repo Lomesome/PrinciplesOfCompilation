@@ -40,6 +40,7 @@ public class MainInterface {
         init();
         BorderPane borderPane = new BorderPane();
         ListView<MyProject> listView = new ListView<>(obList);
+        listView.getStyleClass().add("mainlist");
         listView.setPrefWidth(300);
         listView.setStyle("-fx-padding: 0;-fx-background-color: white;");
         listView.setCellFactory(new Callback<ListView<MyProject>, ListCell<MyProject>>() {

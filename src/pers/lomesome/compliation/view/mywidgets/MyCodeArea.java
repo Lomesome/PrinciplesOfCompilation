@@ -17,9 +17,8 @@ public class MyCodeArea extends CodeArea {
         this.appendText(ReadAndWriteFile.readFileContent(file.getPath()));  //读取文本添加到CodeArea面板
         this.setLineHighlighterFill(new Color(0.95f,0.9f,0.1f,0.1));
         this.setLineHighlighterOn(true);
-        IntFunction<Node> numberFactory = LineNumberFactory.get(this);
-
         this.setUserData(file);
+        IntFunction<Node> numberFactory = LineNumberFactory.get(this);
         IntFunction<Node> graphicFactory = line -> {
             Circle circle = new Circle(4);
             circle.setFill(Color.RED);
@@ -34,5 +33,11 @@ public class MyCodeArea extends CodeArea {
             return hbox;
         };
         this.setParagraphGraphicFactory(graphicFactory);
+    }
+
+    public void moveToSelect(int row, int col){
+        this.requestFocus();
+        this.showParagraphAtTop(row - 10);
+        this.moveTo(row - 1, col - 1);
     }
 }

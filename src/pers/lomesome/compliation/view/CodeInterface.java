@@ -6,10 +6,7 @@ import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
-import javafx.geometry.Insets;
-import javafx.geometry.Orientation;
-import javafx.geometry.Pos;
-import javafx.geometry.VerticalDirection;
+import javafx.geometry.*;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
@@ -18,6 +15,7 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 import javafx.stage.*;
+import javafx.util.Callback;
 import org.fxmisc.richtext.CodeArea;
 import pers.lomesome.compliation.model.PropertyWord;
 import pers.lomesome.compliation.model.Word;
@@ -42,7 +40,9 @@ public class CodeInterface {
     private BorderPane outPane = new BorderPane();
     private final ObservableList<String> logList = FXCollections.observableArrayList();  //记录运行log
     private final ObservableList<PropertyWord> wordList = FXCollections.observableArrayList();
-    private final Map<String,TextArea> textAreaMap = new HashMap<>();
+    private final Map<String, TextArea> textAreaMap = new HashMap<>();
+    private final ObservableList<Word> obList = FXCollections.observableArrayList();
+    private ListView error = new ListView(obList);
 
     private void init() {
         for (String s : FileUtil.findAll()) {
@@ -172,7 +172,7 @@ public class CodeInterface {
                     protected Integer call() {
                         TextArea textArea = textAreaMap.get("Run");
                         boolean areaflag = false;
-                        if(textArea != null) {
+                        if (textArea != null) {
                             textArea.setText("");
                             areaflag = true;
                             textArea.setText("Lexical Analyzer Start!!!\n");
@@ -186,15 +186,14 @@ public class CodeInterface {
                             Platform.runLater(() -> wordList.addAll(new PropertyWord(word.getType(), String.valueOf(word.getTypenum()), word.getWord())));
                         }
 
-                        if(((BorderPane)rootBorderPane.getRight()).getLeft() != null) {
-                            TextArea errorArea = (TextArea) ((VBox) ((BorderPane) ((BorderPane) rootBorderPane.getRight()).getLeft()).getBottom()).getChildren().get(1);
-                            errorArea.clear();
+                        if (((BorderPane) rootBorderPane.getRight()).getLeft() != null) {
+                            Platform.runLater(() -> obList.clear());
                             for (Word word : lexicalAnalyzer.getErrorMsgList()) {
-                                Platform.runLater(() -> errorArea.appendText((word.getType() + " " + "第"+ word.getRow() + "行,第" + (word.getCol() - word.getWord().length()) + "列: " + word.getWord()) + "\n"));
+                                Platform.runLater(() -> obList.add(word));
                             }
                         }
 
-                        if(areaflag){
+                        if (areaflag) {
                             textArea.appendText("Lexical Analyzer finished!!!");
                         }
                         return null;
@@ -226,9 +225,9 @@ public class CodeInterface {
                 return new Task<Integer>() {
                     @Override
                     protected Integer call() throws Exception {
-                        long startTime =  System.currentTimeMillis();
+                        long startTime = System.currentTimeMillis();
 
-                        if(textAreaMap.get("Run") != null) {
+                        if (textAreaMap.get("Run") != null) {
                             File openFile = (File) tabPane.getSelectionModel().getSelectedItem().getUserData();
                             TextArea textArea = textAreaMap.get("Run");
                             Platform.runLater(() -> {
@@ -337,16 +336,14 @@ public class CodeInterface {
         tableBox.setOnMouseClicked(event -> {
             if (tableLabel.getUserData().equals("nochoose")) {
                 BorderPane tableBorderPane;
-                if(ManageTable.getTableBorderPane() == null){
+                if (ManageTable.getTableBorderPane() == null) {
                     tableBorderPane = new BorderPane();
                     tableBorderPane.setCenter(new LaxicalAnalyzerTableView(new String[]{"token", "word"}, wordList));
-                    TextArea error = new TextArea();
-                    error.setEditable(false);
-                    error.setMaxWidth(300);
-                    error.setStyle("-fx-border-width: 1 0 1 0;-fx-border-color: lightgray");
+                    error.setPrefSize(300, 300);
+                    error.setStyle("-fx-background-color:white;-fx-border-width: 1 0 1 0;-fx-border-color: lightgray");
                     tableBorderPane.setBottom(new VBox(new Label("Error:"), error));
                     ManageTable.setTableBorderPane(tableBorderPane);
-                }else {
+                } else {
                     tableBorderPane = ManageTable.getTableBorderPane();
                 }
                 borderPane.setLeft(tableBorderPane);
@@ -358,6 +355,32 @@ public class CodeInterface {
                 tableBox.setStyle("-fx-background-color: transparent");
             }
         });
+        error.getStyleClass().add("codelist");
+        error.setCellFactory(new Callback<ListView<Word>, ListCell<Word>>() {
+                                 public ListCell<Word> call(ListView<Word> headerListView) {
+                                     return new ListCell<Word>() {
+                                         @Override
+                                         protected void updateItem(Word item, boolean empty) {
+                                             super.updateItem(item, empty);
+                                             if (item != null) {
+                                                 this.setOnMouseClicked(event -> {
+                                                     if (event.getClickCount() == 2 && event.getButton() == MouseButton.PRIMARY) {
+                                                         MyCodeArea codeArea = (MyCodeArea) tabPane.getSelectionModel().getSelectedItem().getContent();
+                                                         Platform.runLater(() -> codeArea.moveToSelect(item.getRow(), item.getCol()));
+                                                     } else if (event.getButton() == MouseButton.SECONDARY) {
+                                                         MyContextMenu.getInstance().show(this, Side.BOTTOM, 0, 0);
+                                                     }
+                                                 });
+                                                 Label label = new Label(item.getType() + " " + "第" + item.getRow() + "行,第" + (item.getCol() - item.getWord().length()) + "列: " + item.getWord());
+                                                 setGraphic(label);
+                                             } else {
+                                                 setGraphic(null);
+                                             }
+                                         }
+                                     };
+                                 }
+                             }
+        );
 
         VBox vBox = new VBox(tableBox);
         vBox.setMinWidth(25);
@@ -389,7 +412,7 @@ public class CodeInterface {
         });
 
         delete.setOnMouseEntered(event -> {
-            if( delete.getUserData().equals("text")){
+            if (delete.getUserData().equals("text")) {
                 delete.setStyle("-fx-background-color: #dddddd");
             }
         });
@@ -410,25 +433,25 @@ public class CodeInterface {
                 hBox.setAlignment(Pos.CENTER_LEFT);
                 outPane.setTop(hBox);
                 TextArea outArea;
-                if (textAreaMap.get(choosename) == null){
+                if (textAreaMap.get(choosename) == null) {
                     outArea = new TextArea();
                     outArea.setEditable(false);
                     outArea.setStyle("-fx-padding: 5 0 5 10");
                     outArea.textProperty().addListener((observable, oldValue, newValue) -> {
-                        if (newValue.length() == 0){
+                        if (newValue.length() == 0) {
                             delete.setUserData("notext");
-                            Platform.runLater(()-> delete.setImageView("/resources/images/delete_.png"));
-                        }else {
+                            Platform.runLater(() -> delete.setImageView("/resources/images/delete_.png"));
+                        } else {
                             delete.setUserData("text");
-                            Platform.runLater(()-> delete.setImageView("/resources/images/delete.png"));
+                            Platform.runLater(() -> delete.setImageView("/resources/images/delete.png"));
                         }
                     });
                     textAreaMap.put(choosename, outArea);
-                }else {
+                } else {
                     outArea = textAreaMap.get(choosename);
                 }
 
-                if(delete.getWidth() != 0) {
+                if (delete.getWidth() != 0) {
                     if (outArea.getText().length() == 0) {
                         delete.setUserData("notext");
                         delete.setImageView("/resources/images/delete_.png");
@@ -440,7 +463,7 @@ public class CodeInterface {
 
                 VBox toolBar = new VBox(8, delete);
                 toolBar.setStyle("-fx-border-color: lightgray;-fx-border-width: 0 1 0 0");
-                toolBar.setPadding(new Insets(10,3,10,3));
+                toolBar.setPadding(new Insets(10, 3, 10, 3));
                 toolBar.setAlignment(Pos.TOP_CENTER);
                 outPane.setLeft(toolBar);
                 outPane.setCenter(outArea);
@@ -473,8 +496,8 @@ public class CodeInterface {
         HBox hbox = new HBox(run, problems, build);
         hbox.setStyle("-fx-border-width: 0 0 1 0;-fx-border-color: lightgray");
         Label tips = new Label();
-        tips.setPadding(new Insets(1,0,1,30));
-        logList.addListener((ListChangeListener<? super String>) o -> tips.setText(o.getList().get(o.getList().size()-1)));
+        tips.setPadding(new Insets(1, 0, 1, 30));
+        logList.addListener((ListChangeListener<? super String>) o -> tips.setText(o.getList().get(o.getList().size() - 1)));
         VBox vBox = new VBox(hbox, tips);
         HBox.setMargin(run, new Insets(0, 0, 0, 25));
         rootBorderPane.setBottom(vBox);
@@ -540,15 +563,15 @@ public class CodeInterface {
                     myFile = new File(theFile.getParentFile().getPath() + "/" + result.get());
                 }
                 if (!myFile.exists()) {
-                    if (myFile.mkdirs()){
+                    if (myFile.mkdirs()) {
                         if (treeView.getFocusModel().getFocusedItem().getParent() != null) {
                             addNode(myFile, treeView.getFocusModel().getFocusedItem().getParent());
                         } else {
                             addNode(myFile, treeView.getFocusModel().getFocusedItem());
                         }
                     }
-                }else {
-                    TipStage.informationTip("新建package错误",5, rootStage);
+                } else {
+                    TipStage.informationTip("新建package错误", 5, rootStage);
                 }
             }
         });

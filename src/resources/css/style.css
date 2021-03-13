@@ -3,15 +3,31 @@
     -fx-font-size:0.0001px;
 }
 
-.list-cell:filled:selected:focused,.list-cell:filled:selected {
+.mainlist .list-cell:filled:selected:focused,.list-cell:filled:selected {
     -fx-background-color: #E6E6E6;
     -fx-text-fill: black !important;
 }
-.list-cell { -fx-text-fill: black;}
-.list-cell:odd { -fx-background-color: White;}
-.list-cell:even { -fx-background-color: White;}
-.list-cell:filled:hover {
+.mainlist .list-cell { -fx-text-fill: black;}
+.mainlist .list-cell:odd { -fx-background-color: White;}
+.mainlist .list-cell:even { -fx-background-color: White;}
+.mainlist .list-cell:filled:hover {
     -fx-background-color: WhiteSmoke;
+}
+
+.codelist .list-cell:filled:selected:focused,.list-cell:filled:selected {
+    -fx-background-color: #7697f6;
+    -fx-text-fill: black !important;
+}
+.codelist .list-cell { -fx-text-fill: black;}
+.codelist .list-cell:odd { -fx-background-color: White;}
+.codelist .list-cell:even { -fx-background-color: White;}
+.codelist .list-cell:filled:hover {
+    -fx-background-color: WhiteSmoke;
+}
+
+.list-view .scroll-bar:vertical,
+.list-view .scroll-bar:horizontal{
+    -fx-pref-width: 0;
 }
 
 .button-help {
@@ -90,11 +106,6 @@
 
 .split-pane *.split-pane-divider {
     -fx-padding: 0 1 0 1;
-}
-
-.list-view .scroll-bar:vertical,
-.list-view .scroll-bar:horizontal{
-    -fx-pref-width: 0;
 }
 
 .toolBt {
