@@ -16,6 +16,7 @@ import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 import javafx.stage.*;
 import javafx.util.Callback;
+import org.fxmisc.flowless.VirtualizedScrollPane;
 import org.fxmisc.richtext.CodeArea;
 import pers.lomesome.compliation.model.PropertyWord;
 import pers.lomesome.compliation.model.Word;
@@ -42,7 +43,7 @@ public class CodeInterface {
     private final ObservableList<PropertyWord> wordList = FXCollections.observableArrayList();
     private final Map<String, TextArea> textAreaMap = new HashMap<>();
     private final ObservableList<Word> obList = FXCollections.observableArrayList();
-    private ListView error = new ListView(obList);
+    private final ListView<Word> error = new ListView<>(obList);
 
     private void init() {
         for (String s : FileUtil.findAll()) {
@@ -51,7 +52,8 @@ public class CodeInterface {
     }
 
     public CodeInterface() {
-        init();
+        if (OpenProject.getMyProject()!=null)
+            init();
         rootStage = new Stage();
         rootStage.setMaximized(true);
         rootStage.setTitle("Compilation");
@@ -134,15 +136,14 @@ public class CodeInterface {
         open.setOnAction(event -> {
             File myFile = fileChooser.showOpenDialog(rootStage);
             if (myFile != null) {
-                Tab code = new Tab(myFile.getName());
-                code.setUserData(myFile);
-                code.setContent(new MyCodeArea(myFile));
+                MyTab code = new MyTab(myFile.getName());
+                code.setNode(myFile);
                 tabPane.getTabs().add(code);
             }
         });
 
         save.setOnAction(event -> {
-            CodeArea codeArea = (CodeArea) tabPane.getSelectionModel().getSelectedItem().getContent();
+            MyCodeArea codeArea = (MyCodeArea) ((VirtualizedScrollPane)tabPane.getSelectionModel().getSelectedItem().getContent()).getContent();
             File myFile = (File) codeArea.getUserData();
             try {
                 ReadAndWriteFile.write(myFile.getPath(), codeArea.getText());
@@ -157,9 +158,8 @@ public class CodeInterface {
             Optional<String> result = dialog.showAndWait();
             if (result.isPresent()) {
                 File myFile = new File(OpenProject.getMyProject().getPath() + "/" + OpenProject.getMyProject().getName() + "/" + result.get() + ".txt");
-                Tab code = new Tab(myFile.getName());
-                code.setUserData(myFile);
-                code.setContent(new MyCodeArea(myFile));
+                MyTab code = new MyTab(myFile.getName());
+                code.setNode(myFile);
                 tabPane.getTabs().add(code);
             }
         });
@@ -187,7 +187,7 @@ public class CodeInterface {
                         }
 
                         if (((BorderPane) rootBorderPane.getRight()).getLeft() != null) {
-                            Platform.runLater(() -> obList.clear());
+                            Platform.runLater(obList::clear);
                             for (Word word : lexicalAnalyzer.getErrorMsgList()) {
                                 Platform.runLater(() -> obList.add(word));
                             }
@@ -272,7 +272,10 @@ public class CodeInterface {
             debug.setImageView("/resources/images/debug.png");
             stop.setImageView("/resources/images/stop.png");
         });
-        Text name = new Text(OpenProject.getMyProject().getName());
+        Text name = new Text();
+        if (OpenProject.getMyProject()!=null){
+            name.setText(OpenProject.getMyProject().getName());
+        }
         name.setStyle("-fx-font-weight: bold");
         BorderPane.setMargin(name, new Insets(0, 0, 0, 15));
         toolsBar.setStyle("-fx-background-color: #eaeaea");
@@ -365,7 +368,7 @@ public class CodeInterface {
                                              if (item != null) {
                                                  this.setOnMouseClicked(event -> {
                                                      if (event.getClickCount() == 2 && event.getButton() == MouseButton.PRIMARY) {
-                                                         MyCodeArea codeArea = (MyCodeArea) tabPane.getSelectionModel().getSelectedItem().getContent();
+                                                         MyCodeArea codeArea = (MyCodeArea) ((VirtualizedScrollPane)tabPane.getSelectionModel().getSelectedItem().getContent()).getContent();
                                                          Platform.runLater(() -> codeArea.moveToSelect(item.getRow(), item.getCol()));
                                                      } else if (event.getButton() == MouseButton.SECONDARY) {
                                                          MyContextMenu.getInstance().show(this, Side.BOTTOM, 0, 0);
@@ -374,6 +377,7 @@ public class CodeInterface {
                                                  Label label = new Label(item.getType() + " " + "第" + item.getRow() + "行,第" + (item.getCol() - item.getWord().length()) + "列: " + item.getWord());
                                                  setGraphic(label);
                                              } else {
+                                                 setText(null);
                                                  setGraphic(null);
                                              }
                                          }
@@ -537,9 +541,8 @@ public class CodeInterface {
                     myFile = new File(theFile.getParentFile().getPath() + "/" + result.get() + ".lome");
                     addNode(myFile, treeView.getFocusModel().getFocusedItem().getParent());
                 }
-                Tab code = new Tab(myFile.getName());
-                code.setUserData(myFile);
-                code.setContent(new MyCodeArea(myFile));
+                MyTab code = new MyTab(myFile.getName());
+                code.setNode(myFile);
                 tabPane.getTabs().add(code);
                 tabPane.getSelectionModel().select(code);
             }
@@ -582,16 +585,22 @@ public class CodeInterface {
         contextMenu.getItems().addAll(newBg, new SeparatorMenuItem(), delBg);
 
         ImageView treeImageview = new ImageView(this.getClass().getResource("/resources/images/project.png").toString());
-        TreeItem<File> rootNode = new TreeItem<>(new File(OpenProject.getMyProject().getPath() + "/" + OpenProject.getMyProject().getName()), treeImageview);
+        TreeItem<File> rootNode;
+        if(OpenProject.getMyProject() != null) {
+            rootNode = new TreeItem<>(new File(OpenProject.getMyProject().getPath() + "/" + OpenProject.getMyProject().getName()), treeImageview);
+        }else {
+            rootNode = new TreeItem<>();
+        }
         treeImageview.setFitWidth(18);
         treeImageview.setFitHeight(18);
         rootNode.setExpanded(true);
-
         treeView = new TreeView<>(rootNode);
         treeView.setPrefWidth(200);
         treeView.setCellFactory((TreeView<File> p) -> new TextFieldTreeCellImpl());
         treeView.setStyle("-fx-background-color: transparent;" + "-fx-border-width: 0 0 0 0;" + "-fx-border-style: solid inside;");
-        findFileAndFolderList(new File(OpenProject.getMyProject().getPath() + "/" + OpenProject.getMyProject().getName()), rootNode);
+        if (OpenProject.getMyProject() != null){
+            findFileAndFolderList(new File(OpenProject.getMyProject().getPath() + "/" + OpenProject.getMyProject().getName()), rootNode);
+        }
     }
 
     private void findFileAndFolderList(File dir, TreeItem<File> pNode) {
@@ -629,9 +638,8 @@ public class CodeInterface {
     }
 
     private void addTab(File myFile) {
-        Tab code = new Tab(myFile.getName());
-        code.setUserData(myFile);
-        code.setContent(new MyCodeArea(myFile));
+        MyTab code = new MyTab(myFile.getName());
+        code.setNode(myFile);
         tabPane.getTabs().add(code);
     }
 
@@ -647,7 +655,7 @@ public class CodeInterface {
                 }
                 if (event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 2 && getTreeItem().getValue().isFile()) {
                     if (getTreeItem() != null) {
-                        Tab code = new Tab(getTreeItem().getValue().getName());
+                        MyTab code = new MyTab(getTreeItem().getValue().getName());
                         boolean flag = true;
                         for (Tab tab : tabPane.getTabs()) {
                             if (getTreeItem().getValue().equals(tab.getUserData())) {
@@ -657,7 +665,7 @@ public class CodeInterface {
                         }
                         if (flag) {
                             code.setUserData(getTreeItem().getValue());
-                            code.setContent(new MyCodeArea(getTreeItem().getValue()));
+                            code.setNode(getTreeItem().getValue());
                             tabPane.getTabs().add(code);
                             tabPane.getSelectionModel().select(code);
                         }
