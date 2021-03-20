@@ -127,10 +127,12 @@
 }
 
 .code{
+    -fx-fill: red;
     -fx-text-fill: red;
     -fx-background-color: red;
     -fx-padding: 30;
 }
+
 
 .table-view{
     -fx-font-size: 14;

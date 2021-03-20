@@ -17,16 +17,17 @@ import javafx.scene.text.Text;
 import javafx.stage.*;
 import javafx.util.Callback;
 import org.fxmisc.flowless.VirtualizedScrollPane;
-import org.fxmisc.richtext.CodeArea;
 import pers.lomesome.compliation.model.PropertyWord;
 import pers.lomesome.compliation.model.Word;
 import pers.lomesome.compliation.controller.*;
+import pers.lomesome.compliation.tool.Lexer;
 import pers.lomesome.compliation.tool.LexicalAnalyzer;
 import pers.lomesome.compliation.view.mywidgets.*;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class CodeInterface {
     private final BorderPane rootBorderPane;
@@ -81,17 +82,14 @@ public class CodeInterface {
     private MenuBar setMenuBar() {
         //创建MenuBar
         MenuBar menuBar = new MenuBar();
-
         //创建Menu
         Menu idea = new Menu("Lomesome IDEA");
         Menu file = new Menu("File");
         Menu edit = new Menu("Edit");
         Menu view = new Menu("View");
         Menu tools = new Menu("Tools");
-
         //Menu键入到MenuBar
         menuBar.getMenus().addAll(idea, file, edit, view, tools);
-
         //创建MenuItem类
         //还可以对MenuItem设置图标
         Menu newFile = new Menu("New");
@@ -136,9 +134,7 @@ public class CodeInterface {
         open.setOnAction(event -> {
             File myFile = fileChooser.showOpenDialog(rootStage);
             if (myFile != null) {
-                MyTab code = new MyTab(myFile.getName());
-                code.setNode(myFile);
-                tabPane.getTabs().add(code);
+                addTab(myFile);
             }
         });
 
@@ -158,9 +154,7 @@ public class CodeInterface {
             Optional<String> result = dialog.showAndWait();
             if (result.isPresent()) {
                 File myFile = new File(OpenProject.getMyProject().getPath() + "/" + OpenProject.getMyProject().getName() + "/" + result.get() + ".txt");
-                MyTab code = new MyTab(myFile.getName());
-                code.setNode(myFile);
-                tabPane.getTabs().add(code);
+                addTab(myFile);
             }
         });
 
@@ -177,18 +171,32 @@ public class CodeInterface {
                             areaflag = true;
                             textArea.setText("Lexical Analyzer Start!!!\n");
                         }
-                        File openFile = (File) tabPane.getSelectionModel().getSelectedItem().getUserData();
-                        LexicalAnalyzer lexicalAnalyzer = new LexicalAnalyzer(openFile.getPath());
-                        lexicalAnalyzer.runAnalyzer();
-                        wordList.clear();
 
-                        for (Word word : lexicalAnalyzer.getWords()) {
+                        File openFile = (File) tabPane.getSelectionModel().getSelectedItem().getUserData();
+//                        LexicalAnalyzer lexicalAnalyzer = new LexicalAnalyzer(openFile.getPath());
+//                        lexicalAnalyzer.runAnalyzer();
+//
+//                        for (Word word : lexicalAnalyzer.getWords()) {
+//                            Platform.runLater(() -> wordList.addAll(new PropertyWord(word.getType(), String.valueOf(word.getTypenum()), word.getWord())));
+//                        }
+                        wordList.clear();
+                        Lexer lexer = null;
+                        try {
+                            lexer = new Lexer(new FileReader(openFile.getPath()));
+                            lexer.next_token();
+                        } catch (FileNotFoundException e) {
+                            e.printStackTrace();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
+                        for (Word word : lexer.getWords()){
                             Platform.runLater(() -> wordList.addAll(new PropertyWord(word.getType(), String.valueOf(word.getTypenum()), word.getWord())));
                         }
 
                         if (((BorderPane) rootBorderPane.getRight()).getLeft() != null) {
                             Platform.runLater(obList::clear);
-                            for (Word word : lexicalAnalyzer.getErrorMsgList()) {
+                            for (Word word : lexer.getErrorMsgList()) {
                                 Platform.runLater(() -> obList.add(word));
                             }
                         }
@@ -218,7 +226,6 @@ public class CodeInterface {
         debug.setTooltip(new Tooltip("Debug"));
         stop.setTooltip(new Tooltip("Stop"));
         find.setTooltip(new Tooltip("Search"));
-        AtomicBoolean runflag = new AtomicBoolean(true);
         Service<Integer> runService = new Service<Integer>() {
             @Override
             protected Task<Integer> createTask() {
@@ -257,9 +264,7 @@ public class CodeInterface {
         start.setOnMouseClicked(event -> {
             start.setImageView("/resources/images/restart.png");
             stop.setImageView("/resources/images/stopping.png");
-            runflag.set(true);
             runService.restart();
-            runflag.set(false);
         });
 
         debug.setOnMouseClicked(event -> {
@@ -375,6 +380,7 @@ public class CodeInterface {
                                                      }
                                                  });
                                                  Label label = new Label(item.getType() + " " + "第" + item.getRow() + "行,第" + (item.getCol() - item.getWord().length()) + "列: " + item.getWord());
+                                                 label.setTooltip(new Tooltip("没有建议"));
                                                  setGraphic(label);
                                              } else {
                                                  setText(null);
@@ -403,9 +409,8 @@ public class CodeInterface {
     }
 
     private void bottomMenu() {
-
         final ToggleGroup group = new ToggleGroup();
-        MyButton delete = new MyButton("/resources/images/delete_.png", "toolBt2");
+        final MyButton delete = new MyButton("/resources/images/delete_.png", "toolBt2");
         delete.setUserData("notext");
         outPane = new BorderPane();
         delete.setOnMouseClicked(event -> {
@@ -508,12 +513,9 @@ public class CodeInterface {
     }
 
     private void initTreeView() {
-
         contextMenu = new ContextMenu();
-
         // 菜单项
         Menu newBg = new Menu("New");
-
         // 二级菜单项
         MenuItem delBg = new MenuItem("Delete...");
         delBg.setOnAction(event -> {
@@ -541,10 +543,7 @@ public class CodeInterface {
                     myFile = new File(theFile.getParentFile().getPath() + "/" + result.get() + ".lome");
                     addNode(myFile, treeView.getFocusModel().getFocusedItem().getParent());
                 }
-                MyTab code = new MyTab(myFile.getName());
-                code.setNode(myFile);
-                tabPane.getTabs().add(code);
-                tabPane.getSelectionModel().select(code);
+                addTab(myFile);
             }
         });
 
@@ -641,6 +640,7 @@ public class CodeInterface {
         MyTab code = new MyTab(myFile.getName());
         code.setNode(myFile);
         tabPane.getTabs().add(code);
+        tabPane.getSelectionModel().select(code);
     }
 
     final class TextFieldTreeCellImpl extends TreeCell<File> {

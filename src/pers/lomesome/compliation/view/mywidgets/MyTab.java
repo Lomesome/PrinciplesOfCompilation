@@ -12,6 +12,6 @@ public class MyTab extends Tab {
 
     public void setNode(File myFile){
         this.setUserData(myFile);
-        this.setContent(new VirtualizedScrollPane(new MyCodeArea(myFile)));
+        this.setContent(new VirtualizedScrollPane<>(new MyCodeArea(myFile)));
     }
 }

@@ -16,7 +16,7 @@ public class LexicalAnalyzer {
     private final char[] content;
     private int index = -1;
 
-    //构造函数，输入是文件内容
+    //构造函数，输入是文件路径
     public LexicalAnalyzer(String fileName) {
         this.content = ReadAndWriteFile.readFileContent(fileName).toCharArray();
     }
@@ -150,6 +150,9 @@ public class LexicalAnalyzer {
             case Constants.STATE_16: backLastChar();words.add(new Word(Constants.INTEGER_TOKEN, word.toString(), Constants.INTEGER, row, col));break;
             case Constants.STATE_17: backLastChar();errorMsgList.add(new Word(Constants.ERROR_TOKEN, word.toString(), "error:数值错误 ", row, col));break;
             case Constants.STATE_18:
+            case Constants.STATE_19:
+            case Constants.STATE_20:
+            case Constants.STATE_21:
             case Constants.STATE_26:
             case Constants.STATE_29:
             case Constants.STATE_37:
@@ -168,11 +171,9 @@ public class LexicalAnalyzer {
             case Constants.STATE_68:
             case Constants.STATE_71:
             case Constants.STATE_73:
-            case Constants.STATE_74: words.add(new Word(word.toString(), Constants.OPERATOR, row, col));break;
-            case Constants.STATE_19: words.add(new Word(word.toString(), Constants.OPERATOR, row, col));break;
-            case Constants.STATE_20: words.add(new Word(word.toString(), Constants.OPERATOR, row, col));break;
-            case Constants.STATE_21: words.add(new Word(word.toString(), Constants.OPERATOR, row, col));break;
-            case Constants.STATE_23: words.add(new Word(word.toString(), Constants.OPERATOR, row, col));break;
+            case Constants.STATE_74:
+            case Constants.STATE_23:
+                words.add(new Word(word.toString(), Constants.OPERATOR, row, col));break;
             case Constants.STATE_24:
             case Constants.STATE_27:
             case Constants.STATE_35:
@@ -198,15 +199,15 @@ public class LexicalAnalyzer {
             case Constants.STATE_84: words.add(new Word(Constants.CHARACTER_TOKEN, word.toString(), Constants.CHARACTER, row, col));break;
             case Constants.STATE_85: backLastChar();errorMsgList.add(new Word(Constants.ERROR_TOKEN, word.toString(), "error: 缺少单引号 ", row, col));break;
             default:
-                return false;
+                return true;
         }
-        return true;
+        return false;
     }
 
     //识别关键字、标识符
     private void recognizeId(char ch) {
         char state = Constants.STATE_BEGIN; //初始状态
-        while (!isEndState(state)) {
+        while (isEndState(state)) {
             switch (state) {
                 case Constants.STATE_BEGIN:
                     if (isLetter(ch) || isUnderline(ch)) {
@@ -229,7 +230,7 @@ public class LexicalAnalyzer {
     //识别所有数值
     private void recognizeNum(char ch) {
         char state = Constants.STATE_BEGIN; //初始状态
-        while (!isEndState(state)) {
+        while (isEndState(state)) {
             switch (state) {
                 case Constants.STATE_BEGIN:
                     if (isDigit(ch, '1', '9')) {
@@ -334,7 +335,7 @@ public class LexicalAnalyzer {
     //识别'/'、注释
     private void recognizeMulAndNotes(char ch) {
         char state = Constants.STATE_BEGIN; //初始状态
-        while (!isEndState(state)) {
+        while (isEndState(state)) {
             switch (state) {
                 case Constants.STATE_BEGIN:
                     if (isDiv(ch)) {
@@ -370,9 +371,10 @@ public class LexicalAnalyzer {
                         row += 1;
                     } else if (isMul(ch)) {
                         state = Constants.STATE_33;
-                    } else {
-                        state = Constants.STATE_32;
                     }
+//                    else {
+//                        state = Constants.STATE_32;
+//                    }
                     break;
                 case Constants.STATE_33:
                     ch = getNextChar();
@@ -394,7 +396,7 @@ public class LexicalAnalyzer {
     //识别字符
     private void recognizeChar(char ch) {
         char state = Constants.STATE_BEGIN; //初始状态
-        while (!isEndState(state)) {
+        while (isEndState(state)) {
             switch (state) {
                 case Constants.STATE_BEGIN:
                     if (isSingleQuote(ch)) {
@@ -421,7 +423,7 @@ public class LexicalAnalyzer {
     //识别字符串
     public void recognizeString(char ch) {
         char state = Constants.STATE_BEGIN; //初始状态
-        while (!isEndState(state)) {
+        while (isEndState(state)) {
             switch (state) {
                 case Constants.STATE_BEGIN:
                     if (isDoubleQuote(ch)) {
@@ -446,7 +448,7 @@ public class LexicalAnalyzer {
     //识别分界符
     private void recognizeDelimiter(char ch) {
         char state = Constants.STATE_BEGIN; //初始状态
-        while (!isEndState(state)) {
+        while (isEndState(state)) {
             if (state == Constants.STATE_BEGIN) {
                 switch (ch) {
                     case '{': state = Constants.STATE_75;break;
@@ -462,7 +464,7 @@ public class LexicalAnalyzer {
     //识别运算符
     private void recognizeOperator(char ch) {
         char state = Constants.STATE_BEGIN; //初始状态
-        while (!isEndState(state)) {
+        while (isEndState(state)) {
             switch (state) {
                 case Constants.STATE_BEGIN:
                     switch (ch) {
@@ -614,7 +616,8 @@ public class LexicalAnalyzer {
             ch = getNextChar();
             if (isWhiteSpace(ch)) {
                 continue;
-            } else if (isUnderline(ch) || isLetter(ch)) {
+            }
+            if (isUnderline(ch) || isLetter(ch)) {
                 recognizeId(ch);
             } else if (isDigit(ch)) {
                 recognizeNum(ch);
