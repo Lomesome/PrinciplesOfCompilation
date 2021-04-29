@@ -1,5 +1,6 @@
 package pers.lomesome.compliation.view.mywidgets;
 
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -10,6 +11,7 @@ public class LaxicalAnalyzerTableView extends TableView {
 
     public LaxicalAnalyzerTableView(String[] cols, ObservableList<PropertyWord> list){
         this.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+
         for(String col : cols){
             TableColumn theCol = new TableColumn<>(col);
             theCol.setSortable(false);
@@ -22,5 +24,24 @@ public class LaxicalAnalyzerTableView extends TableView {
         }
         this.setItems(list);
         this.setMaxWidth(300);
+        this.getColumns().addListener(new ListChangeListener() {
+            boolean isturnback = false;
+
+            @Override
+            public void onChanged(Change c) {
+
+                if (!isturnback) {
+                    while (c.next()) {
+                        if (!c.wasPermutated() && !c.wasUpdated()) {
+                            isturnback = true;
+                            getColumns().setAll(c.getRemoved());
+                        }
+                    }
+                }
+                else {
+                    isturnback = false;
+                }
+            }
+        });
     }
 }

@@ -15,7 +15,7 @@ import javafx.stage.Stage;
 import pers.lomesome.compliation.model.MyProject;
 import pers.lomesome.compliation.controller.ManageMainInterface;
 import pers.lomesome.compliation.controller.ManageProjects;
-import pers.lomesome.compliation.controller.ReadAndWriteFile;
+import pers.lomesome.compliation.tool.filehandling.ReadAndWriteFile;
 import java.io.File;
 
 public class NewProject {

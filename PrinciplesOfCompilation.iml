@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module type="JAVA_MODULE" version="4">
+  <component name="FacetManager">
+    <facet type="Python" name="Python">
+      <configuration sdkName="Python 3.8 (PrinciplesOfCompilation)" />
+    </facet>
+  </component>
   <component name="NewModuleRootManager" inherit-compiler-output="true">
     <exclude-output />
     <content url="file://$MODULE_DIR$">
@@ -37,7 +42,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/src/resources/jar/java-cup-11b.jar!/" />
+          <root url="jar://$MODULE_DIR$/src/resources/jar/jython.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -46,11 +51,21 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/src/resources/jar/jflex-full-1.8.2.jar!/" />
+          <root url="jar://$MODULE_DIR$/src/resources/jar/json.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/src/resources/jar/commons-lang3-3.1.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="library" name="Python 3.8 (PrinciplesOfCompilation) interpreter library" level="application" />
   </component>
 </module>

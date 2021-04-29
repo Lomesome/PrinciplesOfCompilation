@@ -1,6 +1,5 @@
 package pers.lomesome.compliation.view.mywidgets;
 
-import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
@@ -9,17 +8,15 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import org.fxmisc.richtext.CodeArea;
 import org.fxmisc.richtext.LineNumberFactory;
-import pers.lomesome.compliation.controller.ReadAndWriteFile;
+import pers.lomesome.compliation.tool.filehandling.ReadAndWriteFile;
 import java.io.File;
 import java.util.function.IntFunction;
 
 public class MyCodeArea extends CodeArea {
     public MyCodeArea(File file){
         this.appendText(ReadAndWriteFile.readFileContent(file.getPath()));  //读取文本添加到CodeArea面板
-        Platform.runLater(()->{
-            this.setLineHighlighterFill(Color.LIGHTGOLDENRODYELLOW);
-            this.setLineHighlighterOn(true);
-        });
+        this.setLineHighlighterFill(Color.LIGHTGOLDENRODYELLOW);
+        this.setLineHighlighterOn(true);
         this.setUserData(file);
         IntFunction<Node> numberFactory = LineNumberFactory.get(this);
         IntFunction<Node> graphicFactory = line -> {

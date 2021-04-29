@@ -2,7 +2,7 @@ package pers.lomesome.compliation.main;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
-import pers.lomesome.compliation.model.FinalAttribute;
+import pers.lomesome.compliation.tool.finalattr.FinalAttribute;
 import pers.lomesome.compliation.controller.ManageMainInterface;
 import pers.lomesome.compliation.view.MainInterface;
 
@@ -10,7 +10,7 @@ public class Main extends Application {
 
     @Override
     public void init() {
-        FinalAttribute.initToken(); //加载关键字、运算符、界符的token值
+        FinalAttribute.init(); //加载关键字、运算符、界符的token值
     }
 
     @Override

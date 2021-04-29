@@ -1,0 +1,5 @@
+S->AB
+A->CD
+B->+AB|-AB|ε
+C->I|N|(S)
+D->*CD|/CD|ε

@@ -1,6 +1,10 @@
 package pers.lomesome.compliation.model;
 
-public class Word {
+import pers.lomesome.compliation.tool.finalattr.FinalAttribute;
+
+import java.io.Serializable;
+
+public class Word implements Serializable {
     private int token;    //种别码
     private String word;    //扫描得到的词
     private String type;    //类别

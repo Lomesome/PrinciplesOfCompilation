@@ -20,8 +20,12 @@ import org.fxmisc.flowless.VirtualizedScrollPane;
 import pers.lomesome.compliation.model.PropertyWord;
 import pers.lomesome.compliation.model.Word;
 import pers.lomesome.compliation.controller.*;
-import pers.lomesome.compliation.tool.Lexer;
-import pers.lomesome.compliation.tool.LexicalAnalyzer;
+import pers.lomesome.compliation.tool.filehandling.FileUtil;
+import pers.lomesome.compliation.tool.filehandling.ReadAndWriteFile;
+import pers.lomesome.compliation.tool.finalattr.FinalAttribute;
+import pers.lomesome.compliation.utils.grammatical.GrammaticalAnalysis;
+import pers.lomesome.compliation.utils.lexer.Lexer;
+import pers.lomesome.compliation.utils.lexer.LexicalAnalyzer;
 import pers.lomesome.compliation.view.mywidgets.*;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -57,7 +61,7 @@ public class CodeInterface {
             init();
         rootStage = new Stage();
         rootStage.setMaximized(true);
-        rootStage.setTitle("Compilation");
+        rootStage.setTitle(OpenProject.getMyProject().getName());
         rootBorderPane = new BorderPane();//主面板
 
         makeTools();
@@ -175,10 +179,7 @@ public class CodeInterface {
                         File openFile = (File) tabPane.getSelectionModel().getSelectedItem().getUserData();
 //                        LexicalAnalyzer lexicalAnalyzer = new LexicalAnalyzer(openFile.getPath());
 //                        lexicalAnalyzer.runAnalyzer();
-//
-//                        for (Word word : lexicalAnalyzer.getWords()) {
-//                            Platform.runLater(() -> wordList.addAll(new PropertyWord(word.getType(), String.valueOf(word.getTypenum()), word.getWord())));
-//                        }
+
                         wordList.clear();
                         Lexer lexer = null;
                         try {
@@ -189,9 +190,9 @@ public class CodeInterface {
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
-
-                        for (Word word : lexer.getWords()){
+                        for (Word word : lexer.getWords()) {
                             Platform.runLater(() -> wordList.addAll(new PropertyWord(word.getType(), String.valueOf(word.getTypenum()), word.getWord())));
+                            System.out.println(FinalAttribute.findString(word.getTypenum(), word.getWord()));
                         }
 
                         if (((BorderPane) rootBorderPane.getRight()).getLeft() != null) {
@@ -200,6 +201,7 @@ public class CodeInterface {
                                 Platform.runLater(() -> obList.add(word));
                             }
                         }
+
 
                         if (areaflag) {
                             textArea.appendText("Lexical Analyzer finished!!!");
@@ -237,10 +239,11 @@ public class CodeInterface {
                         if (textAreaMap.get("Run") != null) {
                             File openFile = (File) tabPane.getSelectionModel().getSelectedItem().getUserData();
                             TextArea textArea = textAreaMap.get("Run");
-                            Platform.runLater(() -> {
-                                textArea.setText("");
-                                textArea.appendText(openFile.getName() + " is running!\n");
-                            });
+//                            Platform.runLater(() -> {
+//                                textArea.setText("");
+//                                textArea.appendText(openFile.getName() + " is running!\n");
+//                            });
+
                             Thread.sleep(500);
 
                             Platform.runLater(() -> textArea.appendText("Process finished with exit code 0\n"));
@@ -264,6 +267,8 @@ public class CodeInterface {
         start.setOnMouseClicked(event -> {
             start.setImageView("/resources/images/restart.png");
             stop.setImageView("/resources/images/stopping.png");
+            GrammaticalAnalysis grammaticalAnalysis = new GrammaticalAnalysis();
+//            grammaticalAnalysis.first_follow(this);
             runService.restart();
         });
 
@@ -643,6 +648,10 @@ public class CodeInterface {
         tabPane.getSelectionModel().select(code);
     }
 
+    public void setRunText(String content){
+        textAreaMap.get("Run").appendText(content + "\n");
+    }
+
     final class TextFieldTreeCellImpl extends TreeCell<File> {
 
         private TextFieldTreeCellImpl() {
@@ -669,6 +678,7 @@ public class CodeInterface {
                             tabPane.getTabs().add(code);
                             tabPane.getSelectionModel().select(code);
                         }
+                        rootStage.setTitle(OpenProject.getMyProject().getName()  + " - " + getTreeItem().getValue().getName());
                     }
                 }
             });
