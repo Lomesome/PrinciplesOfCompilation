@@ -68,10 +68,16 @@ public class NewPredict {
 
 //                    linkedHashMap.get(k.split("->")[0]).get(s).addAll(Arrays.asList(k.split("->")[1].replace("[", "").replace("]", "").replace(" ","").split(",")));
                 }else {
+                    if (k.split("->")[0].equals("declaration_list'")){
+                        System.out.println("************");
+                    }
                     for (String s1 : followSet.get(k.split("->")[0])) {
                         if (linkedHashMap.get(k.split("->")[0]).get(s1).size() == 0) {
                             linkedHashMap.get(k.split("->")[0]).get(s1).add(new MakeJson("ε", new ArrayList<>()));
                         }
+                    }
+                    if (k.split("->")[0].equals("declaration_list'")){
+                        System.out.println(linkedHashMap.get(k.split("->")[0]));
                     }
                 }
             }
@@ -106,6 +112,9 @@ public class NewPredict {
 //                }
 //            }
 //        }
+
+        System.out.println("***************");
+        System.out.println(linkedHashMap.get("declaration_list'"));
         return linkedHashMap;
     }
 }

@@ -20,20 +20,22 @@ public class GrammaticalAnalysis {
     Set<String> allVt = new LinkedHashSet<>();
 
     public void first_follow() throws JSONException {
-        String content = ReadAndWriteFile.readFileContent("/Users/leiyunhong/IdeaProjects/PrinciplesOfCompilation/src/resources/grammar/test9.txt"); //C语言官方文法
+        String content = ReadAndWriteFile.readFileContent("/Users/leiyunhong/IdeaProjects/PrinciplesOfCompilation/src/resources/grammar/test6.txt"); //C语言官方文法
         GrammaticalHandle grammaticalHandle = new GrammaticalHandle(content);
         AllGrammer allGrammer = new AllGrammer(grammaticalHandle.grammaticlHandel());
         EliminateLR eliminateLR = new EliminateLR(allGrammer);
         eliminateLR.eliminate();
+        EliminateBT eliminateBT = new EliminateBT(allGrammer);
+        eliminateBT.eliminate();
         allGrammer.getGrammarMap().forEach((k, v)->{
             System.out.println(k +"->"+v);
         });
         FirstSet firstSet = new FirstSet(allGrammer.getGrammarMap());
 
         Map<String, Set<String>> firstmap = firstSet.getFirstSet();
-//        firstmap.forEach((k,v)->{
-//            System.out.println("First(" + k +")="+v);
-//        });
+        firstmap.forEach((k,v)->{
+            System.out.println("First(" + k +")="+v);
+        });
 
         SingleFirst singleFirst = new SingleFirst(allGrammer.getGrammarMap());
         Map<String, Set<String>> singlefirstmap = singleFirst.getFirstSet();
