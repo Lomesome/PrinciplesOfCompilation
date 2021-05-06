@@ -8,8 +8,11 @@ public class Word implements Serializable {
     private int token;    //种别码
     private String word;    //扫描得到的词
     private String type;    //类别
+    private String name;
+    public String value;
     private int row;
     private int col;
+
 
     public Word() { }
 
@@ -17,6 +20,7 @@ public class Word implements Serializable {
         this.token = FinalAttribute.findToken(word);
         this.word = word;
         this.type = type;
+        this.value = word;
         this.row = row;
         this.col = col;
     }
@@ -28,6 +32,12 @@ public class Word implements Serializable {
         this.row = row;
         this.col = col;
     }
+
+    public Word(String name, String source) {
+        this.name = name;
+        this.word = source;
+    }
+
 
     public int getTypenum() {
         return token;
@@ -53,6 +63,22 @@ public class Word implements Serializable {
         this.type = type;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
+    }
+
     public int getRow() {
         return row;
     }
@@ -71,6 +97,6 @@ public class Word implements Serializable {
 
     @Override
     public String toString() {
-        return "(" + this.type + " , " + this.token + " , " + this.word + ")";
+        return name + "@" + word;
     }
 }

@@ -1,4 +1,4 @@
-package pers.lomesome.compliation.utils.grammatical;
+package pers.lomesome.compliation.model;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.json.JSONException;

@@ -109,6 +109,16 @@ public final class Constants {
     public final static int REALNUMBER_TOKEN = 800;
     public final static int ERROR_TOKEN = 404;
 
+    public static String INT = "int";
+    public static String UNSIGNED = "unsigned";
+    public static String LONG = "long";
+    public static String LONG_UNSIGNED = "long_unsigned";
+    public static String FLOAT = "float";
+    public static String DOUBLE = "double";
+    public static String LONG_DOUBLE = "long_double";
+    public static String CHAR = "char";
+    public static String STRING_ = "string";
+
     public final static String GRAMMAR = "primary_expression\n" +
             "\t: IDENTIFIER\n" +
             "\t| CONSTANT\n" +

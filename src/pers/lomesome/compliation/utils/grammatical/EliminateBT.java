@@ -58,8 +58,8 @@ public class EliminateBT {
                 }
                 if ((vnInfer.get(0)).equals(same)) {
                     replaceableList.get(i).remove(vnInfer);
-//                    if (!replaceableList.get(vt.size() - 1).contains(newVnInfer))
-                    replaceableList.get(vt.size() - 1).add(newVnInfer);
+                    if (!replaceableList.get(vt.size() - 1).contains(newVnInfer))
+                        replaceableList.get(vt.size() - 1).add(newVnInfer);
                 }else {
                     j++;
                     range++;

@@ -18,7 +18,11 @@ public class SingleFirst {
             for (List<String> list : v){
                 Set<String> vnFirst = new LinkedHashSet<>();
                 getFirst(k, vnFirst, list);
-                singleFirstSet.put(k+"->"+list, vnFirst);
+                StringBuilder stringBuilder = new StringBuilder();
+                for (String s : list){
+                    stringBuilder.append(s).append("@#@");
+                }
+                singleFirstSet.put(k+"->"+ stringBuilder.toString(), vnFirst);
             }
         });
         return singleFirstSet;
