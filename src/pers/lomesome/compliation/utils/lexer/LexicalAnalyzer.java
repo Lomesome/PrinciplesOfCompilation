@@ -99,7 +99,8 @@ public class LexicalAnalyzer {
     //判断是否是空字符
     private boolean isWhiteSpace(char ch) {
         if (ch == '\n') { //遇到换行符行数加1，列数置为1
-            row += 1; col = 1;
+            row += 1;
+            col = 1;
             return true;
         } else return ch == '\t' || ch == '\f' || ch == '\0' || ch == ' ';
     }

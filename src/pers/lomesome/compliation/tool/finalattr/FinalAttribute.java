@@ -1,11 +1,11 @@
 package pers.lomesome.compliation.tool.finalattr;
 
-import java.util.HashMap;
-import java.util.Map;
+import pers.lomesome.compliation.model.MakeJson;
+import java.util.*;
 
 public class FinalAttribute {
     //关键字
-    private static final String[] keyword = new String[]{"char", "int", "float", "break", "const", "return", "void", "continue", "do", "while", "if", "else", "for", "auto", "case", "default", "double", "enum", "extern", "goto", "long", "register", "short", "signed", "sizeof", "static", "struct", "switch", "typedef", "union", "unsigned", "volatile"};
+    private static final String[] keyword = new String[]{"char", "int", "float", "break", "const", "return", "void", "continue", "do", "while", "if", "else", "for", "auto", "case", "default", "double", "enum", "extern", "goto", "long", "register", "short", "signed", "sizeof", "static", "struct", "switch", "typedef", "union", "unsigned", "volatile","main" };
 
     //分界符
     private static final String[] delimiter ={"{", "}", ";", ","};
@@ -18,6 +18,18 @@ public class FinalAttribute {
     private static final HashMap<Integer, String> stringMap = new HashMap<>();
 
     private static final HashMap<Integer, String> nameMap = new HashMap<>();
+
+    private static Map<String, Set<String>> firstmap = new LinkedHashMap<>();
+
+    private static Map<String, Set<String>> followmap = new LinkedHashMap<>();
+
+    private static Map<List<List<String>>, Set<String>> selectMap = new LinkedHashMap<>();
+
+    private static LinkedHashMap<String, LinkedHashMap<String, List<MakeJson>>> predictMap;
+
+    private static Set<String> allVn = new LinkedHashSet<>();
+
+    private static Set<String> allVt = new LinkedHashSet<>();
 
     //初始化关键字、分界符、运算符的token
     public static void init(){
@@ -44,17 +56,13 @@ public class FinalAttribute {
 
     private static void setString(){
         int start = 101;
-//        stringMap.put(700, "IDENTIFIER");
-//        stringMap.put(800, "CONSTANT");
-//        stringMap.put(400, "CONSTANT");
-//        stringMap.put(600, "STRING_LITERAL");
-        stringMap.put(700, "IDN");
-        stringMap.put(500, "CHAR");
-        stringMap.put(800, "FLOAT");
-        stringMap.put(400, "INT10");
-        stringMap.put(600, "STR");
+        stringMap.put(700, "id");
+        stringMap.put(500, "char_const");
+        stringMap.put(800, "float_const");
+        stringMap.put(400, "int_const");
+        stringMap.put(600, "string_const");
         for(String s : keyword){
-            stringMap.put(start++, s.toUpperCase());
+            stringMap.put(start++, s);
         }
     }
 
@@ -66,10 +74,6 @@ public class FinalAttribute {
 
     private static void setNameMap(){
         int start = 101;
-//        stringMap.put(700, "IDENTIFIER");
-//        stringMap.put(800, "CONSTANT");
-//        stringMap.put(400, "CONSTANT");
-//        stringMap.put(600, "STRING_LITERAL");
         nameMap.put(700, "id");
         nameMap.put(500, "char");
         nameMap.put(800, "float");
@@ -102,5 +106,54 @@ public class FinalAttribute {
 
     public static HashMap<String, Integer> getTokenMap() {
         return tokenMap;
+    }
+
+    public static LinkedHashMap<String, LinkedHashMap<String, List<MakeJson>>> getPredictMap() {
+        return predictMap;
+    }
+
+    public static void setPredictMap(LinkedHashMap<String, LinkedHashMap<String, List<MakeJson>>> predictMap) {
+        FinalAttribute.predictMap = predictMap;
+    }
+
+    public static Map<String, Set<String>> getFirstmap() {
+        return firstmap;
+    }
+
+    public static void setFirstmap(Map<String, Set<String>> firstmap) {
+        FinalAttribute.firstmap = firstmap;
+    }
+
+    public static Map<String, Set<String>> getFollowmap() {
+        return followmap;
+    }
+
+    public static void setFollowmap(Map<String, Set<String>> followmap) {
+        FinalAttribute.followmap = followmap;
+    }
+
+
+    public static Map<List<List<String>>, Set<String>> getSelectMap() {
+        return selectMap;
+    }
+
+    public static void setSelectMap(Map<List<List<String>>, Set<String>> selectMap) {
+        FinalAttribute.selectMap = selectMap;
+    }
+
+    public static Set<String> getAllVn() {
+        return allVn;
+    }
+
+    public static void setAllVn(Set<String> allVn) {
+        FinalAttribute.allVn = allVn;
+    }
+
+    public static Set<String> getAllVt() {
+        return allVt;
+    }
+
+    public static void setAllVt(Set<String> allVt) {
+        FinalAttribute.allVt = allVt;
     }
 }

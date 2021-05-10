@@ -12,7 +12,7 @@ if __name__ == '__main__':
     print(data)
     tree=(
         #width="3000px",height="900px"
-        Tree( init_opts=opts.InitOpts()).add("", data,orient="TB").set_global_opts(title_opts=opts.TitleOpts(title="语法树"))
+        Tree( init_opts=opts.InitOpts(width="1500px",height="700px")).add("", data,orient="TB").set_global_opts(title_opts=opts.TitleOpts(title="语法树"))
     )
     tree.render('./src/pers/lomesome/compliation/python/GrammerTree.html')
     print('语法树生成成功')

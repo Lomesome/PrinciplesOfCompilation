@@ -2,45 +2,41 @@ package pers.lomesome.compliation.utils.grammatical;
 
 import java.util.*;
 
-public class SingleFirst {
-    public Map<String, Set<String>> firstSet;
-    public Map<String, Set<String>> singleFirstSet;
+public class SelectSet {
     private final Map<String, List<List<String>>> grammars;
 
-    public SingleFirst(Map<String, List<List<String>>> grammars){
+    public SelectSet(Map<String, List<List<String>>> grammars){
         this.grammars = grammars;
     }
 
-    public Map<String, Set<String>> getFirstSet() {
-        singleFirstSet = new LinkedHashMap<>();
-        firstSet = new LinkedHashMap<>();
+    public Map<List<List<String>>, Set<String>> getSelectSet() {
+        Map<List<List<String>>, Set<String>> selectSet = new LinkedHashMap<>();
         grammars.forEach((k, v)->{
             for (List<String> list : v){
-                Set<String> vnFirst = new LinkedHashSet<>();
-                getFirst(k, vnFirst, list);
-                StringBuilder stringBuilder = new StringBuilder();
-                for (String s : list){
-                    stringBuilder.append(s).append("@#@");
-                }
-                singleFirstSet.put(k+"->"+ stringBuilder.toString(), vnFirst);
+                Set<String> vnSelect = new LinkedHashSet<>();
+                getSelect(k, vnSelect, list);
+                List<List<String>> listList = new ArrayList<>();
+                listList.add(Collections.singletonList(k));
+                listList.add(list);
+                selectSet.put(listList, vnSelect);
             }
         });
-        return singleFirstSet;
+        return selectSet;
     }
 
-    private Set<String> getFirst(String vn, Set<String> vnFirst) {
+    private Set<String> getSelect(String vn, Set<String> vnSelect) {
         if (!grammars.containsKey(vn)) {
-            vnFirst.add(vn);
-            return vnFirst;
+            vnSelect.add(vn);
+            return vnSelect;
         }
         int count = 0;
         boolean nullFlag = false;
         for (List<String> infer : grammars.get(vn)) {
             for (String singleInfer : infer) {
                 Set<String> newVnFirst = new LinkedHashSet<>();
-                Set<String> checkNull = getFirst(singleInfer, newVnFirst);
-                vnFirst.addAll(checkNull);
-                vnFirst.remove("ε");
+                Set<String> checkNull = getSelect(singleInfer, newVnFirst);
+                vnSelect.addAll(checkNull);
+                vnSelect.remove("ε");
                 if (singleInfer.equals("ε")){  //可以推导出空串
                     nullFlag = true;
                 }
@@ -53,14 +49,14 @@ public class SingleFirst {
             }
         }
         if (count == grammars.get(vn).size() || nullFlag) { //推导内容全为非终结符且都推导出空串
-            vnFirst.add("ε");
+            vnSelect.add("ε");
         }
-        return vnFirst;
+        return vnSelect;
     }
 
-    private void getFirst(String vn, Set<String> vnFirst, List<String> infer) {
+    private void getSelect(String vn, Set<String> vnSelect, List<String> infer) {
         if (!grammars.containsKey(vn)) {
-            vnFirst.add(vn);
+            vnSelect.add(vn);
             return;
         }
         int count = 0;
@@ -68,9 +64,9 @@ public class SingleFirst {
 
         for (String singleInfer : infer) {
             Set<String> newVnFirst = new LinkedHashSet<>();
-            Set<String> checkNull = getFirst(singleInfer, newVnFirst);
-            vnFirst.addAll(checkNull);
-            vnFirst.remove("ε");
+            Set<String> checkNull = getSelect(singleInfer, newVnFirst);
+            vnSelect.addAll(checkNull);
+            vnSelect.remove("ε");
             if (singleInfer.equals("ε")) {  //可以推导出空串
                 nullFlag = true;
             }
@@ -81,7 +77,7 @@ public class SingleFirst {
             }
         }
         if (count == grammars.get(vn).size() || nullFlag) { //推导内容全为非终结符且都推导出空串
-            vnFirst.add("ε");
+            vnSelect.add("ε");
         }
     }
 }

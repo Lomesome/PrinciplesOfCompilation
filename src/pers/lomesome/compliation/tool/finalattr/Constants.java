@@ -118,6 +118,7 @@ public final class Constants {
     public static String LONG_DOUBLE = "long_double";
     public static String CHAR = "char";
     public static String STRING_ = "string";
+    public static String CONST = "const";
 
     public final static String GRAMMAR = "primary_expression\n" +
             "\t: IDENTIFIER\n" +

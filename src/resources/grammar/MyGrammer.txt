@@ -1,0 +1,104 @@
+function_definition
+	: type 'main' '(' ')' program
+	;
+
+program
+	: '{' expmaker '}'
+	;
+
+expmaker
+	: type id idassignment ';' expmaker
+	| id grop exp ';' expmaker
+	| 'if' '(' boolexp ')' '{' expmaker '}' iselse expmaker
+	| 'struct' id '{' expmaker '}' ';' expmaker
+	| 'while' '(' boolexp ')' '{' expmaker '}' expmaker
+	| ε
+	;
+
+isnull_exp
+	: exp
+	| ε
+	;
+
+iselse
+	: 'else' elif
+	| ε
+	;
+
+elif
+	: '{' expmaker '}'
+	| ε
+	;
+
+grop
+	: '='
+	| '[' int_const ']' '='
+	;
+
+idassignment
+	: '=' exp
+	| '[' int_const ']'
+	| ε
+	;
+
+boolexp
+	: beforexp afterexp
+	;
+
+beforexp
+	: float_const
+	| int_const
+	| id
+	;
+
+value
+	: float_const
+	| int_const
+	| id
+	| ε
+	;
+
+afterexp
+	: '>' value
+	| '<' value
+	| '==' value
+	| '>=' value
+	| '<=' value
+	| ε
+	;
+
+exp
+	: assignment_exp additive_exp
+	;
+
+additive_exp
+	: '+' assignment_exp additive_exp
+	| '-' assignment_exp additive_exp
+	| ε
+	;
+
+assignment_exp
+	: primary_exp mult_exp
+	;
+
+mult_exp
+	: '*' primary_exp mult_exp
+	| '/' primary_exp mult_exp
+	| ε
+	;
+
+primary_exp
+	: id
+	| float_const
+	| int_const
+	| string
+	| char_const
+	| '(' exp ')'
+	;
+
+type
+	: 'int'
+	| 'char'
+	| 'float'
+	| 'string'
+	;

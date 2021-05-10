@@ -25,7 +25,7 @@ import pers.lomesome.compliation.tool.filehandling.ReadAndWriteFile;
 import pers.lomesome.compliation.tool.finalattr.FinalAttribute;
 import pers.lomesome.compliation.utils.grammatical.GrammaticalAnalysis;
 import pers.lomesome.compliation.utils.lexer.Lexer;
-import pers.lomesome.compliation.utils.lexer.LexicalAnalyzer;
+//import pers.lomesome.compliation.utils.lexer.LexicalAnalyzer;
 import pers.lomesome.compliation.view.mywidgets.*;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -185,11 +185,11 @@ public class CodeInterface {
                         try {
                             lexer = new Lexer(new FileReader(openFile.getPath()));
                             lexer.next_token();
-                        } catch (FileNotFoundException e) {
-                            e.printStackTrace();
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
+
+                        assert lexer != null;
                         for (Word word : lexer.getWords()) {
                             Platform.runLater(() -> wordList.addAll(new PropertyWord(word.getType(), String.valueOf(word.getTypenum()), word.getWord())));
                             System.out.println(FinalAttribute.findString(word.getTypenum(), word.getWord()));
@@ -233,7 +233,7 @@ public class CodeInterface {
             protected Task<Integer> createTask() {
                 return new Task<Integer>() {
                     @Override
-                    protected Integer call() throws Exception {
+                    protected Integer call() {
                         long startTime = System.currentTimeMillis();
 
                         if (textAreaMap.get("Run") != null) {
@@ -243,13 +243,34 @@ public class CodeInterface {
 //                                textArea.setText("");
 //                                textArea.appendText(openFile.getName() + " is running!\n");
 //                            });
-
-                            Thread.sleep(500);
-
-                            Platform.runLater(() -> textArea.appendText("Process finished with exit code 0\n"));
+                            List<Word> list = new LinkedList<>();
+                            Lexer lexer = null;
+                            try {
+                                lexer = new Lexer(new FileReader(openFile.getPath()));
+                                lexer.next_token();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            assert lexer != null;
+                            for (Word word : lexer.getWords()) {
+                                word.setName(FinalAttribute.findString(word.getTypenum(), word.getWord()));
+                                list.add(word);
+                            }
+                            List<List<String>> listList = GrammaticalAnalysis.analysis(list);
+                            for (String s : listList.get(0)){
+                                Platform.runLater(() -> textArea.appendText(s));
+                            }
+                            for (String s : listList.get(1)){
+                                Platform.runLater(() -> textArea.appendText(s));
+                            }
+                            String code = "0";
+                            if (listList.get(1).size()>0)
+                                code = "-1";
+                            String finalCode = code;
+                            Platform.runLater(() -> textArea.appendText("\nProcess finished with exit code " + finalCode +"\n"));
 
                             long endTime = System.currentTimeMillis();
-                            long useTime = endTime - startTime - 500;
+                            long useTime = endTime - startTime;
 
                             Platform.runLater(() -> {
                                 start.setImageView("/resources/images/start.png");
@@ -267,8 +288,6 @@ public class CodeInterface {
         start.setOnMouseClicked(event -> {
             start.setImageView("/resources/images/restart.png");
             stop.setImageView("/resources/images/stopping.png");
-            GrammaticalAnalysis grammaticalAnalysis = new GrammaticalAnalysis();
-//            grammaticalAnalysis.first_follow(this);
             runService.restart();
         });
 

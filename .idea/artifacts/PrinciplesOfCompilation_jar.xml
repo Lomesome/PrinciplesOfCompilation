@@ -1,0 +1,10 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="PrinciplesOfCompilation:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/PrinciplesOfCompilation_jar</output-path>
+    <root id="archive" name="PrinciplesOfCompilation.jar">
+      <element id="module-output" name="PrinciplesOfCompilation" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/src/resources/jar/richtextfx-fat-0.10.5.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/src/resources/jar/richtextfx-0.10.5.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>

@@ -1,7 +1,6 @@
 package pers.lomesome.compliation.model;
 
 import pers.lomesome.compliation.tool.finalattr.FinalAttribute;
-
 import java.io.Serializable;
 
 public class Word implements Serializable {
@@ -13,14 +12,12 @@ public class Word implements Serializable {
     private int row;
     private int col;
 
-
     public Word() { }
 
     public Word(String word, String type, int row, int col) {
         this.token = FinalAttribute.findToken(word);
         this.word = word;
         this.type = type;
-        this.value = word;
         this.row = row;
         this.col = col;
     }
@@ -97,6 +94,6 @@ public class Word implements Serializable {
 
     @Override
     public String toString() {
-        return name + "@" + word;
+        return name;
     }
 }

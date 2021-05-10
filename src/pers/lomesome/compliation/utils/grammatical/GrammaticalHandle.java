@@ -16,12 +16,18 @@ public class GrammaticalHandle {
         String[] grammarlist = myGrammar.split("\t;");
         for (String grammar : grammarlist){
             String g =  replaceBlank(grammar.split("\t:")[0]);
-            if ((byte)g.charAt(0) == -1)
-                g = g.substring(1);
+//            if ((byte)g.charAt(0) == -1)
+//                g = g.substring(1);
             String[] replaceableList = grammar.split("\t:")[1].split("\t\\|");
             List<List<String>> arrayList = new ArrayList<>();
             for (String word : replaceableList){
-                List<String> stringArrayList = new ArrayList<>(Arrays.asList(replaceBlank(word).split(" ")));
+                List<String> stringArrayList = new ArrayList<>();
+                for (String s : replaceBlank(word).split(" ")){
+                    if (s.startsWith("'")){
+                        s = s.substring(1, s.length() - 1);
+                    }
+                    stringArrayList.add(s);
+                }
                 stringArrayList.removeAll(Collections.singleton(""));
                 arrayList.add(stringArrayList);
             }
