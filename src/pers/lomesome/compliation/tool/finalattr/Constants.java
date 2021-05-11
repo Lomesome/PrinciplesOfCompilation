@@ -120,404 +120,142 @@ public final class Constants {
     public static String STRING_ = "string";
     public static String CONST = "const";
 
-    public final static String GRAMMAR = "primary_expression\n" +
-            "\t: IDENTIFIER\n" +
-            "\t| CONSTANT\n" +
-            "\t| STRING_LITERAL\n" +
-            "\t| '(' expression ')'\n" +
+    public final static String GRAMMAR = "S\n" +
+            "\t: function functions\n" +
             "\t;\n" +
             "\n" +
-            "postfix_expression\n" +
-            "\t: primary_expression\n" +
-            "\t| postfix_expression '[' expression ']'\n" +
-            "\t| postfix_expression '(' ')'\n" +
-            "\t| postfix_expression '(' argument_expression_list ')'\n" +
-            "\t| postfix_expression '.' IDENTIFIER\n" +
-            "\t| postfix_expression PTR_OP IDENTIFIER\n" +
-            "\t| postfix_expression INC_OP\n" +
-            "\t| postfix_expression DEC_OP\n" +
+            "function\n" +
+            "\t: func_type funcname '(' args ')' program\n" +
             "\t;\n" +
             "\n" +
-            "argument_expression_list\n" +
-            "\t: assignment_expression\n" +
-            "\t| argument_expression_list ',' assignment_expression\n" +
+            "func_type\n" +
+            "\t: type\n" +
+            "\t| 'void'\n" +
             "\t;\n" +
             "\n" +
-            "unary_expression\n" +
-            "\t: postfix_expression\n" +
-            "\t| INC_OP unary_expression\n" +
-            "\t| DEC_OP unary_expression\n" +
-            "\t| unary_operator cast_expression\n" +
-            "\t| SIZEOF unary_expression\n" +
-            "\t| SIZEOF '(' type_name ')'\n" +
+            "functions\n" +
+            "\t: function functions\n" +
+            "\t| ε\n" +
             "\t;\n" +
             "\n" +
-            "unary_operator\n" +
-            "\t: '&'\n" +
-            "\t| '*'\n" +
-            "\t| '+'\n" +
-            "\t| '-'\n" +
-            "\t| '~'\n" +
-            "\t| '!'\n" +
+            "funcname\n" +
+            "\t: id\n" +
+            "\t| 'main'\n" +
             "\t;\n" +
             "\n" +
-            "cast_expression\n" +
-            "\t: unary_expression\n" +
-            "\t| '(' type_name ')' cast_expression\n" +
+            "args\n" +
+            "\t: type id arg\n" +
+            "\t| ε\n" +
             "\t;\n" +
             "\n" +
-            "multiplicative_expression\n" +
-            "\t: cast_expression\n" +
-            "\t| multiplicative_expression '*' cast_expression\n" +
-            "\t| multiplicative_expression '/' cast_expression\n" +
-            "\t| multiplicative_expression '%' cast_expression\n" +
+            "arg\n" +
+            "\t: , type id arg\n" +
+            "\t| ε\n" +
             "\t;\n" +
             "\n" +
-            "additive_expression\n" +
-            "\t: multiplicative_expression\n" +
-            "\t| additive_expression '+' multiplicative_expression\n" +
-            "\t| additive_expression '-' multiplicative_expression\n" +
+            "program\n" +
+            "\t: '{' expmaker '}'\n" +
             "\t;\n" +
             "\n" +
-            "shift_expression\n" +
-            "\t: additive_expression\n" +
-            "\t| shift_expression LEFT_OP additive_expression\n" +
-            "\t| shift_expression RIGHT_OP additive_expression\n" +
+            "expmaker\n" +
+            "\t: type id idassignment ';' expmaker\n" +
+            "\t| id grop exp ';' expmaker\n" +
+            "\t| 'if' '(' boolexp ')' '{' expmaker '}' iselse expmaker\n" +
+            "\t| 'struct' id '{' expmaker '}' ';' expmaker\n" +
+            "\t| 'while' '(' boolexp ')' stmt\n" +
+            "\t| 'for' '(' isnull_exp ';' isnull_exp ';' isnull_exp ')' stmt\n" +
+            "\t| ε\n" +
             "\t;\n" +
             "\n" +
-            "relational_expression\n" +
-            "\t: shift_expression\n" +
-            "\t| relational_expression '<' shift_expression\n" +
-            "\t| relational_expression '>' shift_expression\n" +
-            "\t| relational_expression LE_OP shift_expression\n" +
-            "\t| relational_expression GE_OP shift_expression\n" +
+            "stmt\n" +
+            "\t: '{' expmaker '}' expmaker\n" +
             "\t;\n" +
             "\n" +
-            "equality_expression\n" +
-            "\t: relational_expression\n" +
-            "\t| equality_expression EQ_OP relational_expression\n" +
-            "\t| equality_expression NE_OP relational_expression\n" +
+            "isnull_exp\n" +
+            "\t: exp\n" +
+            "\t| ε\n" +
             "\t;\n" +
             "\n" +
-            "and_expression\n" +
-            "\t: equality_expression\n" +
-            "\t| and_expression '&' equality_expression\n" +
+            "iselse\n" +
+            "\t: 'else' elif\n" +
+            "\t| ε\n" +
             "\t;\n" +
             "\n" +
-            "exclusive_or_expression\n" +
-            "\t: and_expression\n" +
-            "\t| exclusive_or_expression '^' and_expression\n" +
+            "elif\n" +
+            "\t: '{' expmaker '}'\n" +
+            "\t| ε\n" +
             "\t;\n" +
             "\n" +
-            "inclusive_or_expression\n" +
-            "\t: exclusive_or_expression\n" +
-            "\t| inclusive_or_expression '|' exclusive_or_expression\n" +
-            "\t;\n" +
-            "\n" +
-            "logical_and_expression\n" +
-            "\t: inclusive_or_expression\n" +
-            "\t| logical_and_expression AND_OP inclusive_or_expression\n" +
-            "\t;\n" +
-            "\n" +
-            "logical_or_expression\n" +
-            "\t: logical_and_expression\n" +
-            "\t| logical_or_expression OR_OP logical_and_expression\n" +
-            "\t;\n" +
-            "\n" +
-            "conditional_expression\n" +
-            "\t: logical_or_expression\n" +
-            "\t| logical_or_expression '?' expression ':' conditional_expression\n" +
-            "\t;\n" +
-            "\n" +
-            "assignment_expression\n" +
-            "\t: conditional_expression\n" +
-            "\t| unary_expression assignment_operator assignment_expression\n" +
-            "\t;\n" +
-            "\n" +
-            "assignment_operator\n" +
+            "grop\n" +
             "\t: '='\n" +
-            "\t| MUL_ASSIGN\n" +
-            "\t| DIV_ASSIGN\n" +
-            "\t| MOD_ASSIGN\n" +
-            "\t| ADD_ASSIGN\n" +
-            "\t| SUB_ASSIGN\n" +
-            "\t| LEFT_ASSIGN\n" +
-            "\t| RIGHT_ASSIGN\n" +
-            "\t| AND_ASSIGN\n" +
-            "\t| XOR_ASSIGN\n" +
-            "\t| OR_ASSIGN\n" +
+            "\t| '[' int_const ']' '='\n" +
             "\t;\n" +
             "\n" +
-            "expression\n" +
-            "\t: assignment_expression\n" +
-            "\t| expression ',' assignment_expression\n" +
+            "idassignment\n" +
+            "\t: '=' exp\n" +
+            "\t| '[' int_const ']'\n" +
+            "\t| ε\n" +
             "\t;\n" +
             "\n" +
-            "constant_expression\n" +
-            "\t: conditional_expression\n" +
+            "boolexp\n" +
+            "\t: beforexp afterexp\n" +
             "\t;\n" +
             "\n" +
-            "declaration\n" +
-            "\t: declaration_specifiers ';'\n" +
-            "\t| declaration_specifiers init_declarator_list ';'\n" +
+            "beforexp\n" +
+            "\t: float_const\n" +
+            "\t| int_const\n" +
+            "\t| id\n" +
             "\t;\n" +
             "\n" +
-            "declaration_specifiers\n" +
-            "\t: storage_class_specifier\n" +
-            "\t| storage_class_specifier declaration_specifiers\n" +
-            "\t| type_specifier\n" +
-            "\t| type_specifier declaration_specifiers\n" +
-            "\t| type_qualifier\n" +
-            "\t| type_qualifier declaration_specifiers\n" +
+            "value\n" +
+            "\t: float_const\n" +
+            "\t| int_const\n" +
+            "\t| id\n" +
+            "\t| ε\n" +
             "\t;\n" +
             "\n" +
-            "init_declarator_list\n" +
-            "\t: init_declarator\n" +
-            "\t| init_declarator_list ',' init_declarator\n" +
+            "afterexp\n" +
+            "\t: '>' value\n" +
+            "\t| '<' value\n" +
+            "\t| '==' value\n" +
+            "\t| '>=' value\n" +
+            "\t| '<=' value\n" +
+            "\t| ε\n" +
             "\t;\n" +
             "\n" +
-            "init_declarator\n" +
-            "\t: declarator\n" +
-            "\t| declarator '=' initializer\n" +
+            "exp\n" +
+            "\t: assignment_exp additive_exp\n" +
             "\t;\n" +
             "\n" +
-            "storage_class_specifier\n" +
-            "\t: TYPEDEF\n" +
-            "\t| EXTERN\n" +
-            "\t| STATIC\n" +
-            "\t| AUTO\n" +
-            "\t| REGISTER\n" +
+            "additive_exp\n" +
+            "\t: '+' assignment_exp additive_exp\n" +
+            "\t| '-' assignment_exp additive_exp\n" +
+            "\t| ε\n" +
             "\t;\n" +
             "\n" +
-            "type_specifier\n" +
-            "\t: VOID\n" +
-            "\t| CHAR\n" +
-            "\t| SHORT\n" +
-            "\t| INT\n" +
-            "\t| LONG\n" +
-            "\t| FLOAT\n" +
-            "\t| DOUBLE\n" +
-            "\t| SIGNED\n" +
-            "\t| UNSIGNED\n" +
-            "\t| struct_or_union_specifier\n" +
-            "\t| enum_specifier\n" +
-            "\t| TYPE_NAME\n" +
+            "assignment_exp\n" +
+            "\t: primary_exp mult_exp\n" +
             "\t;\n" +
             "\n" +
-            "struct_or_union_specifier\n" +
-            "\t: struct_or_union IDENTIFIER '{' struct_declaration_list '}'\n" +
-            "\t| struct_or_union '{' struct_declaration_list '}'\n" +
-            "\t| struct_or_union IDENTIFIER\n" +
+            "mult_exp\n" +
+            "\t: '*' primary_exp mult_exp\n" +
+            "\t| '/' primary_exp mult_exp\n" +
+            "\t| ε\n" +
             "\t;\n" +
             "\n" +
-            "struct_or_union\n" +
-            "\t: STRUCT\n" +
-            "\t| UNION\n" +
+            "primary_exp\n" +
+            "\t: id\n" +
+            "\t| float_const\n" +
+            "\t| int_const\n" +
+            "\t| string\n" +
+            "\t| char_const\n" +
+            "\t| '(' exp ')'\n" +
             "\t;\n" +
             "\n" +
-            "struct_declaration_list\n" +
-            "\t: struct_declaration\n" +
-            "\t| struct_declaration_list struct_declaration\n" +
-            "\t;\n" +
-            "\n" +
-            "struct_declaration\n" +
-            "\t: specifier_qualifier_list struct_declarator_list ';'\n" +
-            "\t;\n" +
-            "\n" +
-            "specifier_qualifier_list\n" +
-            "\t: type_specifier specifier_qualifier_list\n" +
-            "\t| type_specifier\n" +
-            "\t| type_qualifier specifier_qualifier_list\n" +
-            "\t| type_qualifier\n" +
-            "\t;\n" +
-            "\n" +
-            "struct_declarator_list\n" +
-            "\t: struct_declarator\n" +
-            "\t| struct_declarator_list ',' struct_declarator\n" +
-            "\t;\n" +
-            "\n" +
-            "struct_declarator\n" +
-            "\t: declarator\n" +
-            "\t| ':' constant_expression\n" +
-            "\t| declarator ':' constant_expression\n" +
-            "\t;\n" +
-            "\n" +
-            "enum_specifier\n" +
-            "\t: ENUM '{' enumerator_list '}'\n" +
-            "\t| ENUM IDENTIFIER '{' enumerator_list '}'\n" +
-            "\t| ENUM IDENTIFIER\n" +
-            "\t;\n" +
-            "\n" +
-            "enumerator_list\n" +
-            "\t: enumerator\n" +
-            "\t| enumerator_list ',' enumerator\n" +
-            "\t;\n" +
-            "\n" +
-            "enumerator\n" +
-            "\t: IDENTIFIER\n" +
-            "\t| IDENTIFIER '=' constant_expression\n" +
-            "\t;\n" +
-            "\n" +
-            "type_qualifier\n" +
-            "\t: CONST\n" +
-            "\t| VOLATILE\n" +
-            "\t;\n" +
-            "\n" +
-            "declarator\n" +
-            "\t: pointer direct_declarator\n" +
-            "\t| direct_declarator\n" +
-            "\t;\n" +
-            "\n" +
-            "direct_declarator\n" +
-            "\t: IDENTIFIER\n" +
-            "\t| '(' declarator ')'\n" +
-            "\t| direct_declarator '[' constant_expression ']'\n" +
-            "\t| direct_declarator '[' ']'\n" +
-            "\t| direct_declarator '(' parameter_type_list ')'\n" +
-            "\t| direct_declarator '(' identifier_list ')'\n" +
-            "\t| direct_declarator '(' ')'\n" +
-            "\t;\n" +
-            "\n" +
-            "pointer\n" +
-            "\t: '*'\n" +
-            "\t| '*' type_qualifier_list\n" +
-            "\t| '*' pointer\n" +
-            "\t| '*' type_qualifier_list pointer\n" +
-            "\t;\n" +
-            "\n" +
-            "type_qualifier_list\n" +
-            "\t: type_qualifier\n" +
-            "\t| type_qualifier_list type_qualifier\n" +
-            "\t;\n" +
-            "\n" +
-            "\n" +
-            "parameter_type_list\n" +
-            "\t: parameter_list\n" +
-            "\t| parameter_list ',' ELLIPSIS\n" +
-            "\t;\n" +
-            "\n" +
-            "parameter_list\n" +
-            "\t: parameter_declaration\n" +
-            "\t| parameter_list ',' parameter_declaration\n" +
-            "\t;\n" +
-            "\n" +
-            "parameter_declaration\n" +
-            "\t: declaration_specifiers declarator\n" +
-            "\t| declaration_specifiers abstract_declarator\n" +
-            "\t| declaration_specifiers\n" +
-            "\t;\n" +
-            "\n" +
-            "identifier_list\n" +
-            "\t: IDENTIFIER\n" +
-            "\t| identifier_list ',' IDENTIFIER\n" +
-            "\t;\n" +
-            "\n" +
-            "type_name\n" +
-            "\t: specifier_qualifier_list\n" +
-            "\t| specifier_qualifier_list abstract_declarator\n" +
-            "\t;\n" +
-            "\n" +
-            "abstract_declarator\n" +
-            "\t: pointer\n" +
-            "\t| direct_abstract_declarator\n" +
-            "\t| pointer direct_abstract_declarator\n" +
-            "\t;\n" +
-            "\n" +
-            "direct_abstract_declarator\n" +
-            "\t: '(' abstract_declarator ')'\n" +
-            "\t| '[' ']'\n" +
-            "\t| '[' constant_expression ']'\n" +
-            "\t| direct_abstract_declarator '[' ']'\n" +
-            "\t| direct_abstract_declarator '[' constant_expression ']'\n" +
-            "\t| '(' ')'\n" +
-            "\t| '(' parameter_type_list ')'\n" +
-            "\t| direct_abstract_declarator '(' ')'\n" +
-            "\t| direct_abstract_declarator '(' parameter_type_list ')'\n" +
-            "\t;\n" +
-            "\n" +
-            "initializer\n" +
-            "\t: assignment_expression\n" +
-            "\t| '{' initializer_list '}'\n" +
-            "\t| '{' initializer_list ',' '}'\n" +
-            "\t;\n" +
-            "\n" +
-            "initializer_list\n" +
-            "\t: initializer\n" +
-            "\t| initializer_list ',' initializer\n" +
-            "\t;\n" +
-            "\n" +
-            "statement\n" +
-            "\t: labeled_statement\n" +
-            "\t| compound_statement\n" +
-            "\t| expression_statement\n" +
-            "\t| selection_statement\n" +
-            "\t| iteration_statement\n" +
-            "\t| jump_statement\n" +
-            "\t;\n" +
-            "\n" +
-            "labeled_statement\n" +
-            "\t: IDENTIFIER ':' statement\n" +
-            "\t| CASE constant_expression ':' statement\n" +
-            "\t| DEFAULT ':' statement\n" +
-            "\t;\n" +
-            "\n" +
-            "compound_statement\n" +
-            "\t: '{' '}'\n" +
-            "\t| '{' statement_list '}'\n" +
-            "\t| '{' declaration_list '}'\n" +
-            "\t| '{' declaration_list statement_list '}'\n" +
-            "\t;\n" +
-            "\n" +
-            "declaration_list\n" +
-            "\t: declaration\n" +
-            "\t| declaration_list declaration\n" +
-            "\t;\n" +
-            "\n" +
-            "statement_list\n" +
-            "\t: statement\n" +
-            "\t| statement_list statement\n" +
-            "\t;\n" +
-            "\n" +
-            "expression_statement\n" +
-            "\t: ';'\n" +
-            "\t| expression ';'\n" +
-            "\t;\n" +
-            "\n" +
-            "selection_statement\n" +
-            "\t: IF '(' expression ')' statement\n" +
-            "\t| IF '(' expression ')' statement ELSE statement\n" +
-            "\t| SWITCH '(' expression ')' statement\n" +
-            "\t;\n" +
-            "\n" +
-            "iteration_statement\n" +
-            "\t: WHILE '(' expression ')' statement\n" +
-            "\t| DO statement WHILE '(' expression ')' ';'\n" +
-            "\t| FOR '(' expression_statement expression_statement ')' statement\n" +
-            "\t| FOR '(' expression_statement expression_statement expression ')' statement\n" +
-            "\t;\n" +
-            "\n" +
-            "jump_statement\n" +
-            "\t: GOTO IDENTIFIER ';'\n" +
-            "\t| CONTINUE ';'\n" +
-            "\t| BREAK ';'\n" +
-            "\t| RETURN ';'\n" +
-            "\t| RETURN expression ';'\n" +
-            "\t;\n" +
-            "\n" +
-            "translation_unit\n" +
-            "\t: external_declaration\n" +
-            "\t| translation_unit external_declaration\n" +
-            "\t;\n" +
-            "\n" +
-            "external_declaration\n" +
-            "\t: function_definition\n" +
-            "\t| declaration\n" +
-            "\t;\n" +
-            "\n" +
-            "function_definition\n" +
-            "\t: declaration_specifiers declarator declaration_list compound_statement\n" +
-            "\t| declaration_specifiers declarator compound_statement\n" +
-            "\t| declarator declaration_list compound_statement\n" +
-            "\t| declarator compound_statement\n" +
+            "type\n" +
+            "\t: 'int'\n" +
+            "\t| 'char'\n" +
+            "\t| 'float'\n" +
+            "\t| 'string'\n" +
             "\t;";
 }

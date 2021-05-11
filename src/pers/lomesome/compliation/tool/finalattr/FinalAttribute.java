@@ -1,6 +1,8 @@
 package pers.lomesome.compliation.tool.finalattr;
 
 import pers.lomesome.compliation.model.MakeJson;
+import pers.lomesome.compliation.utils.syntax.AllGrammer;
+
 import java.util.*;
 
 public class FinalAttribute {
@@ -27,9 +29,17 @@ public class FinalAttribute {
 
     private static LinkedHashMap<String, LinkedHashMap<String, List<MakeJson>>> predictMap;
 
+    private static LinkedHashMap<String, LinkedHashMap<String, List<String>>> semPredictMap;
+
     private static Set<String> allVn = new LinkedHashSet<>();
 
     private static Set<String> allVt = new LinkedHashSet<>();
+
+    private static AllGrammer allGrammer;
+
+    private static AllGrammer allGrammerWithAction;
+
+    private static Map<String, Integer> actionMap = new LinkedHashMap<>();
 
     //初始化关键字、分界符、运算符的token
     public static void init(){
@@ -38,6 +48,31 @@ public class FinalAttribute {
         setToken(301, delimiter);
         setString();
         setNameMap();
+        setAction();
+    }
+    
+    private static void setAction(){
+        actionMap.put("PUSH", 1);
+        actionMap.put("GEQA", 2);
+        actionMap.put("GEQS", 3);
+        actionMap.put("GEQM", 4);
+        actionMap.put("GEQD", 5);
+        actionMap.put("ASSI", 6);
+        actionMap.put("GEQG", 7);
+        actionMap.put("GEQL", 8);
+        actionMap.put("GEQE", 9);
+        actionMap.put("GEQGE", 10);
+        actionMap.put("GEQLE", 11);
+        actionMap.put("IF", 12);
+        actionMap.put("EL", 13);
+        actionMap.put("IEFIR", 14);
+        actionMap.put("IESEC", 15);
+        actionMap.put("WH", 16);
+        actionMap.put("DO", 17);
+        actionMap.put("WE", 18);
+        actionMap.put("PUSHNUM", 19);
+        actionMap.put("LEVELA", 20);
+        actionMap.put("LEVELS", 21);
     }
 
     //设置关键字、分界符、运算符的token
@@ -59,7 +94,7 @@ public class FinalAttribute {
         stringMap.put(700, "id");
         stringMap.put(500, "char_const");
         stringMap.put(800, "float_const");
-        stringMap.put(400, "int_const");
+        stringMap.put(400, "float_const");
         stringMap.put(600, "string_const");
         for(String s : keyword){
             stringMap.put(start++, s);
@@ -155,5 +190,37 @@ public class FinalAttribute {
 
     public static void setAllVt(Set<String> allVt) {
         FinalAttribute.allVt = allVt;
+    }
+
+    public static AllGrammer getAllGrammer() {
+        return allGrammer;
+    }
+
+    public static void setAllGrammer(AllGrammer allGrammer) {
+        FinalAttribute.allGrammer = allGrammer;
+    }
+
+    public static Map<String, Integer> getActionMap() {
+        return actionMap;
+    }
+
+    public static void setActionMap(Map<String, Integer> actionMap) {
+        FinalAttribute.actionMap = actionMap;
+    }
+
+    public static AllGrammer getAllGrammerWithAction() {
+        return allGrammerWithAction;
+    }
+
+    public static void setAllGrammerWithAction(AllGrammer allGrammerWithAction) {
+        FinalAttribute.allGrammerWithAction = allGrammerWithAction;
+    }
+
+    public static LinkedHashMap<String, LinkedHashMap<String, List<String>>> getSemPredictMap() {
+        return semPredictMap;
+    }
+
+    public static void setSemPredictMap(LinkedHashMap<String, LinkedHashMap<String, List<String>>> semPredictMap) {
+        FinalAttribute.semPredictMap = semPredictMap;
     }
 }

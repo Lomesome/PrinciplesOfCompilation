@@ -1,7 +1,6 @@
-package pers.lomesome.compliation.utils.grammatical;
+package pers.lomesome.compliation.utils.syntax;
 
 import pers.lomesome.compliation.tool.filehandling.FileUtil;
-
 import java.util.*;
 
 public class AllGrammer {

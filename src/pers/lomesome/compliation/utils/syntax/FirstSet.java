@@ -1,13 +1,14 @@
-package pers.lomesome.compliation.utils.grammatical;
+package pers.lomesome.compliation.utils.syntax;
 
+import pers.lomesome.compliation.tool.finalattr.FinalAttribute;
 import java.util.*;
 
 public class FirstSet {
     public Map<String, Set<String>> firstSet;
     private final Map<String, List<List<String>>> grammars;
 
-    public FirstSet(Map<String, List<List<String>>> grammars){
-        this.grammars = grammars;
+    public FirstSet(){
+        this.grammars = FinalAttribute.getAllGrammer().getGrammarMap();
     }
 
     public Map<String, Set<String>> getFirstSet() {
@@ -17,6 +18,7 @@ public class FirstSet {
             getFirst(k, vnFirst);
             firstSet.put(k, vnFirst);
         });
+
         return firstSet;
     }
 

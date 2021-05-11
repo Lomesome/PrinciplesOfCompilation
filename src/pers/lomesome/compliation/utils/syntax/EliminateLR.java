@@ -1,4 +1,4 @@
-package pers.lomesome.compliation.utils.grammatical;
+package pers.lomesome.compliation.utils.syntax;
 
 import java.util.*;
 

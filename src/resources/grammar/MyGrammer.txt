@@ -1,5 +1,34 @@
-function_definition
-	: type 'main' '(' ')' program
+S
+	: function functions
+	;
+
+function
+	: func_type funcname '(' args ')' program
+	;
+
+func_type
+	: type
+	| 'void'
+	;
+
+functions
+	: function functions
+	| ε
+	;
+
+funcname
+	: id
+	| 'main'
+	;
+
+args
+	: type id arg
+	| ε
+	;
+
+arg
+	: , type id arg
+	| ε
 	;
 
 program
@@ -12,11 +41,6 @@ expmaker
 	| 'if' '(' boolexp ')' '{' expmaker '}' iselse expmaker
 	| 'struct' id '{' expmaker '}' ';' expmaker
 	| 'while' '(' boolexp ')' '{' expmaker '}' expmaker
-	| ε
-	;
-
-isnull_exp
-	: exp
 	| ε
 	;
 

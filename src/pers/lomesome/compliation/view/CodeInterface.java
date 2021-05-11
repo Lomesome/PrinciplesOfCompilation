@@ -23,12 +23,13 @@ import pers.lomesome.compliation.controller.*;
 import pers.lomesome.compliation.tool.filehandling.FileUtil;
 import pers.lomesome.compliation.tool.filehandling.ReadAndWriteFile;
 import pers.lomesome.compliation.tool.finalattr.FinalAttribute;
-import pers.lomesome.compliation.utils.grammatical.GrammaticalAnalysis;
+import pers.lomesome.compliation.utils.semantic.Analysis;
+import pers.lomesome.compliation.utils.syntax.SyntaxAnalysis;
 import pers.lomesome.compliation.utils.lexer.Lexer;
 //import pers.lomesome.compliation.utils.lexer.LexicalAnalyzer;
+import pers.lomesome.compliation.utils.semantic.SymbolTable;
 import pers.lomesome.compliation.view.mywidgets.*;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
@@ -233,7 +234,7 @@ public class CodeInterface {
             protected Task<Integer> createTask() {
                 return new Task<Integer>() {
                     @Override
-                    protected Integer call() {
+                    protected Integer call() throws IOException {
                         long startTime = System.currentTimeMillis();
 
                         if (textAreaMap.get("Run") != null) {
@@ -256,7 +257,13 @@ public class CodeInterface {
                                 word.setName(FinalAttribute.findString(word.getTypenum(), word.getWord()));
                                 list.add(word);
                             }
-                            List<List<String>> listList = GrammaticalAnalysis.analysis(list);
+                            list.add(new Word("#", "end", -1,-1));
+                            list.get(list.size() - 1).setName("#");
+
+                            SymbolTable Table = new SymbolTable();
+                            Table.getTable(list);
+                            List<List<String>> listList = SyntaxAnalysis.analysis(list, Table);
+
                             for (String s : listList.get(0)){
                                 Platform.runLater(() -> textArea.appendText(s));
                             }
@@ -264,8 +271,13 @@ public class CodeInterface {
                                 Platform.runLater(() -> textArea.appendText(s));
                             }
                             String code = "0";
-                            if (listList.get(1).size()>0)
+                            if (listList.get(1).size()>0) {
                                 code = "-1";
+                            }
+                            if (code.equals("0")){
+                                Table.printtable();
+                                Analysis.analysis(list, Table);
+                            }
                             String finalCode = code;
                             Platform.runLater(() -> textArea.appendText("\nProcess finished with exit code " + finalCode +"\n"));
 

@@ -1,7 +1,6 @@
-package pers.lomesome.compliation.utils.grammatical;
+package pers.lomesome.compliation.utils.syntax;
 
 import pers.lomesome.compliation.model.Counter;
-
 import java.util.*;
 
 public class EliminateBT {
@@ -21,7 +20,7 @@ public class EliminateBT {
         for (int i = grammers.getGrammarMap().size() - 1; i >= 0; i--) {
             int range = replaceableList.get(i).size();
             String vn = vt.get(i);
-            Set<String> set = new HashSet();
+            Set<String> set = new LinkedHashSet<>();
             for (List<String> lists : replaceableList.get(i)) {
                 set.add(lists.get(0));
             }

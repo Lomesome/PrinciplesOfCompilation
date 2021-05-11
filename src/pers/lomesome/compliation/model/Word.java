@@ -94,6 +94,6 @@ public class Word implements Serializable {
 
     @Override
     public String toString() {
-        return name;
+        return word;
     }
 }

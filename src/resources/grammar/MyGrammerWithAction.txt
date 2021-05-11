@@ -1,0 +1,127 @@
+S
+	: function functions
+	;
+
+function
+	: func_type funcname '(' args ')' program
+	;
+
+func_type
+	: type
+	| 'void'
+	;
+
+functions
+	: function functions
+	| ε
+	;
+
+funcname
+	: id
+	| 'main'
+	;
+
+args
+	: type id arg
+	| ε
+	;
+
+arg
+	: , type id arg
+	| ε
+	;
+
+program
+	: '{' expmaker '}'
+	;
+
+expmaker
+	: type id idassignment ';' expmaker
+	| ε
+	| id grop exp ASSI ';' expmaker
+	| 'if' '(' boolexp ')' IF '{' LEVELA expmaker '}' LEVELS iselse expmaker
+	| 'struct' id '{' expmaker '}' ';' expmaker
+	| 'while' WH '(' boolexp ')' DO '{' LEVELA expmaker '}' LEVELS WE expmaker
+	;
+
+iselse
+	: ε IEFIR
+	| 'else' EL elif
+	;
+
+elif
+	: '{' LEVELA expmaker '}' LEVELS IESEC
+	| ε
+	;
+
+grop
+	: PUSH '='
+	| PUSH '[' int_const PUSHNUM ']' '='
+	;
+
+idassignment
+	: ε
+	| PUSH '=' exp ASSI
+	| '[' int_const ']'
+	;
+
+boolexp
+	: beforexp afterexp
+	;
+
+beforexp
+	: float_const PUSH
+	| int_const PUSH
+	| id PUSH
+	;
+
+value
+	: float_const PUSH
+	| int_const PUSH
+	| id PUSH
+	| ε
+	;
+
+afterexp
+	: '>' value GEQG
+	| '<' value GEQL
+	| '==' value GEQE
+	| '>=' value GEQGE
+	| '<=' value GEQLE
+	| ε
+	;
+
+exp
+	: assignment_exp additive_exp
+	;
+
+additive_exp
+	: '+' assignment_exp GEQA additive_exp
+	| '-' assignment_exp GEQS additive_exp
+	| ε
+	;
+
+assignment_exp
+	: primary_exp mult_exp
+	;
+
+mult_exp
+	: '*' primary_exp GEQM mult_exp
+	| '/' primary_exp GEQD mult_exp
+	| ε
+	;
+
+primary_exp
+	: id PUSH
+	| float_const PUSH
+	| int_const PUSH
+	| string PUSH
+	| char_const PUSH
+	| '(' exp ')'
+	;
+type
+	: 'int'
+	| 'char'
+	| 'float'
+	| 'string'
+	;

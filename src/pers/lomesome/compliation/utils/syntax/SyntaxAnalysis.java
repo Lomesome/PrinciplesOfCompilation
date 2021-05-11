@@ -1,17 +1,16 @@
-package pers.lomesome.compliation.utils.grammatical;
+package pers.lomesome.compliation.utils.syntax;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 import pers.lomesome.compliation.model.MakeJson;
 import pers.lomesome.compliation.model.MyStack;
 import pers.lomesome.compliation.model.Word;
 import pers.lomesome.compliation.python.DrawTree;
-import pers.lomesome.compliation.tool.filehandling.ReadAndWriteFile;
 import pers.lomesome.compliation.tool.finalattr.FinalAttribute;
-
+import pers.lomesome.compliation.utils.semantic.SymbolTable;
+import java.io.IOException;
 import java.util.*;
 
-public class GrammaticalAnalysis {
-    private static AllGrammer allGrammer;
+public class SyntaxAnalysis {
 
     public static void init(){
         first_follow();
@@ -19,16 +18,13 @@ public class GrammaticalAnalysis {
     }
 
     private static void first_follow() {
-        String content = ReadAndWriteFile.readFileContent("/Users/leiyunhong/IdeaProjects/PrinciplesOfCompilation/src/resources/grammar/MyGrammer.txt"); //C语言官方文法
-        GrammaticalHandle grammaticalHandle = new GrammaticalHandle(content);
-        allGrammer = new AllGrammer(grammaticalHandle.grammaticlHandel());
-        EliminateLR eliminateLR = new EliminateLR(allGrammer);
+        EliminateLR eliminateLR = new EliminateLR(FinalAttribute.getAllGrammer());
         eliminateLR.eliminate();
-        EliminateBT eliminateBT = new EliminateBT(allGrammer);
+        EliminateBT eliminateBT = new EliminateBT(FinalAttribute.getAllGrammer());
         eliminateBT.eliminate();
 
-        allGrammer.getGrammarMap().forEach((k, v)-> FinalAttribute.getAllVn().add(k));
-        allGrammer.getGrammarMap().forEach((k, v)->{
+        FinalAttribute.getAllGrammer().getGrammarMap().forEach((k, v)-> FinalAttribute.getAllVn().add(k));
+        FinalAttribute.getAllGrammer().getGrammarMap().forEach((k, v)->{
             for (List<String> stringList:v){
                 FinalAttribute.getAllVt().addAll(stringList);
             }
@@ -36,24 +32,23 @@ public class GrammaticalAnalysis {
         FinalAttribute.getAllVt().removeAll(FinalAttribute.getAllVn());
         FinalAttribute.getAllVt().remove("ε");
 
-        FirstSet firstSet = new FirstSet(allGrammer.getGrammarMap());
-
+        FirstSet firstSet = new FirstSet();
         FinalAttribute.setFirstmap(firstSet.getFirstSet());
 
-        SelectSet selectSet = new SelectSet(allGrammer.getGrammarMap());
+        SelectSet selectSet = new SelectSet(FinalAttribute.getAllGrammer().getGrammarMap());
         FinalAttribute.setSelectMap(selectSet.getSelectSet());
 
-        FollowSet followSet = new FollowSet(allGrammer.getGrammarMap(), FinalAttribute.getFirstmap());
+        FollowSet followSet = new FollowSet();
         FinalAttribute.setFollowmap(followSet.getFollowSet());
 
     }
 
     private static void makePredict(){
-        Predict predict = new Predict(allGrammer, FinalAttribute.getSelectMap(), FinalAttribute.getFollowmap());
+        Predict predict = new Predict(FinalAttribute.getAllGrammer(), FinalAttribute.getSelectMap(), FinalAttribute.getFollowmap());
         FinalAttribute.setPredictMap(predict.predictTable());
     }
 
-    public static List<List<String>> analysis(List<Word> list){
+    public static List<List<String>> analysis(List<Word> list, SymbolTable table) {
         LinkedHashMap<String, LinkedHashMap<String, List<MakeJson>>> map = FinalAttribute.getPredictMap();
         Stack<MakeJson> makeJsonStack = new MyStack<>();
         boolean errorflag = false;
@@ -63,9 +58,8 @@ public class GrammaticalAnalysis {
         result.add(analysisResult);
         result.add(error);
         makeJsonStack.push(new MakeJson("#", new ArrayList<>()));
-        makeJsonStack.push(new MakeJson((String) allGrammer.getGrammarMap().keySet().toArray()[0], new ArrayList<>()));
-        list.add(new Word("#", "end", -1,-1));
-        list.get(list.size() - 1).setName("#");
+        makeJsonStack.push(new MakeJson((String) FinalAttribute.getAllGrammer().getGrammarMap().keySet().toArray()[0], new ArrayList<>()));
+
         int IP = 0;
         Word a = list.get(IP);
         MakeJson X = makeJsonStack.pop();
@@ -104,19 +98,20 @@ public class GrammaticalAnalysis {
                     }
                 }
             }
-
             analysisResult.add(makeJsonStack + " " + list.subList(IP, list.size()) + "\n");
             System.out.println(makeJsonStack + " " + list.subList(IP, list.size()));
             X = makeJsonStack.pop();
         }
         if (list.size() - 1 != IP  || errorflag){
+            System.out.println("该语句不符合该文法");
             analysisResult.add("该语句不符合该文法\n");
         }else {
+            System.out.println("该语句符合该文法");
+            String str = StringEscapeUtils.unescapeJava(makeJsonList.get(0).toString());
+            str = str.replace("}\",\"","},").replace("[\"{\"","[{\"").replace("}\"],","}],");
+            DrawTree.draw(str);
             analysisResult.add("该语句符合该文法\n");
         }
-        String str = StringEscapeUtils.unescapeJava(makeJsonList.get(0).toString());
-        str = str.replace("}\",\"","},").replace("[\"{\"","[{\"").replace("}\"],","}],");
-        DrawTree.draw(str);
         return result;
     }
 }

@@ -1,7 +1,6 @@
-package pers.lomesome.compliation.utils.grammatical;
+package pers.lomesome.compliation.utils.syntax;
 
 import pers.lomesome.compliation.model.MakeJson;
-
 import java.util.*;
 
 public class Predict {
@@ -19,9 +18,7 @@ public class Predict {
         LinkedHashMap<String, LinkedHashMap<String, List<MakeJson>>> linkedHashMap = new LinkedHashMap<>();
         Set<String> allVn = new LinkedHashSet<>();
         Set<String> allVt = new LinkedHashSet<>();
-        allGrammer.getGrammarMap().forEach((k, v) -> {
-            allVn.add(k);
-        });
+        allGrammer.getGrammarMap().forEach((k, v) -> allVn.add(k));
         allGrammer.getGrammarMap().forEach((k, v) -> {
             for (List<String> stringList : v) {
                 allVt.addAll(stringList);
