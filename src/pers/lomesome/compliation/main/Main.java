@@ -23,7 +23,6 @@ public class Main extends Application {
         FinalAttribute.setAllGrammerWithAction(new AllGrammer(newGrammaticalHandle.grammaticlHandel()));
         FinalAttribute.init(); //加载关键字、运算符、界符的token值
         SyntaxAnalysis.init(); //预先生成预测表
-        Analysis.init();
     }
 
     @Override

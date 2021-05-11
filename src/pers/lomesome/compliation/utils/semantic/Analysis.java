@@ -12,42 +12,6 @@ public class Analysis {
     public static int i = 0;
     public static Boolean flag = true;
 
-    public static void init() {
-        first_follow();
-        makePredict();
-    }
-
-    private static void first_follow() {
-        EliminateLR eliminateLR = new EliminateLR(FinalAttribute.getAllGrammer());
-        eliminateLR.eliminate();
-        EliminateBT eliminateBT = new EliminateBT(FinalAttribute.getAllGrammer());
-        eliminateBT.eliminate();
-
-        FinalAttribute.getAllGrammer().getGrammarMap().forEach((k, v) -> FinalAttribute.getAllVn().add(k));
-        FinalAttribute.getAllGrammer().getGrammarMap().forEach((k, v) -> {
-            for (List<String> stringList : v) {
-                FinalAttribute.getAllVt().addAll(stringList);
-            }
-        });
-        FinalAttribute.getAllVt().removeAll(FinalAttribute.getAllVn());
-        FinalAttribute.getAllVt().remove("ε");
-
-        FirstSet firstSet = new FirstSet();
-        FinalAttribute.setFirstmap(firstSet.getFirstSet());
-
-        SelectSet selectSet = new SelectSet(FinalAttribute.getAllGrammer().getGrammarMap());
-        FinalAttribute.setSelectMap(selectSet.getSelectSet());
-
-        FollowSet followSet = new FollowSet();
-        FinalAttribute.setFollowmap(followSet.getFollowSet());
-
-    }
-
-    private static void makePredict() {
-        NewPredict predict = new NewPredict(FinalAttribute.getAllGrammer(), FinalAttribute.getSelectMap(), FinalAttribute.getFollowmap());
-        FinalAttribute.setSemPredictMap(predict.predictTable());
-    }
-
     public static void analysis(List<Word> list, SymbolTable table) throws IOException {
         LiveStatu liveStatu = new LiveStatu();
         LinkedHashMap<String, LinkedHashMap<String, List<String>>> map = FinalAttribute.getSemPredictMap();
@@ -66,7 +30,6 @@ public class Analysis {
 
             } else if (FinalAttribute.getAllVn().contains(X)) {
                 if (map.get(X).get(a.getName()).size() == 0) {
-
                     X = stringStack.pop();
                     continue;
                 } else if (map.get(X).get(a.getName()).get(0).equals("synch")) {

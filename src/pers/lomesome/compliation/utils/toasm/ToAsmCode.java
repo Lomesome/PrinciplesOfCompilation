@@ -11,7 +11,6 @@ public class ToAsmCode {
     public String RDL = "";
     public int asmCount = 0;//跳转计数器
     public int[] asmJump;//记录每个四元式对应的第一条指令位置
-    public String[] jumpWord = {"JAE", "JMP", "JB", "JNE", "JA", "JBE"};
 
     public void cToAsm(SymbolTable table, LiveStatu liveStatu) {
         System.out.println("汇编指令：");
@@ -52,7 +51,7 @@ public class ToAsmCode {
         preAsmCode.add("DATAS ENDS");
         preAsmCode.add("CODE SEGMENT");
         preAsmCode.add("START:MOV AX,DATAS");
-        preAsmCode.add("      MOV DS,AX");
+        preAsmCode.add("MOV DS,AX");
 
         for (int i = 0; i < liveStatu.getQt().size(); i++) {
             Quaternary temp = liveStatu.getQt().get(i);
@@ -294,22 +293,6 @@ public class ToAsmCode {
                 RDL = temp.getFourth();
             } else if (liveStatu.getQt().get(i).getFirst().equals("=")) {//赋值语句
                 if (RDL.equals("")) {
-                    //if(liveStatu.getQt().get(i).getFourth().contains("[")){
-                    //如果是数组赋值
-                    //String getArrayInfo[] = liveStatu.getQt().get(i).getFourth().split(" ");
-                    //int arrayLength = getArrayInfo[1].length();
-                    // arrayPos = getArrayInfo[1].substring(1,arrayLength-1);
-                    // int findWhere = Integer.valueOf(arrayPos);
-                    //findWhere = findWhere*2;
-                    //asmCode.add("      XOR AX,AX");//清零
-                    //asmCode.add("      MOV AX,"+getArrayInfo[0]);//移入地址
-                    //asmCode.add("      MOV DS,AX");
-                    //asmCode.add("      MOV BX,0");
-                    //asmCode.add("      ADD BX,"+findWhere);
-                    // asmCode.add("      XOR AX,AX");
-                    //.add("      MOV AL,"+liveStatu.getQt().get(i).getSecond());
-                    // asmCode.add("      MOV [BX],AL");
-                    // }
                     asmCode.add("      XOR AX,AX");
                     asmCode.add("      MOV AL," + liveStatu.getQt().get(i).getSecond());
                     asmJump[i] = asmCount;
@@ -589,7 +572,6 @@ public class ToAsmCode {
                 }
             }
         }
-        String getFirCode = "";
         asmJump[liveStatu.getQt().size()] = asmCode.size();
         asmCode.add("      MOV AH,4CH");
         asmCode.add("      INT 21H");
@@ -597,29 +579,6 @@ public class ToAsmCode {
         asmCode.add("      END START");
 
         int jumpCount = 0;//记录跳转位置
-       /* for(int j=0;j<asmCode.size();j++){
-            if(asmCode.get(j).charAt(0)=='J'){//如果跳转语句
-                String getJumpNum[] = asmCode.get(j).split(" ");
-                String toWhere = getJumpNum[1];
-                if(toWhere.charAt(0)!='T'&&asmJump[Integer.valueOf(toWhere)]!=-1){
-                    asmCode.set(j,getJumpNum[0]+" TURN"+jumpCount);
-                    String temp = asmCode.get(Integer.valueOf(toWhere));
-                    asmCode.set(asmJump[Integer.valueOf(toWhere)],"TURN"+jumpCount+": "+temp);
-                    for(int k=j+1;k<asmCode.size();k++){
-                        if(asmCode.get(k).charAt(0)=='J'){
-                            String getJumpNum1[] = asmCode.get(k).split(" ");
-                            String toWhere1 = getJumpNum1[1];
-                            if(toWhere1.charAt(0)!='T'&&toWhere.charAt(0)!='T'&&asmJump[Integer.valueOf(toWhere)]==asmJump[Integer.valueOf(toWhere1)]&&asmJump[Integer.valueOf(toWhere1)]!=-1){
-                                asmCode.set(k,getJumpNum1[0]+" TURN"+jumpCount);
-                                asmJump[Integer.valueOf(toWhere1)]=-1;
-                            }
-                        }
-                    }
-                    jumpCount++;
-                    asmJump[Integer.valueOf(toWhere)]=-1;
-                }
-            }
-        }*/
         for (int j = 0; j < asmCode.size(); j++) {
             if (asmCode.get(j).charAt(0) == 'J') {
                 //如果是跳转指令
@@ -643,8 +602,7 @@ public class ToAsmCode {
     private String getIsActive(String newRDL, LiveStatu liveStatu) {
         int findQt;
         int qtWhere = 0;//first对应1 second对应2 以此类推
-        for (findQt = liveStatu.getQt().size() - 1; findQt >= 0; findQt--) {
-            //逆序遍历四元式
+        for (findQt = liveStatu.getQt().size() - 1; findQt >= 0; findQt--) {  //逆序遍历四元式
             if (liveStatu.getQt().get(findQt).getSecond().equals(newRDL)) {
                 qtWhere = 2;
                 break;

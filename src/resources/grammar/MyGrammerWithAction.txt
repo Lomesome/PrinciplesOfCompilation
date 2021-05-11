@@ -115,7 +115,7 @@ primary_exp
 	: id PUSH
 	| float_const PUSH
 	| int_const PUSH
-	| string PUSH
+	| string_const PUSH
 	| char_const PUSH
 	| '(' exp ')'
 	;

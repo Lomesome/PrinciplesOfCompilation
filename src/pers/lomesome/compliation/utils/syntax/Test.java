@@ -23,7 +23,6 @@ public class Test {
         FinalAttribute.setAllGrammerWithAction(new AllGrammer(newGrammaticalHandle.grammaticlHandel()));
         FinalAttribute.init();
         SyntaxAnalysis.init();
-        Analysis.init();
 
         List<Word> list = new LinkedList<>();
         Lexer lexer = null;

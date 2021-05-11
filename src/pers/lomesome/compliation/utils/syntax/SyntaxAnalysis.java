@@ -45,7 +45,8 @@ public class SyntaxAnalysis {
 
     private static void makePredict(){
         Predict predict = new Predict(FinalAttribute.getAllGrammer(), FinalAttribute.getSelectMap(), FinalAttribute.getFollowmap());
-        FinalAttribute.setPredictMap(predict.predictTable());
+        FinalAttribute.setPredictMap((LinkedHashMap<String, LinkedHashMap<String, List<MakeJson>>>) predict.predictTable().get(0));
+        FinalAttribute.setSemPredictMap((LinkedHashMap<String, LinkedHashMap<String, List<String>>>) predict.predictTable().get(1));
     }
 
     public static List<List<String>> analysis(List<Word> list, SymbolTable table) {

@@ -115,7 +115,7 @@ primary_exp
 	: id
 	| float_const
 	| int_const
-	| string
+	| string_const
 	| char_const
 	| '(' exp ')'
 	;
