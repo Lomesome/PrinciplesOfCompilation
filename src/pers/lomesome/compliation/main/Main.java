@@ -5,7 +5,6 @@ import javafx.stage.Stage;
 import pers.lomesome.compliation.tool.filehandling.ReadAndWriteFile;
 import pers.lomesome.compliation.tool.finalattr.FinalAttribute;
 import pers.lomesome.compliation.controller.ManageMainInterface;
-import pers.lomesome.compliation.utils.semantic.Analysis;
 import pers.lomesome.compliation.utils.syntax.AllGrammer;
 import pers.lomesome.compliation.utils.syntax.GrammaticalHandle;
 import pers.lomesome.compliation.utils.syntax.SyntaxAnalysis;

@@ -81,7 +81,7 @@ public class Predict {
                     for (String s1 : followSet.get(k.get(0).get(0))) {
                         if (linkedHashMap.get(k.get(0).get(0)).get(s1).size() == 0) {
                             linkedHashMap.get(k.get(0).get(0)).get(s1).add(new MakeJson("synch", new ArrayList<>()));
-                            linkedHashMap2.get(k.get(0).get(0)).get(s).add("synch");
+                            linkedHashMap2.get(k.get(0).get(0)).get(s1).add("synch");
                         }
                     }
                 }

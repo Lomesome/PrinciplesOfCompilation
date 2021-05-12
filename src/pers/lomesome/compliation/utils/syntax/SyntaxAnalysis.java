@@ -71,7 +71,7 @@ public class SyntaxAnalysis {
                 IP++;
                 a = list.get(IP);
             } else if (FinalAttribute.getAllVt().contains(X.getName())){
-                error.add("error: " +" position line : " + 2 + " 缺少 '" + X.getName()+"'\n");
+                error.add("error: " +" position line : " + a.getCol() + " 缺少 '" + X.getName()+"'\n");
                 errorflag = true;
             } else if (FinalAttribute.getAllVn().contains(X.getName())){
                 if (map.get(X.getName()).get(a.getName()).size() == 0){

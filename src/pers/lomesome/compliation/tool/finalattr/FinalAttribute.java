@@ -94,7 +94,7 @@ public class FinalAttribute {
         stringMap.put(700, "id");
         stringMap.put(500, "char_const");
         stringMap.put(800, "float_const");
-        stringMap.put(400, "float_const");
+        stringMap.put(400, "int_const");
         stringMap.put(600, "string_const");
         for(String s : keyword){
             stringMap.put(start++, s);

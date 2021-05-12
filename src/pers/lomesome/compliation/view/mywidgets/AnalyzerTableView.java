@@ -7,9 +7,9 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import pers.lomesome.compliation.model.PropertyWord;
 
-public class LaxicalAnalyzerTableView extends TableView {
+public class AnalyzerTableView<T> extends TableView<T> {
 
-    public LaxicalAnalyzerTableView(String[] cols, ObservableList<PropertyWord> list){
+    public AnalyzerTableView(String[] cols, ObservableList<T> list, int width){
         this.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
         for(String col : cols){
@@ -17,7 +17,7 @@ public class LaxicalAnalyzerTableView extends TableView {
             theCol.setSortable(false);
             theCol.setResizable(false);
             // 设置宽度
-            theCol.setMinWidth(150);
+            theCol.setPrefWidth(width);
             // 下面的属性名
             theCol.setCellValueFactory(new PropertyValueFactory<>(col));
             this.getColumns().add(theCol);

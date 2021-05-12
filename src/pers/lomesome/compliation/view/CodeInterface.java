@@ -17,6 +17,8 @@ import javafx.scene.text.Text;
 import javafx.stage.*;
 import javafx.util.Callback;
 import org.fxmisc.flowless.VirtualizedScrollPane;
+import pers.lomesome.compliation.model.LiveStatu;
+import pers.lomesome.compliation.model.ProPertyQuaternary;
 import pers.lomesome.compliation.model.PropertyWord;
 import pers.lomesome.compliation.model.Word;
 import pers.lomesome.compliation.controller.*;
@@ -47,9 +49,11 @@ public class CodeInterface {
     private BorderPane outPane = new BorderPane();
     private final ObservableList<String> logList = FXCollections.observableArrayList();  //记录运行log
     private final ObservableList<PropertyWord> wordList = FXCollections.observableArrayList();
+    private final ObservableList<ProPertyQuaternary> quaternaryList = FXCollections.observableArrayList();
     private final Map<String, TextArea> textAreaMap = new HashMap<>();
     private final ObservableList<Word> obList = FXCollections.observableArrayList();
     private final ListView<Word> error = new ListView<>(obList);
+    private final TextArea asmCodeTextArea = new TextArea();
 
     private void init() {
         for (String s : FileUtil.findAll()) {
@@ -275,9 +279,26 @@ public class CodeInterface {
                                 code = "-1";
                             }
                             if (code.equals("0")){
+                                quaternaryList.clear();
                                 Table.printtable();
-                                Analysis.analysis(list, Table);
+                                Object[] results = Analysis.analysis(list, Table);
+                                LiveStatu liveStatu = (LiveStatu) results[0];
+                                if (liveStatu != null)
+                                    for (int i = 0; i < liveStatu.getQt().size(); i++) {
+                                        quaternaryList.add(new ProPertyQuaternary(i, liveStatu.getQt().get(i).getFirst(), liveStatu.getQt().get(i).getSecond(), liveStatu.getQt().get(i).getThird(),liveStatu.getQt().get(i).getFourth()));
+                                    }
+                                asmCodeTextArea.clear();
+                                if (results[1] != null)
+                                    for (String s : (List<String>)results[1]){
+                                        asmCodeTextArea.appendText(s);
+                                    }
+
+                                for (String s : (List<String>)results[2]) {
+                                    code = "-1";
+                                    Platform.runLater(() -> textArea.appendText("语义错误：" + s + "\n"));
+                                }
                             }
+
                             String finalCode = code;
                             Platform.runLater(() -> textArea.appendText("\nProcess finished with exit code " + finalCode +"\n"));
 
@@ -371,18 +392,26 @@ public class CodeInterface {
     private void rightMenu() {
         VerticalLabel tableLabel = new VerticalLabel(VerticalDirection.DOWN);
         tableLabel.setPadding(new Insets(10, 10, 10, 10));
-        tableLabel.setUserData("nochoose");
         tableLabel.setText("Show Table");
+
+        VerticalLabel quaternaryLabel = new VerticalLabel(VerticalDirection.DOWN);
+        quaternaryLabel.setPadding(new Insets(10, 10, 10, 10));
+
+        quaternaryLabel.setText("Show Quaternary");
         VBox tableBox = new VBox(tableLabel);
+        tableBox.setUserData("nochoose");
         tableBox.setPadding(new Insets(10, 2, 10, 2));
+        VBox quaternaryBox = new VBox(quaternaryLabel);
+        quaternaryBox.setUserData("nochoose");
+        quaternaryBox.setPadding(new Insets(10, 2, 10, 2));
         BorderPane borderPane = new BorderPane();
 
         tableBox.setOnMouseClicked(event -> {
-            if (tableLabel.getUserData().equals("nochoose")) {
+            if (tableBox.getUserData().equals("nochoose")) {
                 BorderPane tableBorderPane;
                 if (ManageTable.getTableBorderPane() == null) {
                     tableBorderPane = new BorderPane();
-                    tableBorderPane.setCenter(new LaxicalAnalyzerTableView(new String[]{"token", "word"}, wordList));
+                    tableBorderPane.setCenter(new AnalyzerTableView(new String[]{"token", "word"}, wordList, 150));
                     error.setPrefSize(300, 300);
                     error.setStyle("-fx-background-color:white;-fx-border-width: 1 0 1 0;-fx-border-color: lightgray");
                     tableBorderPane.setBottom(new VBox(new Label("Error:"), error));
@@ -391,14 +420,16 @@ public class CodeInterface {
                     tableBorderPane = ManageTable.getTableBorderPane();
                 }
                 borderPane.setLeft(tableBorderPane);
-                tableLabel.setUserData("choose");
+                tableBox.setUserData("choose");
                 tableBox.setStyle("-fx-background-color: gray");
+                selectBox(new Object[]{quaternaryBox});
             } else {
                 borderPane.setLeft(null);
-                tableLabel.setUserData("nochoose");
+                tableBox.setUserData("nochoose");
                 tableBox.setStyle("-fx-background-color: transparent");
             }
         });
+
         error.getStyleClass().add("codelist");
         error.setCellFactory(new Callback<ListView<Word>, ListCell<Word>>() {
                                  public ListCell<Word> call(ListView<Word> headerListView) {
@@ -428,11 +459,44 @@ public class CodeInterface {
                              }
         );
 
-        VBox vBox = new VBox(tableBox);
+
+        quaternaryBox.setOnMouseClicked(event -> {
+            if (quaternaryBox.getUserData().equals("nochoose")) {
+                BorderPane tableBorderPane;
+                if (ManageQtTable.getTableBorderPane() == null) {
+                    tableBorderPane = new BorderPane();
+                    tableBorderPane.setCenter(new AnalyzerTableView(new String[]{"Level", "First", "Second", "Third", "Fourth"}, quaternaryList , 60));
+                    asmCodeTextArea.setPrefSize(300, 450);
+                    asmCodeTextArea.setEditable(false);
+                    asmCodeTextArea.setStyle("-fx-background-color:white;-fx-border-width: 1 0 1 0;-fx-border-color: lightgray");
+                    tableBorderPane.setBottom(new VBox(new Label("ASM Code:"), asmCodeTextArea));
+                    ManageQtTable.setTableBorderPane(tableBorderPane);
+                } else {
+                    tableBorderPane = ManageQtTable.getTableBorderPane();
+                }
+                borderPane.setLeft(tableBorderPane);
+                quaternaryBox.setUserData("choose");
+                quaternaryBox.setStyle("-fx-background-color: gray");
+                selectBox(new Object[]{tableBox});
+            } else {
+                borderPane.setLeft(null);
+                quaternaryBox.setUserData("nochoose");
+                quaternaryBox.setStyle("-fx-background-color: transparent");
+            }
+        });
+
+        VBox vBox = new VBox(tableBox, quaternaryBox);
         vBox.setMinWidth(25);
         borderPane.setRight(vBox);
         vBox.setStyle("-fx-background-color: #eaeaea;-fx-border-width: 0 0 0 1;-fx-border-color: lightgray");
         rootBorderPane.setRight(borderPane);
+    }
+
+    private void selectBox(Object[] objects){
+        for (Object o :objects){
+            ((VBox)o).setUserData("nochoose");
+            ((VBox)o).setStyle("-fx-background-color: transparent");
+        }
     }
 
     private void center() {
