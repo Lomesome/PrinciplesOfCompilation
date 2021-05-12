@@ -7,7 +7,6 @@ import pers.lomesome.compliation.model.Word;
 import pers.lomesome.compliation.python.DrawTree;
 import pers.lomesome.compliation.tool.finalattr.FinalAttribute;
 import pers.lomesome.compliation.utils.semantic.SymbolTable;
-import java.io.IOException;
 import java.util.*;
 
 public class SyntaxAnalysis {
