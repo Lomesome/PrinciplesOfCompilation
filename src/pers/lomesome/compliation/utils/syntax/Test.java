@@ -40,11 +40,12 @@ public class Test {
         list.add(new Word("#", "end", -1,-1));
         list.get(list.size() - 1).setName("#");
 
-        SymbolTable Table = new SymbolTable();
-        Table.getTable(list);
-        SyntaxAnalysis.analysis(list, Table);
-        Table.printtable();
-        Analysis.analysis(list, Table);
+
+//        Table.getTable(list);
+        SyntaxAnalysis.analysis(list);
+
+        Analysis.analysis(list);
+
 
     }
 }

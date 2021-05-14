@@ -55,15 +55,15 @@ public class ToAsmCode {
 
         for (int i = 0; i < liveStatu.getQt().size(); i++) {
             Quaternary temp = liveStatu.getQt().get(i);
-            if (temp.getFirst().equals("+")) {//如果四元式的首符号是+
+            if (temp.getFirst().getWord().equals("+")) {//如果四元式的首符号是+
                 if (RDL.equals("")) {
                     asmCode.add("      MOV AL," + temp.getSecond());
                     asmCode.add("      ADD AL," + temp.getThird());
                     asmJump[i] = asmCount;
                     asmCount += 2;
                 } else if (RDL.equals(temp.getSecond())) {
-                    if (liveStatu.getActiveLable().get(i).getSecond().equals("Active")) {
-                        asmCode.add("      MOV " + temp.getSecond() + ",AL");
+                    if (liveStatu.getActiveLable().get(i).getSecond().getWord().equals("Active")) {
+                        asmCode.add("      MOV " + temp.getSecond().getWord() + ",AL");
                         asmCode.add("      ADD AL," + temp.getThird());
                         asmJump[i] = asmCount;
                         asmCount += 2;
@@ -75,9 +75,9 @@ public class ToAsmCode {
                     }
 
                 } else if (RDL.equals(temp.getThird())) {
-                    if (liveStatu.getActiveLable().get(i).getThird().equals("Active")) {
+                    if (liveStatu.getActiveLable().get(i).getThird().getWord().equals("Active")) {
                         //THIRD活跃 要存入内存中 后面还会使用
-                        asmCode.add("      MOV " + temp.getThird() + ",AL");
+                        asmCode.add("      MOV " + temp.getThird().getWord() + ",AL");
                         asmCode.add("      ADD AL," + temp.getSecond());
                         asmJump[i] = asmCount;
                         asmCount += 2;
@@ -117,16 +117,16 @@ public class ToAsmCode {
                     }
                     //可能活跃 要存入内存中 后面还会使用
                 }
-                RDL = temp.getFourth();
-            } else if (temp.getFirst().equals("-")) {//如果四元式的首符号是-
+                RDL = temp.getFourth().getWord();
+            } else if (temp.getFirst().getWord().equals("-")) {//如果四元式的首符号是-
                 if (RDL.equals("")) {
                     asmCode.add("      MOV AL," + temp.getSecond());
                     asmCode.add("      SUB AL," + temp.getThird());
                     asmJump[i] = asmCount;
                     asmCount += 2;
-                } else if (RDL.equals(temp.getSecond())) {
-                    if (liveStatu.getActiveLable().get(i).getSecond().equals("Active")) {
-                        asmCode.add("      MOV " + temp.getSecond() + ",AL");
+                } else if (RDL.equals(temp.getSecond().getWord())) {
+                    if (liveStatu.getActiveLable().get(i).getSecond().getWord().equals("Active")) {
+                        asmCode.add("      MOV " + temp.getSecond().getWord() + ",AL");
                         asmCode.add("      SUB AL," + temp.getThird());
                         asmJump[i] = asmCount;
                         asmCount += 2;
@@ -165,8 +165,8 @@ public class ToAsmCode {
                     }
                     //可能活跃 要存入内存中 后面还会使用
                 }
-                RDL = temp.getFourth();
-            } else if (temp.getFirst().equals("*")) {//如果四元式的首符号是*
+                RDL = temp.getFourth().getWord();
+            } else if (temp.getFirst().getWord().equals("*")) {//如果四元式的首符号是*
                 if (RDL.equals("")) {
                     asmCode.add("      MOV AX,0000H");
                     asmCode.add("      MOV AL," + temp.getSecond());
@@ -174,9 +174,9 @@ public class ToAsmCode {
                     asmJump[i] = asmCount;
                     asmCount += 3;
                 } else if (RDL.equals(temp.getSecond())) {
-                    if (liveStatu.getActiveLable().get(i).getSecond().equals("Active")) {
+                    if (liveStatu.getActiveLable().get(i).getSecond().getWord().equals("Active")) {
                         asmCode.add("      XOR AH,AH");
-                        asmCode.add("      MOV " + temp.getSecond() + ",AL");
+                        asmCode.add("      MOV " + temp.getSecond().getWord() + ",AL");
                         asmCode.add("      MUL " + temp.getThird());
                         asmJump[i] = asmCount;
                         asmCount += 3;
@@ -188,11 +188,11 @@ public class ToAsmCode {
 
                     }
 
-                } else if (RDL.equals(temp.getThird())) {
-                    if (liveStatu.getActiveLable().get(i).getThird().equals("Active")) {
+                } else if (RDL.equals(temp.getThird().getWord())) {
+                    if (liveStatu.getActiveLable().get(i).getThird().getWord().equals("Active")) {
                         //THIRD活跃 要存入内存中 后面还会使用
                         asmCode.add("      XOR AH,AH");
-                        asmCode.add("      MOV " + temp.getThird() + ",AL");
+                        asmCode.add("      MOV " + temp.getThird().getWord() + ",AL");
                         asmCode.add("      MUL " + temp.getSecond());
                         asmJump[i] = asmCount;
                         asmCount += 3;
@@ -234,18 +234,18 @@ public class ToAsmCode {
                     }
                     //可能活跃 要存入内存中 后面还会使用
                 }
-                RDL = temp.getFourth();
-            } else if (temp.getFirst().equals("/")) {//如果四元式的首符号是/
+                RDL = temp.getFourth().getWord();
+            } else if (temp.getFirst().getWord().equals("/")) {//如果四元式的首符号是/
                 if (RDL.equals("")) {
                     asmCode.add("      MOV AX,0000H");
                     asmCode.add("      MOV AL," + temp.getSecond());
                     asmCode.add("      DIV " + temp.getThird());
                     asmJump[i] = asmCount;
                     asmCount += 3;
-                } else if (RDL.equals(temp.getSecond())) {
-                    if (liveStatu.getActiveLable().get(i).getSecond().equals("Active")) {
+                } else if (RDL.equals(temp.getSecond().getWord())) {
+                    if (liveStatu.getActiveLable().get(i).getSecond().getWord().equals("Active")) {
                         asmCode.add("      XOR AH,AH");
-                        asmCode.add("      MOV " + temp.getSecond() + ",AL");
+                        asmCode.add("      MOV " + temp.getSecond().getWord() + ",AL");
                         asmCode.add("      DIV " + temp.getThird());
                         asmJump[i] = asmCount;
                         asmCount += 3;
@@ -290,17 +290,17 @@ public class ToAsmCode {
                     }
                     //可能活跃 要存入内存中 后面还会使用
                 }
-                RDL = temp.getFourth();
-            } else if (liveStatu.getQt().get(i).getFirst().equals("=")) {//赋值语句
+                RDL = temp.getFourth().getWord();
+            } else if (liveStatu.getQt().get(i).getFirst().getWord().equals("=")) {//赋值语句
                 if (RDL.equals("")) {
                     asmCode.add("      XOR AX,AX");
                     asmCode.add("      MOV AL," + liveStatu.getQt().get(i).getSecond());
                     asmJump[i] = asmCount;
                     asmCount += 2;
 
-                } else if (RDL.equals(liveStatu.getQt().get(i).getSecond())) {
-                    if (liveStatu.getActiveLable().get(i).getSecond().equals("Active")) {
-                        asmCode.add("      MOV " + liveStatu.getQt().get(i).getSecond() + ",AL");
+                } else if (RDL.equals(liveStatu.getQt().get(i).getSecond().getWord())) {
+                    if (liveStatu.getActiveLable().get(i).getSecond().getWord().equals("Active")) {
+                        asmCode.add("      MOV " + liveStatu.getQt().get(i).getSecond().getWord() + ",AL");
                         asmJump[i] = asmCount;
                         asmCount += 1;
                     }
@@ -334,8 +334,8 @@ public class ToAsmCode {
                     }
                     //可能活跃 要存入内存中 后面还会使用
                 }
-                RDL = temp.getFourth();
-            } else if (temp.getFirst().equals("==")) {
+                RDL = temp.getFourth().getWord();
+            } else if (temp.getFirst().getWord().equals("==")) {
                 if (RDL.equals("")) {
                     asmCode.add("      MOV BL," + temp.getSecond());
                     asmCode.add("      CMP BL," + temp.getThird());
@@ -372,7 +372,7 @@ public class ToAsmCode {
                     }
                     RDL = "";
                 }
-            } else if (temp.getFirst().equals(">")) {
+            } else if (temp.getFirst().getWord().equals(">")) {
                 if (RDL.equals("")) {
                     asmCode.add("      MOV BL," + temp.getSecond());
                     asmCode.add("      CMP BL," + temp.getThird());
@@ -409,7 +409,7 @@ public class ToAsmCode {
                     RDL = "";
                 }
 
-            } else if (temp.getFirst().equals("<")) {
+            } else if (temp.getFirst().getWord().equals("<")) {
                 if (RDL.equals("")) {
                     asmCode.add("      MOV BL," + temp.getSecond());
                     asmCode.add("      CMP BL," + temp.getThird());
@@ -446,7 +446,7 @@ public class ToAsmCode {
                     RDL = "";
                 }
 
-            } else if (temp.getFirst().equals(">=")) {
+            } else if (temp.getFirst().getWord().equals(">=")) {
                 if (RDL.equals("")) {
                     asmCode.add("      MOV BL," + temp.getSecond());
                     asmCode.add("      CMP BL," + temp.getThird());
@@ -483,7 +483,7 @@ public class ToAsmCode {
                     RDL = "";
                 }
 
-            } else if (temp.getFirst().equals("<=")) {
+            } else if (temp.getFirst().getWord().equals("<=")) {
                 if (RDL.equals("")) {
                     asmCode.add("      MOV BL," + temp.getSecond());
                     asmCode.add("      CMP BL," + temp.getThird());
@@ -519,7 +519,7 @@ public class ToAsmCode {
                     }
                     RDL = "";
                 }
-            } else if (temp.getFirst().equals("ie") || temp.getFirst().equals("wh")) {
+            } else if (temp.getFirst().getWord().equals("ie") || temp.getFirst().getWord().equals("wh")) {
                 String s = getIsActive(RDL, liveStatu);
                 if (s.equals("Active")) {
                     if (RDL.contains("[")) {
@@ -542,7 +542,7 @@ public class ToAsmCode {
                 } else {
                     asmJump[i] = asmCount;
                 }
-            } else if (temp.getFirst().equals("el") || temp.getFirst().equals("we")) {
+            } else if (temp.getFirst().getWord().equals("el") || temp.getFirst().getWord().equals("we")) {
                 String s = getIsActive(RDL, liveStatu);
                 if (s.equals("Active")) {
                     if (RDL.contains("[")) {
@@ -603,24 +603,24 @@ public class ToAsmCode {
         int findQt;
         int qtWhere = 0;//first对应1 second对应2 以此类推
         for (findQt = liveStatu.getQt().size() - 1; findQt >= 0; findQt--) {  //逆序遍历四元式
-            if (liveStatu.getQt().get(findQt).getSecond().equals(newRDL)) {
+            if (liveStatu.getQt().get(findQt).getSecond().getWord().equals(newRDL)) {
                 qtWhere = 2;
                 break;
-            } else if (liveStatu.getQt().get(findQt).getThird().equals(newRDL)) {
+            } else if (liveStatu.getQt().get(findQt).getThird().getWord().equals(newRDL)) {
                 qtWhere = 3;
                 break;
-            } else if (liveStatu.getQt().get(findQt).getFourth().equals(newRDL)) {
+            } else if (liveStatu.getQt().get(findQt).getFourth().getWord().equals(newRDL)) {
                 qtWhere = 4;
                 break;
             }
         }
         String s = "";
         if (qtWhere == 2) {
-            s = liveStatu.getActiveLable().get(findQt).getSecond();
+            s = liveStatu.getActiveLable().get(findQt).getSecond().getWord();
         } else if (qtWhere == 3) {
-            s = liveStatu.getActiveLable().get(findQt).getThird();
+            s = liveStatu.getActiveLable().get(findQt).getThird().getWord();
         } else if (qtWhere == 4) {
-            s = liveStatu.getActiveLable().get(findQt).getFourth();
+            s = liveStatu.getActiveLable().get(findQt).getFourth().getWord();
         }
         return s;
     }

@@ -21,6 +21,8 @@ public class SyntaxAnalysis {
         eliminateLR.eliminate();
         EliminateBT eliminateBT = new EliminateBT(FinalAttribute.getAllGrammer());
         eliminateBT.eliminate();
+        eliminateBT.eliminate();
+        eliminateBT.eliminate();
 
         FinalAttribute.getAllGrammer().getGrammarMap().forEach((k, v)-> FinalAttribute.getAllVn().add(k));
         FinalAttribute.getAllGrammer().getGrammarMap().forEach((k, v)->{
@@ -48,7 +50,7 @@ public class SyntaxAnalysis {
         FinalAttribute.setSemPredictMap((LinkedHashMap<String, LinkedHashMap<String, List<String>>>) predict.predictTable().get(1));
     }
 
-    public static List<List<String>> analysis(List<Word> list, SymbolTable table) {
+    public static List<List<String>> analysis(List<Word> list) {
         LinkedHashMap<String, LinkedHashMap<String, List<MakeJson>>> map = FinalAttribute.getPredictMap();
         Stack<MakeJson> makeJsonStack = new MyStack<>();
         boolean errorflag = false;
@@ -70,16 +72,18 @@ public class SyntaxAnalysis {
                 IP++;
                 a = list.get(IP);
             } else if (FinalAttribute.getAllVt().contains(X.getName())){
-                error.add("error: " +" position line : " + a.getCol() + " 缺少 '" + X.getName()+"'\n");
+                error.add("error: " +" position : (" + list.get(IP- 1).getCol() + "," + list.get(IP- 1).getRow() + ") 缺少 '" + X.getName()+"'\n");
                 errorflag = true;
             } else if (FinalAttribute.getAllVn().contains(X.getName())){
                 if (map.get(X.getName()).get(a.getName()).size() == 0){
+                    System.out.println("遇到SYNCH，从栈顶弹出非终结符" + X);
                     error.add("error: position line : " + a.getCol() + "\n");
                     errorflag = true;
                     X = makeJsonStack.pop();
                     continue;
                 }else if (map.get(X.getName()).get(a.getName()).get(0).getName().equals("synch")) {
                     System.out.println("遇到SYNCH，从栈顶弹出非终结符" + X);
+                    errorflag = true;
                     X = makeJsonStack.pop();
                     continue;
                 } else {

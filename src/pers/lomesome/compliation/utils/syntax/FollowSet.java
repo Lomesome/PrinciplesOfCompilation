@@ -2,130 +2,94 @@ package pers.lomesome.compliation.utils.syntax;
 
 import pers.lomesome.compliation.tool.finalattr.FinalAttribute;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class FollowSet {
-    
+
     private final Map<String, Set<String>> followSet = new LinkedHashMap<>();
     private final Map<String, List<List<String>>> grammars;
     private final Map<String, Set<String>> firstSet;
+    private int nowLen = 0;
 
-    public FollowSet() {
+    public FollowSet(){
         this.grammars = FinalAttribute.getAllGrammer().getGrammarMap();
         this.firstSet = FinalAttribute.getFirstmap();
     }
 
     public Map<String, Set<String>> getFollowSet() {
-        getFollow();
+        System.out.println("first");
+        firstSet.forEach((k, v) -> System.out.println(k +" " + v));
+        do {
+            grammars.forEach((k, v) -> getFollow(k));
+        } while (followChange());
+        System.out.println("follow");
+        followSet.forEach((k, v) -> System.out.println(k +" " + v));
         return followSet;
     }
 
-    public void getFollow() {
-        Set<String> set = new LinkedHashSet<>();//给开始符号的follow集加#
-        set.add("#");
-        followSet.put((String) grammars.keySet().toArray()[0], set);
-
-        for (int z = 0; z < FinalAttribute.getAllVn().size(); z++) {
-            grammars.forEach((k, v) -> {
-                for (List<String> t : v) {
-                    if (!t.get(0).equals("ε")) {
-                        for (int i = 0; i < t.size(); i++) {
-                            if (FinalAttribute.getAllVn().contains(t.get(i))) {//遇到非终结符
-
-                                if (i == (t.size() - 1)) {//如果该非终结符在句尾
-                                    if (followSet.containsKey(k)) {
-                                        if (followSet.containsKey(t.get(i))) {
-                                            Set<String> list_t1 = followSet.get(k);
-                                            Set<String> list_t2 = followSet.get(t.get(i));
-                                            list_t2.addAll(list_t1);
-                                            followSet.put(t.get(i), list_t2);
-                                        } else {
-                                            Set<String> list_t1 = followSet.get(k);
-                                            followSet.put(t.get(i), list_t1);
-                                        }
-                                    }
-                                } else if (!FinalAttribute.getAllVn().contains(t.get(i + 1))) {//如果后面接的是终结符
-
-                                    if (followSet.containsKey(t.get(i))) {
-                                        Set<String> list_t1 = followSet.get(t.get(i));
-                                        Set<String> list_t2 = new LinkedHashSet<>();
-                                        list_t2.add(t.get(i + 1));
-                                        list_t1.addAll(list_t2);
-                                        followSet.put(t.get(i), list_t1);
-                                    } else {
-                                        Set<String> list_t2 = new LinkedHashSet<>();
-                                        list_t2.add(t.get(i + 1));
-                                        followSet.put(t.get(i), list_t2);
-                                    }
-                                } else if (FinalAttribute.getAllVn().contains(t.get(i + 1))) {//后面是非终结符
-                                    if (followSet.containsKey(t.get(i))) {//先将其first集加入前一个非终结符的follow集
-                                        Set<String> list_t1 = followSet.get(t.get(i));
-                                        Set<String> list_t2 = firstSet.get(t.get(i + 1));
-                                        list_t1.addAll(list_t2);
-                                        followSet.put(t.get(i), list_t1);
-                                    } else {
-                                        Set<String> list_t1 = firstSet.get(t.get(i + 1));
-                                        followSet.put(t.get(i), list_t1);
-                                    }
-                                    if (firstSet.get(t.get(i + 1)).contains("ε")) {//含空则将往后扫描
-                                        int flag = 0;//为0表示直到扫描完都没遇到终结符或者说遇到的非终结符的first集都含空
-                                        for (int i2 = i + 2; i2 < t.size(); i2++) {
-                                            if (!FinalAttribute.getAllVn().contains(t.get(i2))) {//如果碰到终结符
-                                                if (followSet.containsKey(t.get(i))) {
-                                                    Set<String> list_t1 = followSet.get(t.get(i));
-                                                    Set<String> list_t2 = new LinkedHashSet<>();
-                                                    list_t2.add(t.get(i2));
-                                                    list_t1.addAll(list_t2);
-                                                    followSet.put(t.get(i), list_t1);
-                                                } else {
-                                                    Set<String> list_t2 = new LinkedHashSet<>();
-                                                    list_t2.add(t.get(i2));
-                                                    followSet.put(t.get(i), list_t2);
-                                                }
-                                                flag = 1;
-                                                i2 = t.size();//跳出
-                                            } else {//遇到非终结符先放first集
-                                                if (followSet.containsKey(t.get(i))) {
-                                                    Set<String> list_t1 = followSet.get(t.get(i));
-                                                    Set<String> list_t2 = firstSet.get(t.get(i2));
-                                                    list_t1.addAll(list_t2);
-                                                    followSet.put(t.get(i), list_t1);
-                                                } else {
-                                                    Set<String> list_t1 = firstSet.get(t.get(i2));
-                                                    followSet.put(t.get(i), list_t1);
-                                                }
-                                                if (!firstSet.get(t.get(i2)).contains("ε")) {//如果不含空，则停止往后
-                                                    flag = 1;
-                                                    i2 = t.size();
-                                                }
-                                            }
-                                        }
-
-                                        if (flag == 0) {
-                                            if (followSet.containsKey(k)) {
-                                                if (followSet.containsKey(t.get(i))) {
-                                                    Set<String> list_t1 = followSet.get(k);
-                                                    Set<String> list_t2 = followSet.get(t.get(i));
-                                                    list_t2.addAll(list_t1);
-                                                    followSet.put(t.get(i), list_t2);
-                                                } else {
-                                                    Set<String> list_t1 = followSet.get(k);
-                                                    followSet.put(t.get(i), list_t1);
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
+    public boolean followChange(){
+        AtomicInteger len = new AtomicInteger();
+        followSet.forEach((k, v)->{
+            len.addAndGet(v.size());
+        });
+        if (len.get() == nowLen){
+            return false;
+        }
+        nowLen = len.get();
+        return true;
+    }
+    private void getFollow(String c){
+        List<List<String>> list = grammars.get(c);
+        Set<String> setA = followSet.containsKey(c) ? followSet.get(c) : new LinkedHashSet<>();
+        if (c == grammars.keySet().toArray()[0]) {  //如果是开始符 添加 #
+            setA.add("#");
+        }
+        for (String ch : grammars.keySet()) {   //查找输入的所有产生式，确定c的后跟 终结符
+            List<List<String>> l = grammars.get(ch);
+            for (List<String> s : l)
+                for (int i = 0; i < s.size(); i++)
+                    if (s.get(i).equals(c) && i + 1 < s.size() && !grammars.containsKey(s.get(i + 1)))
+                        setA.add(s.get(i + 1));
+        }
+        followSet.put(c, setA);
+        for (List<String> s : list) {  //处理c的每一条产生式
+            int i = s.size() - 1;
+            while (i >= 0 ) {
+                String tn = s.get(i);
+                if(grammars.containsKey(tn)){  //只处理非终结符 （都按 A->αBβ  形式处理）
+                    if (s.size() - i - 1 > 0) {  //若β存在
+                        List<String> right = s.subList(i + 1, s.size());
+                        System.out.println( tn + "  "+ s + " "+ right);
+                        Set<String> setF = new LinkedHashSet<>(); //把β的非空first集  加入followB
+                        String s1 = right.get(0);
+                        if (grammars.containsKey(right.get(0))){
+                            setF = firstSet.get(s1);
+                        }else {
+                            setF.add(s1);
+                        }
+                        Set<String> setX = followSet.containsKey(tn) ? followSet.get(tn) : new LinkedHashSet<>();
+                        for (String var : setF)
+                            if (!var.equals("ε"))
+                                setX.add(var);
+                        followSet.put(tn, setX);
+                        if(setF.contains("ε")){  // 若first(β)包含空串   followA 加入 followB
+                            if(!tn.equals(c)){
+                                Set<String> setB = followSet.containsKey(tn) ? new HashSet<>(followSet.get(tn)) : new LinkedHashSet<>();
+                                setB.addAll(setA);
+                                followSet.put(tn, setB);
                             }
                         }
                     }
+                    else{  //若β不存在   followA 加入 followB
+                        if(!tn.equals(c)){  // A和B相同不添加
+                            Set<String> setB = followSet.containsKey(tn) ? followSet.get(tn) : new LinkedHashSet<>();
+                            setB.addAll(setA);
+                            followSet.put(tn, setB);
+                        }
+                    }
                 }
-            });
-        }
-        grammars.forEach((k, v) -> {
-            if (followSet.containsKey(k)) {
-                Set<String> t = followSet.get(k);
-                t.remove("ε");
+                i--;
             }
-        });
+        }
     }
 }

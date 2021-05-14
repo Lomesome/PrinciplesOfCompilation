@@ -55,21 +55,30 @@ public class Predict {
             linkedHashMap2.put(vn, stringLinkedHashMap);
         }
 
+
         firstSet.forEach((k, v) -> {
             for (String s : v){
                 if (!s.equals("ε")) {
-                    for (String s1  : k.get(1)){
-                        linkedHashMap.get(k.get(0).get(0)).get(s).add(new MakeJson(s1, new ArrayList<>()));
-                        linkedHashMap2.get(k.get(0).get(0)).get(s).add(s1);
+                    if (linkedHashMap.get(k.get(0).get(0)).get(s).size() == 0) {
+                        for (String s1 : k.get(1)) {
+                            linkedHashMap.get(k.get(0).get(0)).get(s).add(new MakeJson(s1, new ArrayList<>()));
+                            linkedHashMap2.get(k.get(0).get(0)).get(s).add(s1);
+                        }
                     }
 
                 }else {
-                    for (String s1 : followSet.get(k.get(0).get(0))) {
-                        if (linkedHashMap.get(k.get(0).get(0)).get(s1).size() == 0) {
-                            linkedHashMap.get(k.get(0).get(0)).get(s1).add(new MakeJson("ε", new ArrayList<>()));
-                            linkedHashMap2.get(k.get(0).get(0)).get(s1).add("ε");
+                    try {
+
+                        for (String s1 : followSet.get(k.get(0).get(0))) {
+                            if (linkedHashMap.get(k.get(0).get(0)).get(s1).size() == 0) {
+                                linkedHashMap.get(k.get(0).get(0)).get(s1).add(new MakeJson("ε", new ArrayList<>()));
+                                linkedHashMap2.get(k.get(0).get(0)).get(s1).add("ε");
+                            }
                         }
+                    }catch (Exception e){
+                        System.out.println(k.get(0).get(0));
                     }
+
                 }
 
             }
@@ -90,7 +99,6 @@ public class Predict {
 
         linkedHashMaps.add(linkedHashMap);
         linkedHashMaps.add(linkedHashMap2);
-
         return linkedHashMaps;
     }
 }

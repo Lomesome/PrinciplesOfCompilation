@@ -3,7 +3,7 @@ S
 	;
 
 function
-	: func_type funcname '(' args ')' program
+	: func_type funcname ADDFUN '(' args ')' program
 	;
 
 func_type
@@ -63,6 +63,7 @@ idassignment
 	: ε
 	| PUSH '=' exp ASSI
 	| '[' int_const ']'
+	| , id idassignment
 	;
 
 boolexp

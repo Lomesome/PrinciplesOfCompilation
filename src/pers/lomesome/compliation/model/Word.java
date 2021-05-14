@@ -1,5 +1,6 @@
 package pers.lomesome.compliation.model;
 
+import org.python.modules._json._json;
 import pers.lomesome.compliation.tool.finalattr.FinalAttribute;
 import java.io.Serializable;
 
@@ -13,6 +14,16 @@ public class Word implements Serializable {
     private int col;
 
     public Word() { }
+
+    public Word(String word) {
+        this.word = word;
+        this.name = "";
+    }
+
+    public Word(String word, String name) {
+        this.word = word;
+        this.name = name;
+    }
 
     public Word(String word, String type, int row, int col) {
         this.token = FinalAttribute.findToken(word);
@@ -29,12 +40,6 @@ public class Word implements Serializable {
         this.row = row;
         this.col = col;
     }
-
-    public Word(String name, String source) {
-        this.name = name;
-        this.word = source;
-    }
-
 
     public int getTypenum() {
         return token;
@@ -95,5 +100,14 @@ public class Word implements Serializable {
     @Override
     public String toString() {
         return word;
+    }
+
+    @Override
+    public boolean equals(Object o){
+        if (o instanceof  Word){
+            Word word = (Word) o;
+            return ((this.word.equals(word.word)));
+        }
+        return false;
     }
 }

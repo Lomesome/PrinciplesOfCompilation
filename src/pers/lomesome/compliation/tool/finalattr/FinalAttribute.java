@@ -1,13 +1,14 @@
 package pers.lomesome.compliation.tool.finalattr;
 
 import pers.lomesome.compliation.model.MakeJson;
+import pers.lomesome.compliation.utils.semantic.SymbolTable;
 import pers.lomesome.compliation.utils.syntax.AllGrammer;
 
 import java.util.*;
 
 public class FinalAttribute {
     //关键字
-    private static final String[] keyword = new String[]{"char", "int", "float", "break", "const", "return", "void", "continue", "do", "while", "if", "else", "for", "auto", "case", "default", "double", "enum", "extern", "goto", "long", "register", "short", "signed", "sizeof", "static", "struct", "switch", "typedef", "union", "unsigned", "volatile","main" };
+    private static final String[] keyword = new String[]{"char", "int", "float", "break", "const", "return", "void", "continue", "do", "while", "if", "else", "for", "auto", "case", "default", "double", "enum", "extern", "goto", "long", "register", "short", "signed", "sizeof", "static", "struct", "switch", "typedef", "union", "unsigned", "volatile"};
 
     //分界符
     private static final String[] delimiter ={"{", "}", ";", ","};
@@ -41,6 +42,8 @@ public class FinalAttribute {
 
     private static Map<String, Integer> actionMap = new LinkedHashMap<>();
 
+    private static Map<String, SymbolTable> symbolTableMap = new LinkedHashMap<>();
+
     //初始化关键字、分界符、运算符的token
     public static void init(){
         setToken(101, keyword);
@@ -73,6 +76,7 @@ public class FinalAttribute {
         actionMap.put("PUSHNUM", 19);
         actionMap.put("LEVELA", 20);
         actionMap.put("LEVELS", 21);
+        actionMap.put("ADDFUN", 22);
     }
 
     //设置关键字、分界符、运算符的token
@@ -96,6 +100,15 @@ public class FinalAttribute {
         stringMap.put(800, "float_const");
         stringMap.put(400, "int_const");
         stringMap.put(600, "string_const");
+//        stringMap.put(700, "IDENTIFIER");
+//        stringMap.put(800, "CONSTANT");
+//        stringMap.put(400, "CONSTANT");
+//        stringMap.put(600, "STRING_LITERAL");
+//        stringMap.put(700, "x");
+//        stringMap.put(500, "z");
+//        stringMap.put(800, "y");
+//        stringMap.put(400, "y");
+//        stringMap.put(600, "y");
         for(String s : keyword){
             stringMap.put(start++, s);
         }
@@ -222,5 +235,21 @@ public class FinalAttribute {
 
     public static void setSemPredictMap(LinkedHashMap<String, LinkedHashMap<String, List<String>>> semPredictMap) {
         FinalAttribute.semPredictMap = semPredictMap;
+    }
+
+    public static void addSymbolTable(String func, SymbolTable symbolTable){
+        symbolTableMap.put(func, symbolTable);
+    }
+
+    public static SymbolTable getSymbolTable(String func){
+        return symbolTableMap.get(func);
+    }
+
+    public static Map<String, SymbolTable> getSymbolTableMap() {
+        return symbolTableMap;
+    }
+
+    public static void clearSymbolTableMap() {
+        symbolTableMap.clear();
     }
 }

@@ -34,6 +34,8 @@ import pers.lomesome.compliation.view.mywidgets.*;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.*;
 
 public class CodeInterface {
@@ -125,7 +127,21 @@ public class CodeInterface {
 
         MenuItem lexicalAnalysis = new MenuItem("Lexical Analysis");
         lexicalAnalysis.setAccelerator(KeyCombination.valueOf("Ctrl+L"));
-        tools.getItems().addAll(lexicalAnalysis);
+
+        MenuItem showTree = new MenuItem("Show Tree");
+        showTree.setAccelerator(KeyCombination.valueOf("Ctrl+T"));
+
+        showTree.setOnAction(event -> {
+            String url = this.getClass().getResource("/pers/lomesome/compliation/python/GrammerTree.html").toString();
+            try {
+
+                java.awt.Desktop.getDesktop().browse(new URI(url));
+            } catch (IOException | URISyntaxException ignored) {
+            }
+        });
+
+        tools.getItems().addAll(lexicalAnalysis, showTree);
+
 
         menuBar.setPadding(new Insets(0, 10, 0, 10));
 
@@ -264,9 +280,9 @@ public class CodeInterface {
                             list.add(new Word("#", "end", -1,-1));
                             list.get(list.size() - 1).setName("#");
 
-                            SymbolTable Table = new SymbolTable();
-                            Table.getTable(list);
-                            List<List<String>> listList = SyntaxAnalysis.analysis(list, Table);
+//                            SymbolTable Table = new SymbolTable();
+//                            Table.getTable(list);
+                            List<List<String>> listList = SyntaxAnalysis.analysis(list);
 
                             for (String s : listList.get(0)){
                                 Platform.runLater(() -> textArea.appendText(s));
@@ -280,12 +296,12 @@ public class CodeInterface {
                             }
                             if (code.equals("0")){
                                 quaternaryList.clear();
-                                Table.printtable();
-                                Object[] results = Analysis.analysis(list, Table);
+//                                Table.printTable();
+                                Object[] results = Analysis.analysis(list);
                                 LiveStatu liveStatu = (LiveStatu) results[0];
                                 if (liveStatu != null)
                                     for (int i = 0; i < liveStatu.getQt().size(); i++) {
-                                        quaternaryList.add(new ProPertyQuaternary(i, liveStatu.getQt().get(i).getFirst(), liveStatu.getQt().get(i).getSecond(), liveStatu.getQt().get(i).getThird(),liveStatu.getQt().get(i).getFourth()));
+                                        quaternaryList.add(new ProPertyQuaternary(i, liveStatu.getQt().get(i).getFirst().getWord(), liveStatu.getQt().get(i).getSecond().getWord(), liveStatu.getQt().get(i).getThird().getWord(),liveStatu.getQt().get(i).getFourth().getWord()));
                                     }
                                 asmCodeTextArea.clear();
                                 if (results[1] != null)

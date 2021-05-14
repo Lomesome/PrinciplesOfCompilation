@@ -2,6 +2,8 @@ package pers.lomesome.compliation.utils.toasm;
 
 import pers.lomesome.compliation.model.LiveStatu;
 import pers.lomesome.compliation.model.Quaternary;
+import pers.lomesome.compliation.model.Word;
+
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
@@ -13,25 +15,25 @@ public class ObjectCode {
         LinkedList<String> Block = new LinkedList<String>();
         String str = "";
         for (int i = 0; i < liveStatu.getQt().size(); i++) {
-            str = liveStatu.getQt().get(i).getFirst();
+            str = liveStatu.getQt().get(i).getFirst().getWord();
             if (str.equals("if") || str.equals("el") || str.equals("ie") || str.equals("wh") || str.equals("do") || str.equals("we")) {
                 Block.add(str);
-                str = liveStatu.getQt().get(i).getSecond();
+                str = liveStatu.getQt().get(i).getSecond().getWord();
                 Block.add(str);
-                str = liveStatu.getQt().get(i).getThird();
+                str = liveStatu.getQt().get(i).getThird().getWord();
                 Block.add(str);
-                str = liveStatu.getQt().get(i).getFourth();
+                str = liveStatu.getQt().get(i).getFourth().getWord();
                 Block.add(str);
                 WriteAcTable(Block, liveStatu); // 调用WriteAcTable函数填活跃信息表
                 Block.clear();
                 continue;
             }
             Block.add(str);
-            str = liveStatu.getQt().get(i).getSecond();
+            str = liveStatu.getQt().get(i).getSecond().getWord();
             Block.add(str);
-            str = liveStatu.getQt().get(i).getThird();
+            str = liveStatu.getQt().get(i).getThird().getWord();
             Block.add(str);
-            str = liveStatu.getQt().get(i).getFourth();
+            str = liveStatu.getQt().get(i).getFourth().getWord();
             Block.add(str);
         }
         if (Block.size() != 0) {
@@ -89,17 +91,17 @@ public class ObjectCode {
                     SYMBL.put(Block.get(i), true);
                 }
                 Quaternary tem = new Quaternary();
-                tem.setFirst(str1);
-                tem.setSecond(str2);
-                tem.setThird(str3);
-                tem.setFourth(str4);
+                tem.setFirst(new Word(str1));
+                tem.setSecond(new Word(str2));
+                tem.setThird(new Word(str3));
+                tem.setFourth(new Word(str4));
                 liveStatu.getActiveLable().add(tem);
             }
         } // 初始化完成
         int number = liveStatu.getActiveLable().size();
         for (int i = Block.size() - 1; i >= 0; i--) {
             if (i % 4 == 3) {
-                if (!liveStatu.getActiveLable().get(number - 1).getFourth().equals("Nosense")) {
+                if (!liveStatu.getActiveLable().get(number - 1).getFourth().getWord().equals("Nosense")) {
                     boolean tem = false;
                     tem = SYMBL.get(Block.get(i));
                     if (tem) {
@@ -112,7 +114,7 @@ public class ObjectCode {
                     str4 = "Nosense";
                 }
             } else if (i % 4 == 2) {
-                if (!liveStatu.getActiveLable().get(number - 1).getThird().equals("Nosense")) {
+                if (!liveStatu.getActiveLable().get(number - 1).getThird().getWord().equals("Nosense")) {
                     boolean tem = false;
                     tem = SYMBL.get(Block.get(i));
                     if (tem) {
@@ -125,7 +127,7 @@ public class ObjectCode {
                     str3 = "Nosense";
                 }
             } else if (i % 4 == 1) {
-                if (!liveStatu.getActiveLable().get(number - 1).getSecond().equals("Nosense")) {
+                if (!liveStatu.getActiveLable().get(number - 1).getSecond().getWord().equals("Nosense")) {
                     boolean tem = false;
                     tem = SYMBL.get(Block.get(i));
                     if (tem) {
@@ -138,12 +140,12 @@ public class ObjectCode {
                     str2 = "Nosense";
                 }
             } else {
-                str1 = liveStatu.getActiveLable().get(number - 1).getFirst();
+                str1 = liveStatu.getActiveLable().get(number - 1).getFirst().getWord();
                 Quaternary tem = new Quaternary();
-                tem.setFirst(str1);
-                tem.setSecond(str2);
-                tem.setThird(str3);
-                tem.setFourth(str4);
+                tem.setFirst(new Word(str1));
+                tem.setSecond(new Word(str2));
+                tem.setThird(new Word(str3));
+                tem.setFourth(new Word(str4));
                 liveStatu.getActiveLable().set(number - 1, tem);
                 number--;
             }

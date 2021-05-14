@@ -2,10 +2,10 @@ package pers.lomesome.compliation.model;
 
 public class Quaternary {
     private Integer level;
-    private String First;
-    private String Second;
-    private String Third;
-    private String Fourth;
+    private Word First;
+    private Word Second;
+    private Word Third;
+    private Word Fourth;
 
     public Integer getLevel() {
         return level;
@@ -15,35 +15,35 @@ public class Quaternary {
         this.level = level;
     }
 
-    public String getFirst() {
+    public Word getFirst() {
         return First;
     }
 
-    public void setFirst(String first) {
+    public void setFirst(Word first) {
         First = first;
     }
 
-    public String getSecond() {
+    public Word getSecond() {
         return Second;
     }
 
-    public void setSecond(String second) {
+    public void setSecond(Word second) {
         Second = second;
     }
 
-    public String getThird() {
+    public Word getThird() {
         return Third;
     }
 
-    public void setThird(String third) {
+    public void setThird(Word third) {
         Third = third;
     }
 
-    public String getFourth() {
+    public Word getFourth() {
         return Fourth;
     }
 
-    public void setFourth(String fourth) {
+    public void setFourth(Word fourth) {
         Fourth = fourth;
     }
 

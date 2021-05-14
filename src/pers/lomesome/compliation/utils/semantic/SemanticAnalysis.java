@@ -3,6 +3,7 @@ package pers.lomesome.compliation.utils.semantic;
 import pers.lomesome.compliation.model.LiveStatu;
 import pers.lomesome.compliation.model.Quaternary;
 import pers.lomesome.compliation.model.Pair;
+import pers.lomesome.compliation.model.Word;
 import pers.lomesome.compliation.tool.finalattr.FinalAttribute;
 import java.io.IOException;
 import java.util.regex.Matcher;
@@ -13,20 +14,23 @@ public class SemanticAnalysis {
     public static String arrNum = "";
     public static int thelevel = 0;
 
-    public static void call(String Action, int TokenIndex, String curstr, SymbolTable table, LiveStatu liveStatu) throws IOException {
+    public static void call(String Action, int TokenIndex, Word curstr, SymbolTable table, LiveStatu liveStatu) throws IOException {
         switch (FinalAttribute.getActionMap().get(Action)) {
             case 1: { // PUSH动作
-                Pair<String, Integer> _pair = new Pair<>(curstr, TokenIndex);
+                Pair<Word, Integer> _pair = new Pair<>(curstr, TokenIndex);
+                System.out.println("push");
                 liveStatu.getSEM().push(_pair);
                 break;
             }
             case 2: { // GEQA动作
-                String str1 = liveStatu.getSEM().peek().getFirst();
+                Word str1 = liveStatu.getSEM().peek().getFirst();
+                System.out.println("pop1: " +str1);
                 liveStatu.getSEM().pop();
-                String str2 = liveStatu.getSEM().peek().getFirst();
+                Word str2 = liveStatu.getSEM().peek().getFirst();
+                System.out.println("pop2: " + str2);
                 liveStatu.getSEM().pop();
                 Quaternary tem = new Quaternary();
-                tem.setFirst("+");
+                tem.setFirst(new Word("+"));
                 tem.setSecond(str2);
                 tem.setThird(str1);
 
@@ -39,21 +43,21 @@ public class SemanticAnalysis {
                     Analysis.errorMsg.add(tem.getThird() + "未定义");
                     System.out.println(tem.getThird() + "未定义");
                 }
-                tem.setFourth("t" + Analysis.i);
+                tem.setFourth(new Word("t" + Analysis.i));
                 liveStatu.getQt().add(tem);
                 getTemLable(tem, table);
-                Pair<String, Integer> _pair = new Pair<>("t" + Analysis.i, TokenIndex);
+                Pair<Word, Integer> _pair = new Pair<>(new Word("t" + Analysis.i, str1.getName()), TokenIndex);
                 liveStatu.getSEM().push(_pair);
                 Analysis.i++;
                 break;
             }
             case 3: { // GEQS动作
-                String str1 = liveStatu.getSEM().peek().getFirst();
+                Word str1 = liveStatu.getSEM().peek().getFirst();
                 liveStatu.getSEM().pop();
-                String str2 = liveStatu.getSEM().peek().getFirst();
+                Word str2 = liveStatu.getSEM().peek().getFirst();
                 liveStatu.getSEM().pop();
                 Quaternary tem = new Quaternary();
-                tem.setFirst("-");
+                tem.setFirst(new Word("-"));
                 tem.setSecond(str2);
                 tem.setThird(str1);
 
@@ -67,21 +71,21 @@ public class SemanticAnalysis {
                     System.out.println(tem.getThird() + "未定义");
                     Analysis.errorMsg.add(tem.getThird() + "未定义");
                 }
-                tem.setFourth("t" + Analysis.i);
+                tem.setFourth(new Word("t" + Analysis.i));
                 liveStatu.getQt().add(tem);
                 getTemLable(tem, table);
-                Pair<String, Integer> _pair = new Pair<>("t" + Analysis.i, TokenIndex);
+                Pair<Word, Integer> _pair = new Pair<>(new Word("t" + Analysis.i, str1.getName()), TokenIndex);
                 liveStatu.getSEM().push(_pair);
                 Analysis.i++;
                 break;
             }
             case 4: { // GEQM动作
-                String str1 = liveStatu.getSEM().peek().getFirst();
+                Word str1 = liveStatu.getSEM().peek().getFirst();
                 liveStatu.getSEM().pop();
-                String str2 = liveStatu.getSEM().peek().getFirst();
+                Word str2 = liveStatu.getSEM().peek().getFirst();
                 liveStatu.getSEM().pop();
                 Quaternary tem = new Quaternary();
-                tem.setFirst("*");
+                tem.setFirst(new Word("*"));
                 tem.setSecond(str2);
                 tem.setThird(str1);
 
@@ -94,21 +98,21 @@ public class SemanticAnalysis {
                     System.out.println(tem.getThird() + "未定义");
                     Analysis.errorMsg.add(tem.getThird() + "未定义");
                 }
-                tem.setFourth("t" + Analysis.i);
+                tem.setFourth(new Word("t" + Analysis.i));
                 liveStatu.getQt().add(tem);
                 getTemLable(tem, table);
-                Pair<String, Integer> _pair = new Pair<>("t" + String.valueOf(Analysis.i), TokenIndex);
+                Pair<Word, Integer> _pair = new Pair<>(new Word("t" + Analysis.i, str1.getName()), TokenIndex);
                 liveStatu.getSEM().push(_pair);
                 Analysis.i++;
                 break;
             }
             case 5: { // GEQD动作
-                String str1 = liveStatu.getSEM().peek().getFirst();
+                Word str1 = liveStatu.getSEM().peek().getFirst();
                 liveStatu.getSEM().pop();
-                String str2 = liveStatu.getSEM().peek().getFirst();
+                Word str2 = liveStatu.getSEM().peek().getFirst();
                 liveStatu.getSEM().pop();
                 Quaternary tem = new Quaternary();
-                tem.setFirst("/");
+                tem.setFirst(new Word("/"));
                 tem.setSecond(str2);
                 tem.setThird(str1);
 
@@ -121,29 +125,42 @@ public class SemanticAnalysis {
                     System.out.println(tem.getThird() + "未定义");
                     Analysis.errorMsg.add(tem.getThird() + "未定义");
                 }
-                tem.setFourth("t" + Analysis.i);
+                tem.setFourth(new Word("t" + Analysis.i));
                 liveStatu.getQt().add(tem);
                 getTemLable(tem, table);
-                Pair<String, Integer> _pair = new Pair<>("t" + Analysis.i, TokenIndex);
+                Pair<Word, Integer> _pair = new Pair<>(new Word("t" + Analysis.i, str1.getName()), TokenIndex);
                 liveStatu.getSEM().push(_pair);
                 Analysis.i++;
                 break;
             }
             case 6: { // ASSI动作
-                String tem1 = liveStatu.getSEM().peek().getFirst();
+                Word tem1 = liveStatu.getSEM().peek().getFirst();
+                System.out.println("ASSI pop1: "+ tem1);
                 liveStatu.getSEM().pop();
-                String tem2 = liveStatu.getSEM().peek().getFirst();
+                Word tem2 = liveStatu.getSEM().peek().getFirst();
+                System.out.println("ASSI pop2: "+ tem2);
                 liveStatu.getSEM().pop();
                 Quaternary tem = new Quaternary();
-                tem.setFirst("=");
+                tem.setFirst(new Word("="));
                 tem.setSecond(tem1);
-                tem.setThird("_");
+                tem.setThird(new Word("_"));
                 if (!arrNum.equals("")) {
-                    tem2 = tem2 + "[" + arrNum + "]";
+                    tem2.setWord(tem2.getWord() + "[" + arrNum + "]");
                 }
                 tem.setFourth(tem2);
 
-                if (!isDefined(tem.getSecond(), table)) {
+                if (tem1.getWord().startsWith("t") || tem2.getWord().startsWith("t")){
+                    if (!cheackType(tem2, table).equals(cheackType(tem1, table))){
+//                        Analysis.flag = false;
+                        System.out.println(tem2.getWord() + cheackType(tem2, table) + "类型错误");
+                        System.out.println(tem1.getWord() +  cheackType(tem1, table)+ "类型错误");
+                        Analysis.errorMsg.add(tem2.getWord() + "类型错误");
+                    }
+                } else if (!isAssignmentRight(tem1.getName(), cheackType(tem2, table))){
+                    Analysis.flag = false;
+                    System.out.println(tem2.getWord() + "类型错误");
+                    Analysis.errorMsg.add(tem2.getWord() + "类型错误");
+                }else if (!isDefined(tem.getSecond(), table)) {
                     Analysis.flag = false;
                     System.out.println(tem.getSecond() + "未定义");
                     Analysis.errorMsg.add(tem.getSecond() + "未定义");
@@ -157,15 +174,15 @@ public class SemanticAnalysis {
                 break;
             }
             case 7: { // GEQG动作
-                String str1 = liveStatu.getSEM().peek().getFirst();
+                Word str1 = liveStatu.getSEM().peek().getFirst();
                 liveStatu.getSEM().pop();
-                String str2 = liveStatu.getSEM().peek().getFirst();
+                Word str2 = liveStatu.getSEM().peek().getFirst();
                 liveStatu.getSEM().pop();
                 Quaternary tem = new Quaternary();
-                tem.setFirst(">");
+                tem.setFirst(new Word(">"));
                 tem.setSecond(str2);
                 tem.setThird(str1);
-                tem.setFourth("t" + Analysis.i);
+                tem.setFourth(new Word("t" + Analysis.i));
                 if (!isDefined(tem.getSecond(), table)) {
                     Analysis.flag = false;
                     System.out.println(tem.getSecond() + "未定义");
@@ -176,21 +193,21 @@ public class SemanticAnalysis {
                     Analysis.errorMsg.add(tem.getThird() + "未定义");
                 }
                 liveStatu.getQt().add(tem);
-                Pair<String, Integer> _pair = new Pair<>("t" + Analysis.i, TokenIndex);
+                Pair<Word, Integer> _pair = new Pair<>(new Word("t" + Analysis.i, str1.getName()), TokenIndex);
                 liveStatu.getSEM().push(_pair);
                 Analysis.i++;
                 break;
             }
             case 8: { // GEQL动作
-                String str1 = liveStatu.getSEM().peek().getFirst();
+                Word str1 = liveStatu.getSEM().peek().getFirst();
                 liveStatu.getSEM().pop();
-                String str2 = liveStatu.getSEM().peek().getFirst();
+                Word str2 = liveStatu.getSEM().peek().getFirst();
                 liveStatu.getSEM().pop();
                 Quaternary tem = new Quaternary();
-                tem.setFirst("<");
+                tem.setFirst(new Word("<"));
                 tem.setSecond(str2);
                 tem.setThird(str1);
-                tem.setFourth("t" + Analysis.i);
+                tem.setFourth(new Word("t" + Analysis.i));
                 if (!isDefined(tem.getSecond(), table)) {
                     Analysis.flag = false;
                     System.out.println(tem.getSecond() + "未定义");
@@ -201,21 +218,21 @@ public class SemanticAnalysis {
                     Analysis.errorMsg.add(tem.getThird() + "未定义");
                 }
                 liveStatu.getQt().add(tem);
-                Pair<String, Integer> _pair = new Pair<>("t" + Analysis.i, TokenIndex);
+                Pair<Word, Integer> _pair = new Pair<>(new Word("t" + Analysis.i, str1.getName()), TokenIndex);
                 liveStatu.getSEM().push(_pair);
                 Analysis.i++;
                 break;
             }
             case 9: { // GEQE动作
-                String str1 = liveStatu.getSEM().peek().getFirst();
+                Word str1 = liveStatu.getSEM().peek().getFirst();
                 liveStatu.getSEM().pop();
-                String str2 = liveStatu.getSEM().peek().getFirst();
+                Word str2 = liveStatu.getSEM().peek().getFirst();
                 liveStatu.getSEM().pop();
                 Quaternary tem = new Quaternary();
-                tem.setFirst("==");
+                tem.setFirst(new Word("=="));
                 tem.setSecond(str2);
                 tem.setThird(str1);
-                tem.setFourth("t" + Analysis.i);
+                tem.setFourth(new Word("t" + Analysis.i));
                 if (!isDefined(tem.getSecond(), table)) {
                     Analysis.flag = false;
                     System.out.println(tem.getSecond() + "未定义");
@@ -226,21 +243,21 @@ public class SemanticAnalysis {
                     Analysis.errorMsg.add(tem.getThird() + "未定义");
                 }
                 liveStatu.getQt().add(tem);
-                Pair<String, Integer> _pair = new Pair<>("t" + Analysis.i, TokenIndex);
+                Pair<Word, Integer> _pair = new Pair<>(new Word("t" + Analysis.i, str1.getName()), TokenIndex);
                 liveStatu.getSEM().push(_pair);
                 Analysis.i++;
                 break;
             }
             case 10: { // GEQGE动作
-                String str1 = liveStatu.getSEM().peek().getFirst();
+                Word str1 = liveStatu.getSEM().peek().getFirst();
                 liveStatu.getSEM().pop();
-                String str2 = liveStatu.getSEM().peek().getFirst();
+                Word str2 = liveStatu.getSEM().peek().getFirst();
                 liveStatu.getSEM().pop();
                 Quaternary tem = new Quaternary();
-                tem.setFirst(">=");
+                tem.setFirst(new Word(">="));
                 tem.setSecond(str2);
                 tem.setThird(str1);
-                tem.setFourth("t" + Analysis.i);
+                tem.setFourth(new Word("t" + Analysis.i));
                 if (!isDefined(tem.getSecond(), table)) {
                     Analysis.flag = false;
                     System.out.println(tem.getSecond() + "未定义");
@@ -251,21 +268,21 @@ public class SemanticAnalysis {
                     Analysis.errorMsg.add(tem.getThird() + "未定义");
                 }
                 liveStatu.getQt().add(tem);
-                Pair<String, Integer> _pair = new Pair<>("t" + Analysis.i, TokenIndex);
+                Pair<Word, Integer> _pair = new Pair<>(new Word("t" + Analysis.i, str1.getName()), TokenIndex);
                 liveStatu.getSEM().push(_pair);
                 Analysis.i++;
                 break;
             }
             case 11: { // GEQLE动作
-                String str1 = liveStatu.getSEM().peek().getFirst();
+                Word str1 = liveStatu.getSEM().peek().getFirst();
                 liveStatu.getSEM().pop();
-                String str2 = liveStatu.getSEM().peek().getFirst();
+                Word str2 = liveStatu.getSEM().peek().getFirst();
                 liveStatu.getSEM().pop();
                 Quaternary tem = new Quaternary();
-                tem.setFirst("<=");
+                tem.setFirst(new Word("<="));
                 tem.setSecond(str2);
                 tem.setThird(str1);
-                tem.setFourth("t" + Analysis.i);
+                tem.setFourth(new Word("t" + Analysis.i));
                 if (!isDefined(tem.getSecond(), table)) {
                     Analysis.flag = false;
                     System.out.println(tem.getSecond() + "未定义");
@@ -276,38 +293,39 @@ public class SemanticAnalysis {
                     Analysis.errorMsg.add(tem.getThird() + "未定义");
                 }
                 liveStatu.getQt().add(tem);
-                Pair<String, Integer> _pair = new Pair<>("t" + Analysis.i, TokenIndex);
+                Pair<Word, Integer> _pair = new Pair<>(new Word("t" + Analysis.i, str1.getName()), TokenIndex);
                 liveStatu.getSEM().push(_pair);
                 Analysis.i++;
                 break;
             }
             case 12: { // IF动作
-                String str1 = liveStatu.getSEM().peek().getFirst();
+                Word str1 = liveStatu.getSEM().peek().getFirst();
                 Quaternary tem = new Quaternary();
-                tem.setFirst("if");
+                tem.setFirst(new Word("if"));
                 tem.setSecond(str1);
-                tem.setThird("_");
-                tem.setFourth("_");
+                tem.setThird(new Word("_"));
+                tem.setFourth(new Word("_"));
                 tem.setLevel(thelevel);
+                System.out.println("thelevel"+thelevel);
                 liveStatu.getQt().add(tem);
                 liveStatu.getSEM().pop();
                 break;
             }
             case 13: { // EL动作
                 Quaternary tem = new Quaternary();
-                tem.setFirst("el");
-                tem.setSecond("_");
-                tem.setThird("_");
-                tem.setFourth("_");
+                tem.setFirst(new Word("el"));
+                tem.setSecond(new Word("_"));
+                tem.setThird(new Word("_"));
+                tem.setFourth(new Word("_"));
                 tem.setLevel(thelevel);
                 liveStatu.getQt().add(tem);
                 for (int i = liveStatu.getQt().size() - 1; i >= 0; i--) {
-                    if (liveStatu.getQt().get(i).getFirst().equals("if") && liveStatu.getQt().get(i).getFourth().equals("_") && liveStatu.getQt().get(i).getLevel() == thelevel) {
+                    if (liveStatu.getQt().get(i).getFirst().equals(new Word("if")) && liveStatu.getQt().get(i).getFourth().equals(new Word("_")) && liveStatu.getQt().get(i).getLevel() == thelevel) {
                         Quaternary tem1 = new Quaternary();
-                        tem1.setFirst("if");
+                        tem1.setFirst(new Word("if"));
                         tem1.setSecond(liveStatu.getQt().get(i).getSecond());
-                        tem1.setThird("_");
-                        tem1.setFourth(String.valueOf(liveStatu.getQt().size()));
+                        tem1.setThird(new Word("_"));
+                        tem1.setFourth(new Word(String.valueOf(liveStatu.getQt().size())));
                         liveStatu.getQt().set(i, tem1);
                         break;
                     }
@@ -316,19 +334,19 @@ public class SemanticAnalysis {
             }
             case 14: { // IEFIR动作
                 Quaternary tem = new Quaternary();
-                tem.setFirst("ie");
-                tem.setSecond("_");
-                tem.setThird("_");
-                tem.setFourth("_");
+                tem.setFirst(new Word("ie"));
+                tem.setSecond(new Word("_"));
+                tem.setThird(new Word("_"));
+                tem.setFourth(new Word("_"));
                 tem.setLevel(thelevel);
                 liveStatu.getQt().add(tem);
                 for (int i = liveStatu.getQt().size() - 1; i >= 0; i--) {
-                    if (liveStatu.getQt().get(i).getFirst().equals("if") && liveStatu.getQt().get(i).getFourth().equals("_")) {
+                    if (liveStatu.getQt().get(i).getFirst().equals(new Word("if")) && liveStatu.getQt().get(i).getFourth().equals(new Word("_"))) {
                         Quaternary tem1 = new Quaternary();
-                        tem1.setFirst("if");
+                        tem1.setFirst(new Word("if"));
                         tem1.setSecond(liveStatu.getQt().get(i).getSecond());
-                        tem1.setThird("_");
-                        tem1.setFourth(String.valueOf(liveStatu.getQt().size() - 1));
+                        tem1.setThird(new Word("_"));
+                        tem1.setFourth( new Word(String.valueOf(liveStatu.getQt().size() - 1)));
                         liveStatu.getQt().set(i, tem1);
                         break;
                     }
@@ -338,37 +356,37 @@ public class SemanticAnalysis {
 
             case 15: { // IESEC动作
                 Quaternary tem = new Quaternary();
-                tem.setFirst("ie");
-                tem.setSecond("_");
-                tem.setThird("_");
-                tem.setFourth("_");
+                tem.setFirst(new Word("ie"));
+                tem.setSecond(new Word("_"));
+                tem.setThird(new Word("_"));
+                tem.setFourth(new Word("_"));
                 tem.setLevel(thelevel);
                 liveStatu.getQt().add(tem);
                 int Number = 0;
                 for (int i = liveStatu.getQt().size() - 1; i >= 0; i--) {
-                    if (liveStatu.getQt().get(i).getFirst().equals("el") && Number >= 0) {
+                    if (liveStatu.getQt().get(i).getFirst().equals(new Word("el")) && Number >= 0) {
                         Number++;
-                        if (liveStatu.getQt().get(i).getFourth().equals("_")) {
+                        if (liveStatu.getQt().get(i).getFourth().equals(new Word("_"))) {
                             Quaternary tem1 = new Quaternary();
-                            tem1.setFirst("el");
-                            tem1.setSecond("_");
-                            tem1.setThird("_");
-                            tem1.setFourth(String.valueOf(liveStatu.getQt().size() - 1));
+                            tem1.setFirst(new Word("el"));
+                            tem1.setSecond(new Word("_"));
+                            tem1.setThird(new Word("_"));
+                            tem1.setFourth(new Word(String.valueOf(liveStatu.getQt().size() - 1)));
                             liveStatu.getQt().set(i, tem1);
                         }
                     }
-                    if (liveStatu.getQt().get(i).getFirst().equals("if")) {
+                    if (liveStatu.getQt().get(i).getFirst().equals(new Word("if"))) {
                         Number--;
                         if (Number < 0) {
                             break;
                         }
                     }
-                    if (liveStatu.getQt().get(i).getFirst().equals("el") && liveStatu.getQt().get(i).getFourth().equals("_") && liveStatu.getQt().get(i).getLevel() == thelevel) {
+                    if (liveStatu.getQt().get(i).getFirst().equals(new Word("el")) && liveStatu.getQt().get(i).getFourth().equals(new Word("_")) && liveStatu.getQt().get(i).getLevel() == thelevel) {
                         Quaternary tem1 = new Quaternary();
-                        tem1.setFirst("el");
-                        tem1.setSecond("_");
-                        tem1.setThird("_");
-                        tem1.setFourth(String.valueOf(liveStatu.getQt().size() - 1));
+                        tem1.setFirst(new Word("el"));
+                        tem1.setSecond(new Word("_"));
+                        tem1.setThird(new Word("_"));
+                        tem1.setFourth(new Word(String.valueOf(liveStatu.getQt().size() - 1)));
                         liveStatu.getQt().set(i, tem1);
                     }
                 }
@@ -376,19 +394,19 @@ public class SemanticAnalysis {
             }
             case 16: { // WH动作
                 Quaternary tem = new Quaternary();
-                tem.setFirst("wh");
-                tem.setSecond("_");
-                tem.setThird("_");
-                tem.setFourth("_");
+                tem.setFirst(new Word("wh"));
+                tem.setSecond(new Word("_"));
+                tem.setThird(new Word("_"));
+                tem.setFourth(new Word("_"));
                 liveStatu.getQt().add(tem);
                 break;
             }
             case 17: { // DO动作
                 Quaternary tem = new Quaternary();
-                tem.setFirst("do");
+                tem.setFirst(new Word("do"));
                 tem.setSecond(liveStatu.getSEM().peek().getFirst());
-                tem.setThird("_");
-                tem.setFourth("_");
+                tem.setThird(new Word("_"));
+                tem.setFourth(new Word("_"));
                 liveStatu.getQt().add(tem);
                 liveStatu.getSEM().pop();
                 break;
@@ -396,21 +414,21 @@ public class SemanticAnalysis {
             case 18: { // WE动作
                 int isFindDo = 0;//如果找到空DO则变为1
                 for (int i = liveStatu.getQt().size() - 1; i >= 0; i--) {
-                    if (liveStatu.getQt().get(i).getFirst().equals("do") && liveStatu.getQt().get(i).getFourth().equals("_") && isFindDo == 0) {
+                    if (liveStatu.getQt().get(i).getFirst().equals(new Word("do")) && liveStatu.getQt().get(i).getFourth().equals(new Word("_")) && isFindDo == 0) {
                         isFindDo = 1;
                         Quaternary tem1 = new Quaternary();
-                        tem1.setFirst("do");
+                        tem1.setFirst(new Word("do"));
                         tem1.setSecond(liveStatu.getQt().get(i).getSecond());
-                        tem1.setThird("_");
-                        tem1.setFourth(String.valueOf(liveStatu.getQt().size() + 1));
+                        tem1.setThird(new Word("_"));
+                        tem1.setFourth( new Word(String.valueOf(liveStatu.getQt().size() + 1)));
                         liveStatu.getQt().set(i, tem1);
                     }
-                    if (isFindDo == 1 && liveStatu.getQt().get(i).getFirst().equals("wh")) {
+                    if (isFindDo == 1 && liveStatu.getQt().get(i).getFirst().equals(new Word("wh"))) {
                         Quaternary tem1 = new Quaternary();
-                        tem1.setFirst("we");
-                        tem1.setSecond("_");
-                        tem1.setThird("_");
-                        tem1.setFourth(String.valueOf(i + 1));
+                        tem1.setFirst(new Word("we"));
+                        tem1.setSecond(new Word("_"));
+                        tem1.setThird(new Word("_"));
+                        tem1.setFourth(new Word(String.valueOf(i + 1)));
                         liveStatu.getQt().add(tem1);
                         break;
                     }
@@ -418,7 +436,7 @@ public class SemanticAnalysis {
                 break;
             }
             case 19: { // PUSHNUM动作
-                arrNum = curstr;
+                arrNum = curstr.getWord();
                 break;
             }
 
@@ -430,40 +448,60 @@ public class SemanticAnalysis {
                 thelevel--;
                 break;
             }
+
+            case 22: {
+                Analysis.nowFunc = curstr.getWord();
+                SymbolTable symbolTable = new SymbolTable(Analysis.nowFunc);
+                FinalAttribute.addSymbolTable(Analysis.nowFunc, symbolTable);
+            }
         }
     }
 
-    public static void getTemLable(Quaternary tem, SymbolTable table) throws IOException {
+    public static void getTemLable(Quaternary tem, SymbolTable table) {
         SymbolTable.Var newtemp = new SymbolTable.Var();
-        if (tem.getFirst().equals("+") || tem.getFirst().equals("-") || tem.getFirst().equals("*") || tem.getFirst().equals("/")) {
-            newtemp.name = tem.getFourth();
+        if (tem.getFirst().equals(new Word("+")) || tem.getFirst().equals(new Word("-")) || tem.getFirst().equals(new Word("*")) || tem.getFirst().equals(new Word("/"))) {
+            newtemp.name = tem.getFourth().getWord();
             newtemp.offset = 0;
             newtemp.tp = 0;
             String type1 = "";
             String type2 = "";
-            if (isNumber(tem.getSecond())) {
-                type1 = "int";
-            } else if (tem.getSecond().charAt(0) == '\'') {
-                type1 = "char";
-            } else {
-                for (SymbolTable.Var v : table.Synbl) {
-                    if (v.name.equals(tem.getSecond())) {
-                        type1 = v.type;
-                        break;
+            switch (tem.getSecond().getName()) {
+                case "int_const":
+                    type1 = "int";
+                    break;
+                case "char_const":
+                    type1 = "char";
+                    break;
+                case "float_const":
+                    type1 = "float";
+                    break;
+                default:
+                    for (SymbolTable.Var v : table.Synbl) {
+                        if (v.name.equals(tem.getSecond().getWord())) {
+                            type1 = v.type;
+                            break;
+                        }
                     }
-                }
+                    break;
             }
-            if (isNumber(tem.getThird())) {
-                type2 = "int";
-            } else if (tem.getThird().charAt(0) == '\'') {
-                type2 = "char";
-            } else {
-                for (SymbolTable.Var v : table.Synbl) {
-                    if (v.name.equals(tem.getThird())) {
-                        type2 = v.type;
-                        break;
+            switch (tem.getThird().getName()) {
+                case "int_const":
+                    type2 = "int";
+                    break;
+                case "char_const":
+                    type2 = "char";
+                    break;
+                case "float_const":
+                    type2 = "float";
+                    break;
+                default:
+                    for (SymbolTable.Var v : table.Synbl) {
+                        if (v.name.equals(tem.getSecond().getWord())) {
+                            type2 = v.type;
+                            break;
+                        }
                     }
-                }
+                    break;
             }
             if ((type1.contains("int")) && (type2.contains("int"))) {
                 newtemp.type = "int";
@@ -472,7 +510,7 @@ public class SemanticAnalysis {
             } else if ((type1.contains("int") && type2.contains("char")) || (type1.contains("char") && type2.contains("int"))) {
                 newtemp.type = "int";
             } else {
-                if ((isDefined(tem.getSecond(), table) && isDefined(tem.getThird(), table)) && !isTempvar(tem.getSecond()) && !isTempvar(tem.getThird())) {
+                if ((isDefined(tem.getSecond(), table) && isDefined(tem.getThird(), table)) && !isTempvar(tem.getSecond().getWord()) && !isTempvar(tem.getThird().getWord())) {
                     Analysis.flag = false;
                     System.out.println("类型不匹配");
                     Analysis.errorMsg.add("类型不匹配");
@@ -483,33 +521,32 @@ public class SemanticAnalysis {
                 int size = 0;
                 switch (table.Synbl.get(table.Synbl.size() - 1).type) {
                     case "int":
-                        size = 1;
+                        size = 4;
                         break;
                     case "char":
                         size = 1;
                         break;
                     case "float":
-                        size = 2;
+                        size = 8;
                         break;
                     case "String":
                         size = 50;
                         break;
                 }
                 newtemp.offset = table.Synbl.get(table.Synbl.size() - 1).offset + size;
-                table.Synbl.add(newtemp);
+                table.Temp.add(newtemp);
             }
         }
     }
+    
 
-    static boolean isDefined(String name, SymbolTable table) {
+    private static boolean isDefined(Word name, SymbolTable table) {
         if (isNumber(name)) {
             return true;
-        } else if (name.charAt(0) == '\'') {
+        } else if (isTempvar(name.getWord())) {
             return true;
-        } else if (isTempvar(name)) {
-            return true;
-        } else if (name.contains("[")) {
-            String[] s = name.split("\\[");
+        } else if (name.getName().contains("[")) {
+            String[] s = name.getWord().split("\\[");
             String[] ss = s[1].split("\\]");
             for (SymbolTable.Var v : table.Synbl) {
                 if (v.name.equals(s[0])) {
@@ -523,7 +560,7 @@ public class SemanticAnalysis {
             }
         } else {
             for (SymbolTable.Var v : table.Synbl) {
-                if (v.name.equals(name)) {
+                if (v.name.equals(name.getWord())) {
                     return true;
                 }
             }
@@ -531,7 +568,48 @@ public class SemanticAnalysis {
         return false;
     }
 
+    private static boolean isAssignmentRight(String a1, String a2){
+        if (a2.equals("float")){
+            switch (a1){
+                case "int_const" :
+                case "float_const":
+                    return true;
+                default:
+                    return false;
+            }
+        }else {
+            return a1.contains(a2);
+        }
+    }
+
+    private static String cheackType(Word word, SymbolTable table){
+        String type = null;
+        for (SymbolTable.Var v : table.Synbl) {
+            if (v.name.equals(word.getWord())) {
+                type =  v.type;
+            }
+        }
+        for (SymbolTable.Var v : table.Temp) {
+            if (v.name.equals(word.getWord())) {
+                type =  v.type;
+            }
+        }
+        return type;
+    }
+    
+    public static Boolean isNumber(Word word){
+        switch (word.getName()){
+            case "int_const":
+            case "char_const":
+            case "float_const": 
+                return true;
+            default:
+                return false;
+        }
+    }
+
     public static Boolean isNumber(String str) {
+        
         Pattern pattern = Pattern.compile("[0-9]+");
         Matcher matcher = pattern.matcher(str);
         return matcher.matches();
