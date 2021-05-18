@@ -29,7 +29,6 @@ import pers.lomesome.compliation.utils.semantic.Analysis;
 import pers.lomesome.compliation.utils.syntax.SyntaxAnalysis;
 import pers.lomesome.compliation.utils.lexer.Lexer;
 //import pers.lomesome.compliation.utils.lexer.LexicalAnalyzer;
-import pers.lomesome.compliation.utils.semantic.SymbolTable;
 import pers.lomesome.compliation.view.mywidgets.*;
 import java.io.File;
 import java.io.FileReader;
@@ -305,11 +304,19 @@ public class CodeInterface {
                                     }
                                 asmCodeTextArea.clear();
                                 if (results[1] != null)
-                                    for (String s : (List<String>)results[1]){
-                                        asmCodeTextArea.appendText(s);
+                                    asmCodeTextArea.appendText("符号表：\n");
+                                    for (Object s : (List)results[1]){
+                                        asmCodeTextArea.appendText(s.toString() + "\n");
+                                    }
+                                asmCodeTextArea.appendText("\n");
+                                if (results[2] != null)
+                                    asmCodeTextArea.appendText("函数表：\n");
+                                    for (Object s : (List)results[2]){
+                                        asmCodeTextArea.appendText(s.toString() + "\n");
                                     }
 
-                                for (String s : (List<String>)results[2]) {
+
+                                for (String s : (List<String>)results[3]) {
                                     code = "-1";
                                     Platform.runLater(() -> textArea.appendText("语义错误：" + s + "\n"));
                                 }
@@ -448,44 +455,43 @@ public class CodeInterface {
 
         error.getStyleClass().add("codelist");
         error.setCellFactory(new Callback<ListView<Word>, ListCell<Word>>() {
-                                 public ListCell<Word> call(ListView<Word> headerListView) {
-                                     return new ListCell<Word>() {
-                                         @Override
-                                         protected void updateItem(Word item, boolean empty) {
-                                             super.updateItem(item, empty);
-                                             if (item != null) {
-                                                 this.setOnMouseClicked(event -> {
-                                                     if (event.getClickCount() == 2 && event.getButton() == MouseButton.PRIMARY) {
-                                                         MyCodeArea codeArea = (MyCodeArea) ((VirtualizedScrollPane)tabPane.getSelectionModel().getSelectedItem().getContent()).getContent();
-                                                         Platform.runLater(() -> codeArea.moveToSelect(item.getRow(), item.getCol()));
-                                                     } else if (event.getButton() == MouseButton.SECONDARY) {
-                                                         MyContextMenu.getInstance().show(this, Side.BOTTOM, 0, 0);
-                                                     }
-                                                 });
-                                                 Label label = new Label(item.getType() + " " + "第" + item.getRow() + "行,第" + (item.getCol() - item.getWord().length()) + "列: " + item.getWord());
-                                                 label.setTooltip(new Tooltip("没有建议"));
-                                                 setGraphic(label);
-                                             } else {
-                                                 setText(null);
-                                                 setGraphic(null);
-                                             }
-                                         }
-                                     };
+                 public ListCell<Word> call(ListView<Word> headerListView) {
+                     return new ListCell<Word>() {
+                         @Override
+                         protected void updateItem(Word item, boolean empty) {
+                         super.updateItem(item, empty);
+                         if (item != null) {
+                             this.setOnMouseClicked(event -> {
+                                 if (event.getClickCount() == 2 && event.getButton() == MouseButton.PRIMARY) {
+                                     MyCodeArea codeArea = (MyCodeArea) ((VirtualizedScrollPane)tabPane.getSelectionModel().getSelectedItem().getContent()).getContent();
+                                     Platform.runLater(() -> codeArea.moveToSelect(item.getRow(), item.getCol()));
+                                 } else if (event.getButton() == MouseButton.SECONDARY) {
+                                     MyContextMenu.getInstance().show(this, Side.BOTTOM, 0, 0);
                                  }
-                             }
+                             });
+                             Label label = new Label(item.getType() + " " + "第" + item.getRow() + "行,第" + (item.getCol() - item.getWord().length()) + "列: " + item.getWord());
+                             label.setTooltip(new Tooltip("没有建议"));
+                             setGraphic(label);
+                         } else {
+                             setText(null);
+                             setGraphic(null);
+                         }
+                         }
+                     };
+                 }
+             }
         );
-
 
         quaternaryBox.setOnMouseClicked(event -> {
             if (quaternaryBox.getUserData().equals("nochoose")) {
                 BorderPane tableBorderPane;
                 if (ManageQtTable.getTableBorderPane() == null) {
                     tableBorderPane = new BorderPane();
-                    tableBorderPane.setCenter(new AnalyzerTableView(new String[]{"Level", "First", "Second", "Third", "Fourth"}, quaternaryList , 60));
-                    asmCodeTextArea.setPrefSize(300, 450);
+                    tableBorderPane.setCenter(new AnalyzerTableView(new String[]{"No", "First", "Second", "Third", "Fourth"}, quaternaryList , 60));
+                    asmCodeTextArea.setPrefSize(300, 350);
                     asmCodeTextArea.setEditable(false);
                     asmCodeTextArea.setStyle("-fx-background-color:white;-fx-border-width: 1 0 1 0;-fx-border-color: lightgray");
-                    tableBorderPane.setBottom(new VBox(new Label("ASM Code:"), asmCodeTextArea));
+                    tableBorderPane.setBottom(new VBox(new Label("Table:"), asmCodeTextArea));
                     ManageQtTable.setTableBorderPane(tableBorderPane);
                 } else {
                     tableBorderPane = ManageQtTable.getTableBorderPane();

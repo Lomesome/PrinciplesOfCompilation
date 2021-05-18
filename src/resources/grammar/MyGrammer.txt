@@ -32,16 +32,32 @@ arg
 	;
 
 program
-	: '{' expmaker '}'
+	: ';'
+	| '{' expmaker '}'
 	;
 
 expmaker
 	: type id idassignment ';' expmaker
-	| id grop exp ';' expmaker
-	| 'if' '(' boolexp ')' '{' expmaker '}' iselse expmaker
-	| 'struct' id '{' expmaker '}' ';' expmaker
-	| 'while' '(' boolexp ')' '{' expmaker '}' expmaker
+	| id var_func ';' expmaker
+	| 'if' '(' boolexp ')' program iselse expmaker
+	| 'while' '(' boolexp ')' program expmaker
+	| 'do' program 'while' '(' boolexp ')' ';' expmaker
 	| ε
+	;
+
+_args
+	: id _arg
+	| ε
+	;
+
+_arg
+	: , id _arg
+	| ε
+	;
+
+var_func
+	: grop exp 
+	| '(' _args ')'
 	;
 
 iselse
@@ -60,35 +76,32 @@ grop
 	;
 
 idassignment
-	: '=' exp
+	: '=' exp idassis
 	| '[' int_const ']'
 	| , id idassignment
 	| ε
 	;
+
+idassis
+	: , id idassignment
+	| ε
+	;
+	
 
 boolexp
 	: beforexp afterexp
 	;
 
 beforexp
-	: float_const
-	| int_const
-	| id
-	;
-
-value
-	: float_const
-	| int_const
-	| id
-	| ε
+	: exp
 	;
 
 afterexp
-	: '>' value
-	| '<' value
-	| '==' value
-	| '>=' value
-	| '<=' value
+	: '>' exp
+	| '<' exp
+	| '==' exp
+	| '>=' exp
+	| '<=' exp
 	| ε
 	;
 

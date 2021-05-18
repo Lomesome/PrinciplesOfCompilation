@@ -4,26 +4,26 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 
 public class ProPertyQuaternary {
-    private final SimpleIntegerProperty Level;
+    private final SimpleIntegerProperty No;
     private final SimpleStringProperty First;
     private final SimpleStringProperty Second;
     private final SimpleStringProperty Third;
     private final SimpleStringProperty Fourth;
 
-    public ProPertyQuaternary(int level, String First, String Second, String Third, String Fourth) {
-        this.Level = new SimpleIntegerProperty(level);
+    public ProPertyQuaternary(int no, String First, String Second, String Third, String Fourth) {
+        this.No = new SimpleIntegerProperty(no);
         this.First = new SimpleStringProperty(First);
         this.Second = new SimpleStringProperty(Second);
         this.Third = new SimpleStringProperty(Third);
         this.Fourth = new SimpleStringProperty(Fourth);
     }
 
-    public int getLevel() {
-        return Level.get();
+    public int getNo() {
+        return No.get();
     }
 
-    public void setLevel(int level) {
-        this.Level.set(level);
+    public void setNo(int no) {
+        this.No.set(no);
     }
 
     public String getFirst() {

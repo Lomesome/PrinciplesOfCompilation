@@ -67,16 +67,11 @@ public class Predict {
                     }
 
                 }else {
-                    try {
-
-                        for (String s1 : followSet.get(k.get(0).get(0))) {
-                            if (linkedHashMap.get(k.get(0).get(0)).get(s1).size() == 0) {
-                                linkedHashMap.get(k.get(0).get(0)).get(s1).add(new MakeJson("ε", new ArrayList<>()));
-                                linkedHashMap2.get(k.get(0).get(0)).get(s1).add("ε");
-                            }
+                    for (String s1 : followSet.get(k.get(0).get(0))) {
+                        if (linkedHashMap.get(k.get(0).get(0)).get(s1).size() == 0) {
+                            linkedHashMap.get(k.get(0).get(0)).get(s1).add(new MakeJson("ε", new ArrayList<>()));
+                            linkedHashMap2.get(k.get(0).get(0)).get(s1).add("ε");
                         }
-                    }catch (Exception e){
-                        System.out.println(k.get(0).get(0));
                     }
 
                 }

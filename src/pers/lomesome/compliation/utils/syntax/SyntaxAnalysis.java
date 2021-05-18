@@ -23,6 +23,11 @@ public class SyntaxAnalysis {
         eliminateBT.eliminate();
         eliminateBT.eliminate();
         eliminateBT.eliminate();
+        eliminateBT.eliminate();
+
+        FinalAttribute.getAllGrammer().getGrammarMap().forEach((k, v)->{
+            System.out.println(k + " " + v);
+        });
 
         FinalAttribute.getAllGrammer().getGrammarMap().forEach((k, v)-> FinalAttribute.getAllVn().add(k));
         FinalAttribute.getAllGrammer().getGrammarMap().forEach((k, v)->{
@@ -73,6 +78,7 @@ public class SyntaxAnalysis {
                 a = list.get(IP);
             } else if (FinalAttribute.getAllVt().contains(X.getName())){
                 error.add("error: " +" position : (" + list.get(IP- 1).getCol() + "," + list.get(IP- 1).getRow() + ") 缺少 '" + X.getName()+"'\n");
+                System.out.println("error: " +" position : (" + list.get(IP- 1).getCol() + "," + list.get(IP- 1).getRow() + ") 缺少 '" + X.getName()+"'\n");
                 errorflag = true;
             } else if (FinalAttribute.getAllVn().contains(X.getName())){
                 if (map.get(X.getName()).get(a.getName()).size() == 0){

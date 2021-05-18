@@ -17,8 +17,10 @@ public class MyStack<T> extends Stack<T> {
 //            value = matcher.group(1);
 //            result.append(" ").append(value, 1, value.length() - 1);
 //        }
+
         StringBuilder result = new StringBuilder();
         this.forEach( s -> result.append(" ").append(((MakeJson)s).getName()));
         return result.toString();
     }
+
 }

@@ -8,7 +8,6 @@ public class Pair<A, B> {
         super();
         this.first = first;
         this.second = second;
-        System.out.println(this.toString());
     }
 
     public int hashCode() {

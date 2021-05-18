@@ -3,7 +3,7 @@ S
 	;
 
 function
-	: func_type funcname ADDFUN '(' args ')' program
+	: func_type PUSH funcname ADDFUN '(' args ')' program
 	;
 
 func_type
@@ -22,26 +22,42 @@ funcname
 	;
 
 args
-	: type id arg
+	: type PUSH id PUSH ADDARG arg
 	| ε
 	;
 
 arg
-	: , type id arg
+	: , type PUSH id PUSH ADDARG arg
 	| ε
 	;
 
 program
-	: '{' expmaker '}'
+	: ';'
+	| '{' LEVELA expmaker '}' LEVELS
 	;
 
 expmaker
 	: type id idassignment ';' expmaker
+	| id var_func ';' expmaker
+	| 'if' '(' boolexp ')' IF program iselse expmaker
+	| 'while' '(' boolexp ')' DO program WE expmaker
+	| 'do' DOW program 'while' '(' boolexp ')' ';' expmaker
 	| ε
-	| id grop exp ASSI ';' expmaker
-	| 'if' '(' boolexp ')' IF '{' LEVELA expmaker '}' LEVELS iselse expmaker
-	| 'struct' id '{' expmaker '}' ';' expmaker
-	| 'while' WH '(' boolexp ')' DO '{' LEVELA expmaker '}' LEVELS WE expmaker
+	;
+
+_args
+	: id _arg
+	| ε
+	;
+
+_arg
+	: , id _arg
+	| ε
+	;
+
+var_func
+	: grop exp ASSI
+	| CALLFUN '(' _args ')'
 	;
 
 iselse
@@ -61,9 +77,14 @@ grop
 
 idassignment
 	: ε
-	| PUSH '=' exp ASSI
+	| PUSH '=' exp ASSI idassis
 	| '[' int_const ']'
 	| , id idassignment
+	;
+
+idassis
+	: , id idassignment
+	| ε
 	;
 
 boolexp
@@ -71,24 +92,15 @@ boolexp
 	;
 
 beforexp
-	: float_const PUSH
-	| int_const PUSH
-	| id PUSH
-	;
-
-value
-	: float_const PUSH
-	| int_const PUSH
-	| id PUSH
-	| ε
+	: exp
 	;
 
 afterexp
-	: '>' value GEQG
-	| '<' value GEQL
-	| '==' value GEQE
-	| '>=' value GEQGE
-	| '<=' value GEQLE
+	: '>' exp GEQG
+	| '<' exp GEQL
+	| '==' exp GEQE
+	| '>=' exp GEQGE
+	| '<=' exp GEQLE
 	| ε
 	;
 

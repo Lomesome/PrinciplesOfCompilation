@@ -17,13 +17,13 @@ public class FollowSet {
     }
 
     public Map<String, Set<String>> getFollowSet() {
-        System.out.println("first");
-        firstSet.forEach((k, v) -> System.out.println(k +" " + v));
+//        System.out.println("first");
+//        firstSet.forEach((k, v) -> System.out.println(k +" " + v));
         do {
             grammars.forEach((k, v) -> getFollow(k));
         } while (followChange());
-        System.out.println("follow");
-        followSet.forEach((k, v) -> System.out.println(k +" " + v));
+//        System.out.println("follow");
+//        followSet.forEach((k, v) -> System.out.println(k +" " + v));
         return followSet;
     }
 
@@ -59,7 +59,6 @@ public class FollowSet {
                 if(grammars.containsKey(tn)){  //只处理非终结符 （都按 A->αBβ  形式处理）
                     if (s.size() - i - 1 > 0) {  //若β存在
                         List<String> right = s.subList(i + 1, s.size());
-                        System.out.println( tn + "  "+ s + " "+ right);
                         Set<String> setF = new LinkedHashSet<>(); //把β的非空first集  加入followB
                         String s1 = right.get(0);
                         if (grammars.containsKey(right.get(0))){

@@ -1,6 +1,5 @@
 package pers.lomesome.compliation.model;
 
-import org.python.modules._json._json;
 import pers.lomesome.compliation.tool.finalattr.FinalAttribute;
 import java.io.Serializable;
 
@@ -8,8 +7,8 @@ public class Word implements Serializable {
     private int token;    //种别码
     private String word;    //扫描得到的词
     private String type;    //类别
-    private String name;
-    public String value;
+    private String name;    //终结符名称
+    private String semSymbol = "";    //语义符号
     private int row;
     private int col;
 
@@ -73,14 +72,6 @@ public class Word implements Serializable {
         this.name = name;
     }
 
-    public String getValue() {
-        return value;
-    }
-
-    public void setValue(String value) {
-        this.value = value;
-    }
-
     public int getRow() {
         return row;
     }
@@ -95,6 +86,14 @@ public class Word implements Serializable {
 
     public void setCol(int col) {
         this.col = col;
+    }
+
+    public void setSemSymbol(String semSymbol) {
+        this.semSymbol = semSymbol;
+    }
+
+    public String getSemSymbol() {
+        return semSymbol;
     }
 
     @Override

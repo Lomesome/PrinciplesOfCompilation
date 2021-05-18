@@ -120,6 +120,34 @@ public final class Constants {
     public static String STRING_ = "string";
     public static String CONST = "const";
 
+    public final static String PUSH = "PUSH";
+    public final static String 推 = "PUSH";
+    public final static String GEQA = "GEQA";
+    public final static String GEQS = "GEQS";
+    public final static String GEQM = "GEQM";
+    public final static String GEQD = "GEQD";
+    public final static String ASSI = "ASSI";
+    public final static String 赋值 = "ASSI";
+    public final static String GEQG = "GEQG";
+    public final static String GEQL = "GEQL";
+    public final static String GEQE = "GEQE";
+    public final static String GEQGE = "GEQGE";
+    public final static String GEQLE = "GEQLE";
+    public final static String IF = "IF";
+    public final static String EL = "EL";
+    public final static String IEFIR = "IEFIR";
+    public final static String IESEC = "IESEC";
+    public final static String WH = "WH";
+    public final static String DO = "DO";
+    public final static String DOW = "DOW";
+    public final static String WE = "WE";
+    public final static String PUSHNUM = "PUSHNUM";
+    public final static String LEVELA = "LEVELA";
+    public final static String LEVELS = "LEVELS";
+    public final static String ADDFUN = "ADDFUN";
+    public final static String CALLFUN = "CALLFUN";
+    public final static String ADDARG = "ADDARG";
+
     public final static String GRAMMAR = "S\n" +
             "\t: function functions\n" +
             "\t;\n" +

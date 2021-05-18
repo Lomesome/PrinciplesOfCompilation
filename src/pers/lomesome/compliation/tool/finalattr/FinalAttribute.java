@@ -16,6 +16,9 @@ public class FinalAttribute {
     //运算符
     private static final String[] operator ={"(", ")", "[", "]", "!", "*", "/", "%", "+", "-", "++", "--", "<", "<=", ">", ">=", "==", "!=", "&&", "||", "=", "+=", "-=", "*=", "/=", "%=", "&=", "|=", "^=", ">>=", "<<=", "&", "|", "~", "^", "<<", ">>", "."};
 
+    //语义标记
+    private static final String[] sem = {"PUSH", "GEQA", "GEQS", "GEQM", "GEQD", "ASSI", "GEQG", "GEQL", "GEQE", "GEQGE", "GEQLE", "IF", "EL", "IEFIR", "IESEC", "WH", "DO", "WE", "PUSHNUM", "LEVELA", "LEVELS", "ADDFUN", "DOW", "CALLFUN", "ADDARG"};
+
     private static final HashMap<String, Integer> tokenMap = new HashMap<>();
 
     private static final HashMap<Integer, String> stringMap = new HashMap<>();
@@ -40,8 +43,6 @@ public class FinalAttribute {
 
     private static AllGrammer allGrammerWithAction;
 
-    private static Map<String, Integer> actionMap = new LinkedHashMap<>();
-
     private static Map<String, SymbolTable> symbolTableMap = new LinkedHashMap<>();
 
     //初始化关键字、分界符、运算符的token
@@ -51,32 +52,6 @@ public class FinalAttribute {
         setToken(301, delimiter);
         setString();
         setNameMap();
-        setAction();
-    }
-    
-    private static void setAction(){
-        actionMap.put("PUSH", 1);
-        actionMap.put("GEQA", 2);
-        actionMap.put("GEQS", 3);
-        actionMap.put("GEQM", 4);
-        actionMap.put("GEQD", 5);
-        actionMap.put("ASSI", 6);
-        actionMap.put("GEQG", 7);
-        actionMap.put("GEQL", 8);
-        actionMap.put("GEQE", 9);
-        actionMap.put("GEQGE", 10);
-        actionMap.put("GEQLE", 11);
-        actionMap.put("IF", 12);
-        actionMap.put("EL", 13);
-        actionMap.put("IEFIR", 14);
-        actionMap.put("IESEC", 15);
-        actionMap.put("WH", 16);
-        actionMap.put("DO", 17);
-        actionMap.put("WE", 18);
-        actionMap.put("PUSHNUM", 19);
-        actionMap.put("LEVELA", 20);
-        actionMap.put("LEVELS", 21);
-        actionMap.put("ADDFUN", 22);
     }
 
     //设置关键字、分界符、运算符的token
@@ -213,14 +188,6 @@ public class FinalAttribute {
         FinalAttribute.allGrammer = allGrammer;
     }
 
-    public static Map<String, Integer> getActionMap() {
-        return actionMap;
-    }
-
-    public static void setActionMap(Map<String, Integer> actionMap) {
-        FinalAttribute.actionMap = actionMap;
-    }
-
     public static AllGrammer getAllGrammerWithAction() {
         return allGrammerWithAction;
     }
@@ -251,5 +218,9 @@ public class FinalAttribute {
 
     public static void clearSymbolTableMap() {
         symbolTableMap.clear();
+    }
+
+    public static String[] getSem() {
+        return sem;
     }
 }

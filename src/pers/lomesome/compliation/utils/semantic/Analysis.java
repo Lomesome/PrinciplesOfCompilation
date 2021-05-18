@@ -1,10 +1,7 @@
 package pers.lomesome.compliation.utils.semantic;
 
-import pers.lomesome.compliation.model.LiveStatu;
 import pers.lomesome.compliation.model.Word;
 import pers.lomesome.compliation.tool.finalattr.FinalAttribute;
-import pers.lomesome.compliation.utils.toasm.ToAsmCode;
-import java.io.IOException;
 import java.util.*;
 
 public class Analysis {
@@ -13,17 +10,25 @@ public class Analysis {
     public static List<String> errorMsg;
     public static List<Word> list;
     public static String nowFunc;
+    public static int scope;
+    public static Stack<Integer> actionscope;
 
-
-    public static Object[] analysis(List<Word> list) throws IOException {
-        FinalAttribute.clearSymbolTableMap();
-        Object[] results = new Object[3];
-        Analysis.list = list;
-        errorMsg = new ArrayList<>();
-        flag = true;
+    public static void init(List<Word> list){
         i = 0;
+        flag = true;
+        errorMsg = new ArrayList<>();
+        Analysis.list = list;
         nowFunc = "global";
-        SymbolTable rootSymbolTable = new SymbolTable("global");
+        actionscope = new Stack<>();
+        scope = 0;
+        actionscope.push(scope);
+    }
+
+    public static Object[] analysis(List<Word> list) {
+        init(list);
+        FinalAttribute.clearSymbolTableMap();
+        Object[] results = new Object[4];
+        SymbolTable rootSymbolTable = new SymbolTable("global", "void");
         FinalAttribute.addSymbolTable(nowFunc, rootSymbolTable);
         FinalAttribute.getSymbolTable(nowFunc);
         LinkedHashMap<String, LinkedHashMap<String, List<String>>> map = FinalAttribute.getSemPredictMap();
@@ -64,37 +69,21 @@ public class Analysis {
                 }
             } else {
                 if (!X.equals("ε"))
-                    SemanticAnalysis.call(X, IP, list.get(IP - 1), FinalAttribute.getSymbolTable(nowFunc),  FinalAttribute.getSymbolTable(nowFunc).getLiveStatu());
+                    NewSemanticAnalysis.call(X, IP, list.get(IP - 1), FinalAttribute.getSymbolTable(nowFunc),  FinalAttribute.getSymbolTable(nowFunc).getLiveStatu());
             }
             X = stringStack.pop();
         }
-        System.out.println(flag);
         if (flag){
             FinalAttribute.getSymbolTableMap().forEach((k, v)->{
                 System.out.println(k);
-                v.printTable();
-                SemanticAnalysis.printQuaternary(v.getLiveStatu());
+                results[1] = v.printTable().get(0);
+                results[2] = v.printTable().get(1);
+                NewSemanticAnalysis.printQuaternary(v.getLiveStatu());
             });
 
             results[0] =  FinalAttribute.getSymbolTable(nowFunc).getLiveStatu();
-
-//            ToAsmCode asm = new ToAsmCode();
-//            asm.cToAsm(FinalAttribute.getSymbolTable(nowFunc), FinalAttribute.getSymbolTable(nowFunc).getLiveStatu());
-//            List<String> asmString = new ArrayList<>();
-//            for (int i = 0; i < asm.preAsmCode.size(); i++) {
-//                System.out.println(asm.preAsmCode.get(i));
-//                asmString.add(asm.preAsmCode.get(i) + "\n");
-//            }
-//            for (int i = 0; i < asm.asmCode.size(); i++) {
-//                System.out.println(asm.asmCode.get(i));
-//                asmString.add(asm.asmCode.get(i) + "\n");
-//            }
-//            for (int j = 0; j < asm.asmJump.length; j++) {
-//                System.out.println(j + "  " + asm.asmJump[j]);
-//            }
-//            results[1] = asmString;
         }
-//        results[2] = errorMsg;
+        results[3] = errorMsg;
         return results;
     }
 
@@ -112,8 +101,8 @@ public class Analysis {
     public static boolean equalsList(List<String> A, List<String> B) {
         List<String> copyA = new ArrayList<>(A.subList(0, A.size()));
         List<String> copyB = new ArrayList<>(B.subList(0, B.size()));
-        copyA.removeAll(FinalAttribute.getActionMap().keySet());
-        copyB.removeAll(FinalAttribute.getActionMap().keySet());
+        copyA.removeAll(Arrays.asList(FinalAttribute.getSem()));
+        copyB.removeAll((Arrays.asList(FinalAttribute.getSem())));
         int len = copyA.size();
         if (copyA.size() == copyB.size()) {
             for (int i = 0; i < len; i++) {
