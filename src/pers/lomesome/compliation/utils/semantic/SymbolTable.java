@@ -3,8 +3,11 @@ package pers.lomesome.compliation.utils.semantic;
 import pers.lomesome.compliation.model.LiveStatu;
 import pers.lomesome.compliation.model.Pair;
 import pers.lomesome.compliation.model.Word;
+import pers.lomesome.compliation.tool.filehandling.StringAlign;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
 public class SymbolTable {
 
@@ -17,7 +20,10 @@ public class SymbolTable {
         public int offset; // 偏移量
         @Override
         public String toString(){
-            return name + "\t\t" + type + "\t\t" + value + "\t\t" + tp + "\t\t" + offset + "\t\t\t" + scope;
+            StringAlign align = new StringAlign(10, StringAlign.Alignment.CENTER);//调用构造方法，设置字符串对齐为居中对齐，最大长度为50
+            if (value == null)
+                value = "null";
+            return name + "\t" + align.format(type) + "\t" + align.format(value) + "\t" + align.format(tp) + "\t" + scope;
         }
     }
 
@@ -56,6 +62,7 @@ public class SymbolTable {
     private int state = 1;
     private String stype;
     private String sname;
+    private Word sword;
     private int off = 0;
     private int offs = 0;
     private boolean isArr = false;
@@ -119,39 +126,40 @@ public class SymbolTable {
             Synbl.add(v);
         } else {
             Analysis.flag = false;
-            Analysis.errorMsg.add(sname + "重定义");
-            System.out.println(sname + "重定义");
+            Analysis.errorMsg.add("error: " + sword.getWord() + " 重定义 position (" + sword.getRow() + ", " + sword.getCol() + ")");
+            System.out.println("error: " + sword.getWord() + " 重定义 position (" + sword.getRow() + ", " + sword.getCol() + ")");
         }
     }
 
     public void setTable(Word word){
-        String s = word.getWord();
-        state = changeState(s, state);//自动机状态变换
+        state = changeState(word, state);//自动机状态变换
     }
 
-    int changeState(String s, int state) {
+    int changeState(Word s, int state) {
+        String word = s.getWord();
         switch (state) {
             case 1:
-                if (s.equals("int") || s.equals("char") || s.equals("String") || s.equals("float")) {
-                    stype = s;
+                if (word.equals("int") || word.equals("char") || word.equals("String") || word.equals("float")) {
+                    stype = word;
                     state = 2;
                 } else
                     state = 1;
                 break;
             case 2:
-                sname = s;
+                sname = word;
+                sword = s;
                 state = 3;
                 break;
             case 3:
-                if (s.equals(",")) {
+                if (word.equals(",")) {
                     isArr = false;
                     len = 1;
                     addSynbl();
                     state = 2;
-                } else if (s.equals("[")) {
+                } else if (word.equals("[")) {
                     state = 4;
                     isArr = true;
-                } else if (!(s.equals(";") || s.equals("(") || s.equals(")"))) {
+                } else if (!(word.equals(";") || word.equals("(") || word.equals(")"))) {
                     state = 3;
                 }
                 else {
@@ -162,17 +170,17 @@ public class SymbolTable {
                 }
                 break;
             case 4:
-                len = Integer.parseInt(s);
+                len = Integer.parseInt(s.getWord());
                 state = 5;
                 break;
             case 5:
-                if (s.equals("]")) {
+                if (word.equals("]")) {
                     addSynbl();
                     state = 6;
                 }
                 break;
             case 6:
-                if (s.equals(",")) {
+                if (word.equals(",")) {
                     state = 2;
                 } else {
                     state = 1;
@@ -209,6 +217,49 @@ public class SymbolTable {
         results.add(funclList);
         return results;
     }
+
+    public String getValue(Word word) {
+        String value = null;
+        for (Var v : Synbl) {
+            Stack<Integer> stack = new Stack<>();
+            for (Integer integer : Analysis.actionscope){
+                stack.push(integer);
+            }
+
+            if (v.name.equals(word.getWord()) && isScope(v.scope, stack)) {
+                value = v.value ;
+                return value;
+            }
+        }
+        for (Var v : Synbl) {
+            Stack<Integer> stack = new Stack<>();
+            for (Integer integer : Analysis.actionscope){
+                stack.push(integer);
+            }
+            do {
+                if (v.name.equals(word.getWord()) && isScope(v.scope, stack)) {
+                    value = v.value ;
+                    return value;
+                }
+                if (stack.size() > 0)
+                    stack.pop();
+            }while (stack.size() > 0);
+        }
+        return value;
+    }
+
+    private boolean isScope(List<Integer> scopeList, Stack<Integer> actionscope){
+        if (scopeList.size() != actionscope.size()){
+            return false;
+        }
+        for (int i = 0; i < scopeList.size(); i++){
+            if (!scopeList.get(i).equals(actionscope.get(i))){
+                return false;
+            }
+        }
+        return true;
+    }
+
 
     public LiveStatu getLiveStatu() {
         return liveStatu;

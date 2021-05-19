@@ -6,8 +6,6 @@ import pers.lomesome.compliation.tool.finalattr.FinalAttribute;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class NewSemanticAnalysis {
 
@@ -15,20 +13,16 @@ public class NewSemanticAnalysis {
     public static int thelevel = 0;
 
     public static void call(String Action, int TokenIndex, Word symbol, SymbolTable table, LiveStatu liveStatu) {
-        System.out.println(Action);
         switch (Action) {
             case Constants.PUSH: { // PUSH动作
                 Pair<Word, Integer> _pair = new Pair<>(symbol, TokenIndex);
-                System.out.println(_pair);
                 liveStatu.getSEM().push(_pair);
                 break;
             }
             case Constants.GEQA: { // GEQA动作
                 Word str1 = liveStatu.getSEM().peek().getFirst();
-//                System.out.println("pop1: " +str1);
                 liveStatu.getSEM().pop();
                 Word str2 = liveStatu.getSEM().peek().getFirst();
-//                System.out.println("pop2: " + str2);
                 liveStatu.getSEM().pop();
                 Quaternary tem = new Quaternary();
                 tem.setFirst(new Word("+"));
@@ -37,17 +31,18 @@ public class NewSemanticAnalysis {
 
                 if (!isDefined(tem.getSecond(), table)) {
                     Analysis.flag = false;
-                    Analysis.errorMsg.add("error:" + tem.getSecond() + "未定义position :("+tem.getSecond().getRow() +","+tem.getSecond().getCol()+")");
-                    System.out.println("error:" + tem.getSecond() + "未定义position :("+tem.getSecond().getRow() +","+tem.getSecond().getCol()+")");
+                    Analysis.errorMsg.add("error: " + tem.getSecond() + " 未定义 position :("+tem.getSecond().getRow() +","+tem.getSecond().getCol()+")");
+                    System.out.println("error: " + tem.getSecond() + " 未定义 position :("+tem.getSecond().getRow() +","+tem.getSecond().getCol()+")");
                 } else if (!isDefined(tem.getThird(), table)) {
                     Analysis.flag = false;
-                    Analysis.errorMsg.add("error:" + tem.getThird() + "未定义position :("+tem.getThird().getRow() +","+tem.getThird().getCol()+")");
-                    System.out.println("error:" + tem.getThird() + "未定义position :("+tem.getThird().getRow() +","+tem.getThird().getCol()+")");
+                    Analysis.errorMsg.add("error: " + tem.getThird() + " 未定义 position :("+tem.getThird().getRow() +","+tem.getThird().getCol()+")");
+                    System.out.println("error: " + tem.getThird() + " 未定义 position :("+tem.getThird().getRow() +","+tem.getThird().getCol()+")");
                 }
-                tem.setFourth(new Word("t" + Analysis.i));
+                Word tempWord = new Word("t" + Analysis.i,"temp");
+                tem.setFourth(tempWord);
                 liveStatu.getQt().add(tem);
                 getTemLable(tem, table);
-                Pair<Word, Integer> _pair = new Pair<>(new Word("t" + Analysis.i, str1.getName()), TokenIndex);
+                Pair<Word, Integer> _pair = new Pair<>(tempWord, TokenIndex);
                 liveStatu.getSEM().push(_pair);
                 Analysis.i++;
                 break;
@@ -65,18 +60,19 @@ public class NewSemanticAnalysis {
 
                 if (!isDefined(tem.getSecond(), table)) {
                     Analysis.flag = false;
-                    System.out.println("error:" + tem.getSecond() + "未定义position :("+tem.getSecond().getRow() +","+tem.getSecond().getCol()+")");
-                    Analysis.errorMsg.add("error:" + tem.getSecond() + "未定义position :("+tem.getSecond().getRow() +","+tem.getSecond().getCol()+")");
+                    System.out.println("error: " + tem.getSecond() + " 未定义 position :("+tem.getSecond().getRow() +","+tem.getSecond().getCol()+")");
+                    Analysis.errorMsg.add("error: " + tem.getSecond() + " 未定义 position :("+tem.getSecond().getRow() +","+tem.getSecond().getCol()+")");
 
                 } else if (!isDefined(tem.getThird(), table)) {
                     Analysis.flag = false;
-                    System.out.println("error:" + tem.getThird() + "未定义position :("+tem.getThird().getRow() +","+tem.getThird().getCol()+")");
-                    Analysis.errorMsg.add("error:" + tem.getThird() + "未定义position :("+tem.getThird().getRow() +","+tem.getThird().getCol()+")");
+                    System.out.println("error: " + tem.getThird() + " 未定义 position :("+tem.getThird().getRow() +","+tem.getThird().getCol()+")");
+                    Analysis.errorMsg.add("error: " + tem.getThird() + " 未定义 position :("+tem.getThird().getRow() +","+tem.getThird().getCol()+")");
                 }
-                tem.setFourth(new Word("t" + Analysis.i));
+                Word tempWord = new Word("t" + Analysis.i,"temp");
+                tem.setFourth(tempWord);
                 liveStatu.getQt().add(tem);
                 getTemLable(tem, table);
-                Pair<Word, Integer> _pair = new Pair<>(new Word("t" + Analysis.i, str1.getName()), TokenIndex);
+                Pair<Word, Integer> _pair = new Pair<>(tempWord, TokenIndex);
                 liveStatu.getSEM().push(_pair);
                 Analysis.i++;
                 break;
@@ -93,17 +89,18 @@ public class NewSemanticAnalysis {
 
                 if (!isDefined(tem.getSecond(), table)) {
                     Analysis.flag = false;
-                    System.out.println("error:" + tem.getSecond() + "未定义position :("+tem.getSecond().getRow() +","+tem.getSecond().getCol()+")");
-                    Analysis.errorMsg.add("error:" + tem.getSecond() + "未定义position :("+tem.getSecond().getRow() +","+tem.getSecond().getCol()+")");
+                    System.out.println("error: " + tem.getSecond() + " 未定义 position :("+tem.getSecond().getRow() +","+tem.getSecond().getCol()+")");
+                    Analysis.errorMsg.add("error :" + tem.getSecond() + " 未定义 position :("+tem.getSecond().getRow() +","+tem.getSecond().getCol()+")");
                 } else if (!isDefined(tem.getThird(), table)) {
                     Analysis.flag = false;
-                    System.out.println("error:" + tem.getThird() + "未定义position :("+tem.getThird().getRow() +","+tem.getThird().getCol()+")");
-                    Analysis.errorMsg.add("error:" + tem.getThird() + "未定义position :("+tem.getThird().getRow() +","+tem.getThird().getCol()+")");
+                    System.out.println("error: " + tem.getThird() + " 未定义 position :("+tem.getThird().getRow() +","+tem.getThird().getCol()+")");
+                    Analysis.errorMsg.add("error: " + tem.getThird() + " 未定义 position :("+tem.getThird().getRow() +","+tem.getThird().getCol()+")");
                 }
-                tem.setFourth(new Word("t" + Analysis.i));
+                Word tempWord = new Word("t" + Analysis.i,"temp");
+                tem.setFourth(tempWord);
                 liveStatu.getQt().add(tem);
                 getTemLable(tem, table);
-                Pair<Word, Integer> _pair = new Pair<>(new Word("t" + Analysis.i, str1.getName()), TokenIndex);
+                Pair<Word, Integer> _pair = new Pair<>(tempWord, TokenIndex);
                 liveStatu.getSEM().push(_pair);
                 Analysis.i++;
                 break;
@@ -123,27 +120,26 @@ public class NewSemanticAnalysis {
                     Analysis.errorMsg.add("除数不能为零");
                 } else if (!isDefined(tem.getSecond(), table)) {
                     Analysis.flag = false;
-                    System.out.println("error:" + tem.getSecond() + "未定义position :("+tem.getSecond().getRow() +","+tem.getSecond().getCol()+")");
-                    Analysis.errorMsg.add("error:" + tem.getSecond() + "未定义position :("+tem.getSecond().getRow() +","+tem.getSecond().getCol()+")");
+                    System.out.println("error: " + tem.getSecond() + " 未定义 position :("+tem.getSecond().getRow() +","+tem.getSecond().getCol()+")");
+                    Analysis.errorMsg.add("error: " + tem.getSecond() + " 未定义 position :("+tem.getSecond().getRow() +","+tem.getSecond().getCol()+")");
                 } else if (!isDefined(tem.getThird(), table)) {
                     Analysis.flag = false;
-                    System.out.println("error:" + tem.getThird() + "未定义position :("+tem.getThird().getRow() +","+tem.getThird().getCol()+")");
-                    Analysis.errorMsg.add("error:" + tem.getThird() + "未定义position :("+tem.getThird().getRow() +","+tem.getThird().getCol()+")");
+                    System.out.println("error: " + tem.getThird() + " 未定义 position :("+tem.getThird().getRow() +","+tem.getThird().getCol()+")");
+                    Analysis.errorMsg.add("error: " + tem.getThird() + " 未定义 position :("+tem.getThird().getRow() +","+tem.getThird().getCol()+")");
                 }
-                tem.setFourth(new Word("t" + Analysis.i));
+                Word tempWord = new Word("t" + Analysis.i,"temp");
+                tem.setFourth(tempWord);
                 liveStatu.getQt().add(tem);
                 getTemLable(tem, table);
-                Pair<Word, Integer> _pair = new Pair<>(new Word("t" + Analysis.i, str1.getName()), TokenIndex);
+                Pair<Word, Integer> _pair = new Pair<>(tempWord, TokenIndex);
                 liveStatu.getSEM().push(_pair);
                 Analysis.i++;
                 break;
             }
             case Constants.ASSI: { // ASSI动作
                 Word tem1 = liveStatu.getSEM().peek().getFirst();
-//                System.out.println("ASSI pop1: "+ tem1);
                 liveStatu.getSEM().pop();
                 Word tem2 = liveStatu.getSEM().peek().getFirst();
-//                System.out.println("ASSI pop2: "+ tem2);
                 liveStatu.getSEM().pop();
                 Quaternary tem = new Quaternary();
                 tem.setFirst(new Word("="));
@@ -154,7 +150,7 @@ public class NewSemanticAnalysis {
                 }
                 tem.setFourth(tem2);
 
-                if (tem1.getWord().startsWith("t") || tem2.getWord().startsWith("t")){
+                if (tem1.getName().equals("temp") || tem2.getName().equals("temp")){
                     if (!cheackType(tem2, table).equals(cheackType(tem1, table))){
 //                        Analysis.flag = false;
 //                        System.out.println(tem2.getWord() + cheackType(tem2, table) + "类型错误");
@@ -163,8 +159,8 @@ public class NewSemanticAnalysis {
                     }
                 } else if (!isDefined(tem.getSecond(), table)) {
                     Analysis.flag = false;
-                    System.out.println("error:" + tem.getSecond() + "未定义position :("+tem.getSecond().getRow() +","+tem.getSecond().getCol()+")");
-                    Analysis.errorMsg.add("error:" + tem.getSecond() + "未定义position :("+tem.getSecond().getRow() +","+tem.getSecond().getCol()+")");
+                    System.out.println("error: " + tem.getSecond() + " 未定义 position :("+tem.getSecond().getRow() +","+tem.getSecond().getCol()+")");
+                    Analysis.errorMsg.add("error: " + tem.getSecond() + " 未定义 position :("+tem.getSecond().getRow() +","+tem.getSecond().getCol()+")");
                 } else if (!isDefined(tem.getFourth(), table)) {
                     Analysis.flag = false;
                 } else if (!isAssignmentRight(tem1.getName(), cheackType(tem2, table))){
@@ -172,7 +168,6 @@ public class NewSemanticAnalysis {
                     System.out.println(tem2.getWord() + "类型错误");
                     Analysis.errorMsg.add(tem2.getWord() + "类型错误 position :("+tem2.getRow() +","+tem2.getCol()+")");
                 } else{
-                    System.out.println(tem1 + " " + tem2);
                     setValue(tem1, tem2, table);
                 }
                 liveStatu.getQt().add(tem);
@@ -198,15 +193,15 @@ public class NewSemanticAnalysis {
                 }
                 if (!isDefined(tem.getSecond(), table)) {
                     Analysis.flag = false;
-                    System.out.println("error:" + tem.getSecond() + "未定义position :("+tem.getSecond().getRow() +","+tem.getSecond().getCol()+")");
-                    Analysis.errorMsg.add("error:" + tem.getSecond() + "未定义position :("+tem.getSecond().getRow() +","+tem.getSecond().getCol()+")");
+                    System.out.println("error: " + tem.getSecond() + " 未定义 position :("+tem.getSecond().getRow() +","+tem.getSecond().getCol()+")");
+                    Analysis.errorMsg.add("error: " + tem.getSecond() + " 未定义 position :("+tem.getSecond().getRow() +","+tem.getSecond().getCol()+")");
                 } else if (!isDefined(tem.getThird(), table)) {
                     Analysis.flag = false;
-                    System.out.println("error:" + tem.getThird() + "未定义position :("+tem.getThird().getRow() +","+tem.getThird().getCol()+")");
-                    Analysis.errorMsg.add("error:" + tem.getThird() + "未定义position :("+tem.getThird().getRow() +","+tem.getThird().getCol()+")");
+                    System.out.println("error: " + tem.getThird() + " 未定义 position :("+tem.getThird().getRow() +","+tem.getThird().getCol()+")");
+                    Analysis.errorMsg.add("error: " + tem.getThird() + " 未定义 position :("+tem.getThird().getRow() +","+tem.getThird().getCol()+")");
                 }
                 liveStatu.getQt().add(tem);
-                Pair<Word, Integer> _pair = new Pair<>(new Word("t" + Analysis.i, str1.getName()), TokenIndex);
+                Pair<Word, Integer> _pair = new Pair<>(new Word("t" + Analysis.i, "temp"), TokenIndex);
                 liveStatu.getSEM().push(_pair);
                 break;
             }
@@ -226,19 +221,18 @@ public class NewSemanticAnalysis {
                         tem.setFourth(new Word(String.valueOf(strings[2])));
                         liveStatu.getSIGNHEAD().pop();
                     }
-
                 }
                 if (!isDefined(tem.getSecond(), table)) {
                     Analysis.flag = false;
-                    System.out.println("error:" + tem.getSecond() + "未定义position :("+tem.getSecond().getRow() +","+tem.getSecond().getCol()+")");
-                    Analysis.errorMsg.add("error:" + tem.getSecond() + "未定义position :("+tem.getSecond().getRow() +","+tem.getSecond().getCol()+")");
+                    System.out.println("error: " + tem.getSecond() + " 未定义 position :("+tem.getSecond().getRow() +","+tem.getSecond().getCol()+")");
+                    Analysis.errorMsg.add("error: " + tem.getSecond() + " 未定义 position :("+tem.getSecond().getRow() +","+tem.getSecond().getCol()+")");
                 } else if (!isDefined(tem.getThird(), table)) {
                     Analysis.flag = false;
-                    System.out.println("error:" + tem.getThird() + "未定义position :("+tem.getThird().getRow() +","+tem.getThird().getCol()+")");
-                    Analysis.errorMsg.add("error:" + tem.getThird() + "未定义position :("+tem.getThird().getRow() +","+tem.getThird().getCol()+")");
+                    System.out.println("error: " + tem.getThird() + " 未定义 position :("+tem.getThird().getRow() +","+tem.getThird().getCol()+")");
+                    Analysis.errorMsg.add("error: " + tem.getThird() + " 未定义 position :("+tem.getThird().getRow() +","+tem.getThird().getCol()+")");
                 }
                 liveStatu.getQt().add(tem);
-                Pair<Word, Integer> _pair = new Pair<>(new Word("t" + Analysis.i, str1.getName()), TokenIndex);
+                Pair<Word, Integer> _pair = new Pair<>(new Word("t" + Analysis.i, "temp"), TokenIndex);
                 liveStatu.getSEM().push(_pair);
                 break;
             }
@@ -262,15 +256,15 @@ public class NewSemanticAnalysis {
                 }
                 if (!isDefined(tem.getSecond(), table)) {
                     Analysis.flag = false;
-                    System.out.println("error:" + tem.getSecond() + "未定义position :("+tem.getSecond().getRow() +","+tem.getSecond().getCol()+")");
-                    Analysis.errorMsg.add("error:" + tem.getSecond() + "未定义position :("+tem.getSecond().getRow() +","+tem.getSecond().getCol()+")");
+                    System.out.println("error: " + tem.getSecond() + " 未定义 position :("+tem.getSecond().getRow() +","+tem.getSecond().getCol()+")");
+                    Analysis.errorMsg.add("error: " + tem.getSecond() + " 未定义 position :("+tem.getSecond().getRow() +","+tem.getSecond().getCol()+")");
                 } else if (!isDefined(tem.getThird(), table)) {
                     Analysis.flag = false;
-                    System.out.println("error:" + tem.getThird() + "未定义position :("+tem.getThird().getRow() +","+tem.getThird().getCol()+")");
-                    Analysis.errorMsg.add("error:" + tem.getThird() + "未定义position :("+tem.getThird().getRow() +","+tem.getThird().getCol()+")");
+                    System.out.println("error: " + tem.getThird() + " 未定义 position :("+tem.getThird().getRow() +","+tem.getThird().getCol()+")");
+                    Analysis.errorMsg.add("error: " + tem.getThird() + " 未定义 position :("+tem.getThird().getRow() +","+tem.getThird().getCol()+")");
                 }
                 liveStatu.getQt().add(tem);
-                Pair<Word, Integer> _pair = new Pair<>(new Word("t" + Analysis.i, str1.getName()), TokenIndex);
+                Pair<Word, Integer> _pair = new Pair<>(new Word("t" + Analysis.i, "temp"), TokenIndex);
                 liveStatu.getSEM().push(_pair);
                 break;
             }
@@ -293,15 +287,15 @@ public class NewSemanticAnalysis {
                 }
                 if (!isDefined(tem.getSecond(), table)) {
                     Analysis.flag = false;
-                    System.out.println("error:" + tem.getSecond() + "未定义position :("+tem.getSecond().getRow() +","+tem.getSecond().getCol()+")");
-                    Analysis.errorMsg.add("error:" + tem.getSecond() + "未定义position :("+tem.getSecond().getRow() +","+tem.getSecond().getCol()+")");
+                    System.out.println("error: " + tem.getSecond() + " 未定义 position :("+tem.getSecond().getRow() +","+tem.getSecond().getCol()+")");
+                    Analysis.errorMsg.add("error: " + tem.getSecond() + " 未定义 position :("+tem.getSecond().getRow() +","+tem.getSecond().getCol()+")");
                 } else if (!isDefined(tem.getThird(), table)) {
                     Analysis.flag = false;
-                    System.out.println("error:" + tem.getThird() + "未定义position :("+tem.getThird().getRow() +","+tem.getThird().getCol()+")");
-                    Analysis.errorMsg.add("error:" + tem.getThird() + "未定义position :("+tem.getThird().getRow() +","+tem.getThird().getCol()+")");
+                    System.out.println("error: " + tem.getThird() + " 未定义 position :("+tem.getThird().getRow() +","+tem.getThird().getCol()+")");
+                    Analysis.errorMsg.add("error: " + tem.getThird() + " 未定义 position :("+tem.getThird().getRow() +","+tem.getThird().getCol()+")");
                 }
                 liveStatu.getQt().add(tem);
-                Pair<Word, Integer> _pair = new Pair<>(new Word("t" + Analysis.i, str1.getName()), TokenIndex);
+                Pair<Word, Integer> _pair = new Pair<>(new Word("t" + Analysis.i, "temp"), TokenIndex);
                 liveStatu.getSEM().push(_pair);
                 break;
             }
@@ -324,15 +318,15 @@ public class NewSemanticAnalysis {
                 }
                 if (!isDefined(tem.getSecond(), table)) {
                     Analysis.flag = false;
-                    System.out.println("error:" + tem.getSecond() + "未定义position :("+tem.getSecond().getRow() +","+tem.getSecond().getCol()+")");
-                    Analysis.errorMsg.add("error:" + tem.getSecond() + "未定义position :("+tem.getSecond().getRow() +","+tem.getSecond().getCol()+")");
+                    System.out.println("error: " + tem.getSecond() + " 未定义 position :("+tem.getSecond().getRow() +","+tem.getSecond().getCol()+")");
+                    Analysis.errorMsg.add("error: " + tem.getSecond() + " 未定义 position :("+tem.getSecond().getRow() +","+tem.getSecond().getCol()+")");
                 } else if (!isDefined(tem.getThird(), table)) {
                     Analysis.flag = false;
-                    System.out.println("error:" + tem.getThird() + "未定义position :("+tem.getThird().getRow() +","+tem.getThird().getCol()+")");
-                    Analysis.errorMsg.add("error:" + tem.getThird() + "未定义position :("+tem.getThird().getRow() +","+tem.getThird().getCol()+")");
+                    System.out.println("error: " + tem.getThird() + " 未定义 position :("+tem.getThird().getRow() +","+tem.getThird().getCol()+")");
+                    Analysis.errorMsg.add("error: " + tem.getThird() + " 未定义 position :("+tem.getThird().getRow() +","+tem.getThird().getCol()+")");
                 }
                 liveStatu.getQt().add(tem);
-                Pair<Word, Integer> _pair = new Pair<>(new Word("t" + Analysis.i, str1.getName()), TokenIndex);
+                Pair<Word, Integer> _pair = new Pair<>(new Word("t" + Analysis.i, "temp"), TokenIndex);
                 liveStatu.getSEM().push(_pair);
                 break;
             }
@@ -444,8 +438,8 @@ public class NewSemanticAnalysis {
                 f.name = symbol.getWord();
                 if (FinalAttribute.getSymbolTableMap().get(symbol.getWord()) == null){
                     System.out.println(f.name + "()函数未定义");
-                    Analysis.flag = false;
                     Analysis.errorMsg.add(f.name + "()函数未定义");
+                    Analysis.flag = false;
                 }else {
                     f.type = FinalAttribute.getSymbolTableMap().get(symbol.getWord()).functype;
                     f.args = FinalAttribute.getSymbolTableMap().get(symbol.getWord()).argsList;
@@ -483,7 +477,7 @@ public class NewSemanticAnalysis {
             }
             break;
 
-            case Constants.ADDARG:
+            case Constants.ADDARG: {
                 System.out.println(liveStatu.getSEM());
                 Word str1 = liveStatu.getSEM().peek().getFirst();
                 liveStatu.getSEM().pop();
@@ -491,7 +485,8 @@ public class NewSemanticAnalysis {
                 liveStatu.getSEM().pop();
                 Pair<String, String> pair = new Pair(str2.getWord(), str1.getWord());
                 FinalAttribute.getSymbolTableMap().get(Analysis.nowFunc).argsList.add(pair);
-                break;
+            }
+            break;
         }
     }
 
@@ -547,41 +542,92 @@ public class NewSemanticAnalysis {
                 newtemp.type = "char";
             } else if ((type1.contains("int") && type2.contains("char")) || (type1.contains("char") && type2.contains("int"))) {
                 newtemp.type = "int";
+            } else if ((type1.contains("int") && type2.contains("float")) || (type1.contains("float") && type2.contains("int"))) {
+                newtemp.type = "float";
             } else {
-                if ((isDefined(tem.getSecond(), table) && isDefined(tem.getThird(), table)) && !isTempvar(tem.getSecond().getWord()) && !isTempvar(tem.getThird().getWord())) {
+                if (isDefined(tem.getSecond(), table) && !tem.getSecond().getName().equals("temp") ) {
                     Analysis.flag = false;
-                    System.out.println("类型不匹配");
-                    Analysis.errorMsg.add("类型不匹配");
+                    System.out.println("error: "+ tem.getSecond().getWord()  + " 类型不匹配 position: ("+ tem.getSecond().getRow() + ", "+ tem.getSecond().getCol() +")");
+                    Analysis.errorMsg.add("error: "+ tem.getSecond().getWord()  + " 类型不匹配 position: ("+ tem.getSecond().getRow() + ", "+ tem.getSecond().getCol() +")");
+                }else if (isDefined(tem.getThird(), table) && !tem.getThird().getName().equals("temp")){
+                    Analysis.flag = false;
+                    System.out.println("error: " + tem.getThird().getWord() + " 类型不匹配 position: ("+ tem.getThird().getRow() + ", "+ tem.getThird().getCol() +")");
+                    Analysis.errorMsg.add("error: " + tem.getThird().getWord() + " 类型不匹配 position: ("+ tem.getThird().getRow() + ", "+ tem.getThird().getCol() +")");
                 }
                 newtemp.type = "";
             }
             if (!newtemp.type.equals("")) {
                 int size = 0;
-                switch (table.Synbl.get(table.Synbl.size() - 1).type) {
+                String num1 = tem.getSecond().getWord();
+                String num2 = tem.getThird().getWord();
+
+                if (tem.getSecond().getName().equals("id") || tem.getSecond().getName().equals("temp")){
+                    num1 = table.getValue(tem.getSecond());
+                }
+                if (tem.getThird().getName().equals("id") || tem.getThird().getName().equals("temp")){
+                    num2 = table.getValue(tem.getThird());
+                }
+
+                if (num1 == null){
+                    Analysis.flag = false;
+                    System.out.println("error: "+tem.getSecond().getWord() +" 值未初始化 positon: (" + tem.getSecond().getRow() +", " + tem.getSecond().getCol() +")");
+                    Analysis.errorMsg.add("error: "+tem.getSecond().getWord() +" 值未初始化 positon: (" + tem.getSecond().getRow() +", " + tem.getSecond().getCol() +")");
+                    return;
+                }
+                if (num2 == null){
+                    Analysis.flag = false;
+                    System.out.println("error: "+tem.getThird().getWord() +" 值未初始化 positon: (" + tem.getThird().getRow() +", " + tem.getThird().getCol() +")");
+                    Analysis.errorMsg.add("error: "+tem.getThird().getWord() +" 值未初始化 positon: (" + tem.getThird().getRow() +", " + tem.getThird().getCol() +")");
+                    return;
+                }
+                switch (newtemp.type) {
                     case "int":
                         size = 4;
+                        newtemp.value = calculation(Integer.parseInt(num1), Integer.parseInt(num2), tem.getFirst().getWord());
                         break;
                     case "char":
                         size = 1;
                         break;
                     case "float":
                         size = 8;
+                        newtemp.value = calculation(Float.valueOf(num1), Float.valueOf(num2), tem.getFirst().getWord());
                         break;
                     case "String":
                         size = 50;
                         break;
                 }
+
                 newtemp.offset = table.Synbl.get(table.Synbl.size() - 1).offset + size;
                 newtemp.scope = new ArrayList<>(Analysis.actionscope);
-                table.Temp.add(newtemp);
+                table.Synbl.add(newtemp);
             }
         }
+    }
+
+    private static String calculation(int num1, int num2, String sybol){
+        switch (sybol){
+            case "+" : return String.valueOf(num1 + num2);
+            case "-" : return String.valueOf(num1 - num2);
+            case "*" : return String.valueOf(num1 * num2);
+            case "/" : return String.valueOf(num1 / num2);
+        }
+        return null;
+    }
+
+    private static String calculation(float num1, float num2, String sybol){
+        switch (sybol){
+            case "+" : return String.valueOf(num1 + num2);
+            case "-" : return String.valueOf(num1 - num2);
+            case "*" : return String.valueOf(num1 * num2);
+            case "/" : return String.valueOf(num1 / num2);
+        }
+        return null;
     }
 
     private static boolean isDefined(Word name, SymbolTable table) {
         if (isNumber(name)) {
             return true;
-        } else if (isTempvar(name.getWord())) {
+        } else if (name.getName().equals("temp")) {
             return true;
         } else if (name.getWord().contains("[")) {
             String[] s = name.getWord().split("\\[");
@@ -591,7 +637,7 @@ public class NewSemanticAnalysis {
                     if (Integer.parseInt(ss[0]) >= v.tp) {
                         System.out.println(name + "数组越界");
                         Analysis.flag = false;
-                        Analysis.errorMsg.add("error: "+name + "数组越界position :("+name.getRow() +","+name.getCol()+")");
+                        Analysis.errorMsg.add("error: "+name + " 数组越界 position :("+name.getRow() +","+name.getCol()+")");
                         return false;
                     }
                     return true;
@@ -612,9 +658,9 @@ public class NewSemanticAnalysis {
                 }while (stack.size() > 0);
             }
         }
-        System.out.println(name + "未定义");
+        System.out.println("error: " + name.getWord() + " 未定义 position :("+name.getRow() +","+name.getCol()+")");
         Analysis.flag = false;
-        Analysis.errorMsg.add("error:" + name.getWord() + "未定义position :("+name.getRow() +","+name.getCol()+")");
+        Analysis.errorMsg.add("error: " + name.getWord() + " 未定义 position :("+name.getRow() +","+name.getCol()+")");
         return false;
     }
 
@@ -700,12 +746,6 @@ public class NewSemanticAnalysis {
             default:
                 return false;
         }
-    }
-
-    public static Boolean isTempvar(String str) {
-        Pattern pattern = Pattern.compile("t[0-9]+");
-        Matcher matcher = pattern.matcher(str);
-        return matcher.matches();
     }
 
     public static void printQuaternary(LiveStatu liveStatu) {

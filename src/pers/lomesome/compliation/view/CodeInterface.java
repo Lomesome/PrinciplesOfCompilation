@@ -303,18 +303,19 @@ public class CodeInterface {
                                         quaternaryList.add(new ProPertyQuaternary(i, liveStatu.getQt().get(i).getFirst().getWord(), liveStatu.getQt().get(i).getSecond().getWord(), liveStatu.getQt().get(i).getThird().getWord(),liveStatu.getQt().get(i).getFourth().getWord()));
                                     }
                                 asmCodeTextArea.clear();
-                                if (results[1] != null)
+                                if (results[1] != null) {
                                     asmCodeTextArea.appendText("符号表：\n");
-                                    for (Object s : (List)results[1]){
+                                    for (Object s : (List) results[1]) {
                                         asmCodeTextArea.appendText(s.toString() + "\n");
                                     }
+                                }
                                 asmCodeTextArea.appendText("\n");
-                                if (results[2] != null)
+                                if (results[2] != null) {
                                     asmCodeTextArea.appendText("函数表：\n");
-                                    for (Object s : (List)results[2]){
+                                    for (Object s : (List) results[2]) {
                                         asmCodeTextArea.appendText(s.toString() + "\n");
                                     }
-
+                                }
 
                                 for (String s : (List<String>)results[3]) {
                                     code = "-1";

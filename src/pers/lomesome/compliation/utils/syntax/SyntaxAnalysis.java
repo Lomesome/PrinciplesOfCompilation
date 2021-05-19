@@ -77,13 +77,13 @@ public class SyntaxAnalysis {
                 IP++;
                 a = list.get(IP);
             } else if (FinalAttribute.getAllVt().contains(X.getName())){
-                error.add("error: " +" position : (" + list.get(IP- 1).getCol() + "," + list.get(IP- 1).getRow() + ") 缺少 '" + X.getName()+"'\n");
-                System.out.println("error: " +" position : (" + list.get(IP- 1).getCol() + "," + list.get(IP- 1).getRow() + ") 缺少 '" + X.getName()+"'\n");
+                error.add("error: " +" position : (" + list.get(IP- 1).getRow() + "," + list.get(IP- 1).getCol() + ") 缺少 '" + X.getName()+"'\n");
+                System.out.println("error: " +" position : (" + list.get(IP- 1).getRow() + "," + list.get(IP- 1).getCol() + ") 缺少 '" + X.getName()+"'\n");
                 errorflag = true;
             } else if (FinalAttribute.getAllVn().contains(X.getName())){
                 if (map.get(X.getName()).get(a.getName()).size() == 0){
                     System.out.println("遇到SYNCH，从栈顶弹出非终结符" + X);
-                    error.add("error: position line : " + a.getCol() + "\n");
+//                    error.add("error: position line : " + a.getCol() + "\n");
                     errorflag = true;
                     X = makeJsonStack.pop();
                     continue;

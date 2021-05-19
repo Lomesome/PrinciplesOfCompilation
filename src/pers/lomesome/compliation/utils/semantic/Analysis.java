@@ -74,16 +74,15 @@ public class Analysis {
             X = stringStack.pop();
         }
         if (flag){
-            FinalAttribute.getSymbolTableMap().forEach((k, v)->{
-                System.out.println(k);
-                results[1] = v.printTable().get(0);
-                results[2] = v.printTable().get(1);
-                NewSemanticAnalysis.printQuaternary(v.getLiveStatu());
-            });
-
-            results[0] =  FinalAttribute.getSymbolTable(nowFunc).getLiveStatu();
+            SymbolTable s = FinalAttribute.getSymbolTableMap().get("main");
+            List<List<Object>> listList = s.printTable();
+            results[1] = listList.get(0);
+            results[2] = listList.get(1);
+            NewSemanticAnalysis.printQuaternary(s.getLiveStatu());
+            results[0] =  FinalAttribute.getSymbolTable("main").getLiveStatu();
         }
-        results[3] = errorMsg;
+        List<String> newst= new ArrayList<>(new LinkedHashSet<>(errorMsg));
+        results[3] = newst;
         return results;
     }
 
