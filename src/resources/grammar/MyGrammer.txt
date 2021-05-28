@@ -36,13 +36,48 @@ program
 	| '{' expmaker '}'
 	;
 
+loop_program
+	: '{' expmaker break_loop '}'
+	| ';'
+	;
+
+break_loop
+	: break ';'
+	| continue ';'
+	| ε
+	;
+
+isreturn
+	: return return_type ';'
+	| ε
+	;
+
+return_type
+	: cons_type 
+	| id
+	| ε
+	;
+
 expmaker
-	: type id idassignment ';' expmaker
+	: cons type id idassignment ';' expmaker
 	| id var_func ';' expmaker
 	| 'if' '(' boolexp ')' program iselse expmaker
-	| 'while' '(' boolexp ')' program expmaker
-	| 'do' program 'while' '(' boolexp ')' ';' expmaker
+	| 'while' '(' boolexp ')' loop_program expmaker
+	| 'do' loop_program 'while' '(' boolexp ')' ';' expmaker
+	| print '(' print_arg ')' ; expmaker
+	| 'for' '(' type id var_func ';' boolexp ';' id increment ')' loop_program expmaker
+	| isreturn
 	| ε
+	;
+
+print_arg
+	: id
+	| cons_type
+	;
+
+increment
+	: '++'
+	| '--'
 	;
 
 _args
@@ -102,6 +137,7 @@ afterexp
 	| '==' exp
 	| '>=' exp
 	| '<=' exp
+	| '!=' exp
 	| ε
 	;
 
@@ -126,12 +162,14 @@ mult_exp
 	;
 
 primary_exp
-	: id
-	| float_const
-	| int_const
-	| string_const
-	| char_const
+	: id return_func
+	| cons_type
 	| '(' exp ')'
+	;
+
+return_func
+	: '(' _args ')'
+	| ε
 	;
 
 type
@@ -139,4 +177,16 @@ type
 	| 'char'
 	| 'float'
 	| 'string'
+	;
+
+cons_type
+	: float_const
+	| int_const
+	| string_const
+	| char_const
+	;
+
+cons
+	: 'const'
+	| ε
 	;

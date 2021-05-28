@@ -1,8 +1,14 @@
 package pers.lomesome.compliation.utils.semantic;
 
+import pers.lomesome.compliation.model.Quaternary;
 import pers.lomesome.compliation.model.Word;
 import pers.lomesome.compliation.tool.finalattr.FinalAttribute;
+import pers.lomesome.compliation.utils.dag.Optimizer;
+import pers.lomesome.compliation.utils.toasm.ToAsm;
+import pers.lomesome.compliation.utils.toasm.ToNasmCode;
+
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class Analysis {
     public static int i;
@@ -27,7 +33,7 @@ public class Analysis {
     public static Object[] analysis(List<Word> list) {
         init(list);
         FinalAttribute.clearSymbolTableMap();
-        Object[] results = new Object[4];
+        Object[] results = new Object[6];
         SymbolTable rootSymbolTable = new SymbolTable("global", "void");
         FinalAttribute.addSymbolTable(nowFunc, rootSymbolTable);
         FinalAttribute.getSymbolTable(nowFunc);
@@ -69,20 +75,56 @@ public class Analysis {
                 }
             } else {
                 if (!X.equals("ε"))
-                    NewSemanticAnalysis.call(X, IP, list.get(IP - 1), FinalAttribute.getSymbolTable(nowFunc),  FinalAttribute.getSymbolTable(nowFunc).getLiveStatu());
+                    SemanticAnalysis.call(X, IP, list.get(IP - 1), FinalAttribute.getSymbolTable(nowFunc),  FinalAttribute.getSymbolTable(nowFunc).getLiveStatu());
             }
             X = stringStack.pop();
         }
         if (flag){
+            Quaternary q = new Quaternary();
+            q.setFirst(new Word("sys"));
+            q.setSecond(new Word("_"));
+            q.setThird(new Word("_"));
+            q.setFourth(new Word("_"));
+            FinalAttribute.getSymbolTable("main").getLiveStatu().getQt().add(q);
             SymbolTable s = FinalAttribute.getSymbolTableMap().get("main");
             List<List<Object>> listList = s.printTable();
             results[1] = listList.get(0);
             results[2] = listList.get(1);
-            NewSemanticAnalysis.printQuaternary(s.getLiveStatu());
+            results[3] = listList.get(2);
+            SemanticAnalysis.printQuaternary(s.getLiveStatu());
             results[0] =  FinalAttribute.getSymbolTable("main").getLiveStatu();
+
+//            ToAsm asm = new ToAsm();
+            ToNasmCode asm = new ToNasmCode();
+            asm.cToAsm(FinalAttribute.getSymbolTable("main"), FinalAttribute.getSymbolTable("main").getLiveStatu());
+            try{
+                results[4] = asm.getResults();
+            }catch (Exception ignored){
+
+            }
         }
+        AtomicInteger id1 = new AtomicInteger();
+        List<Quaternary> list1 =  FinalAttribute.getSymbolTable("main").getLiveStatu().getQt();
+        list1.forEach(quaternary -> {
+            quaternary.setId(id1.getAndIncrement());
+        });
+        list1.forEach(System.out::println);
+        try {
+            Optimizer optimizer = new Optimizer(list1);
+            List<Quaternary> qtss = optimizer.optimize();
+
+            System.out.println("\n\n优化后的所有四元式:\n" + list1.size() + " -> " + qtss.size());
+            AtomicInteger id = new AtomicInteger();
+            qtss.forEach(quaternary -> {
+                quaternary.setId(id.getAndIncrement());
+            });
+            qtss.forEach(System.out::println);
+        }catch (Exception ignored){}
+
+
+//        DAG.doDAG(list1);
         List<String> newst= new ArrayList<>(new LinkedHashSet<>(errorMsg));
-        results[3] = newst;
+        results[5] = newst;
         return results;
     }
 

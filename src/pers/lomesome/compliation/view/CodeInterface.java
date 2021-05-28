@@ -25,10 +25,15 @@ import pers.lomesome.compliation.controller.*;
 import pers.lomesome.compliation.tool.filehandling.FileUtil;
 import pers.lomesome.compliation.tool.filehandling.ReadAndWriteFile;
 import pers.lomesome.compliation.tool.finalattr.FinalAttribute;
+import pers.lomesome.compliation.utils.lexer.LexicalAnalyzer;
+import pers.lomesome.compliation.utils.operatorpriority.OperatorAnalyze;
 import pers.lomesome.compliation.utils.semantic.Analysis;
 import pers.lomesome.compliation.utils.syntax.SyntaxAnalysis;
 import pers.lomesome.compliation.utils.lexer.Lexer;
 //import pers.lomesome.compliation.utils.lexer.LexicalAnalyzer;
+import pers.lomesome.compliation.utils.toasm.RunAsm;
+import pers.lomesome.compliation.utils.toasm.ToNasmCode;
+import pers.lomesome.compliation.view.mystage.RegToNfaStage;
 import pers.lomesome.compliation.view.mywidgets.*;
 import java.io.File;
 import java.io.FileReader;
@@ -98,8 +103,10 @@ public class CodeInterface {
         Menu edit = new Menu("Edit");
         Menu view = new Menu("View");
         Menu tools = new Menu("Tools");
+        Menu algorithms = new Menu("Algorithms");
+
         //Menu键入到MenuBar
-        menuBar.getMenus().addAll(idea, file, edit, view, tools);
+        menuBar.getMenus().addAll(idea, file, edit, view, tools, algorithms);
         //创建MenuItem类
         //还可以对MenuItem设置图标
         Menu newFile = new Menu("New");
@@ -133,7 +140,6 @@ public class CodeInterface {
         showTree.setOnAction(event -> {
             String url = this.getClass().getResource("/pers/lomesome/compliation/python/GrammerTree.html").toString();
             try {
-
                 java.awt.Desktop.getDesktop().browse(new URI(url));
             } catch (IOException | URISyntaxException ignored) {
             }
@@ -141,6 +147,32 @@ public class CodeInterface {
 
         tools.getItems().addAll(lexicalAnalysis, showTree);
 
+        MenuItem reg2nfa = new MenuItem("REG to NFA");
+
+        reg2nfa.setOnAction(event -> {
+            new RegToNfaStage();
+        });
+
+        MenuItem operator = new MenuItem("Operator Priority");
+        operator.setOnAction(event -> {
+            File openFile = (File) tabPane.getSelectionModel().getSelectedItem().getUserData();
+            LexicalAnalyzer lexicalAnalyzer = new LexicalAnalyzer(openFile.getPath());
+            lexicalAnalyzer.runAnalyzer();
+            for (Word word : lexicalAnalyzer.getWords()) {
+                Platform.runLater(() -> wordList.addAll(new PropertyWord(word.getType(), String.valueOf(word.getTypenum()), word.getWord())));
+            }
+
+
+            OperatorAnalyze OperatorAnalyze = new OperatorAnalyze();
+            OperatorAnalyze.doAna(lexicalAnalyzer.getWords());
+            TextArea textArea = textAreaMap.get("Run");
+            textArea.clear();
+            for (String s : OperatorAnalyze.getResult()){
+                textArea.appendText(s);
+            }
+        });
+
+        algorithms.getItems().addAll(reg2nfa, operator);
 
         menuBar.setPadding(new Insets(0, 10, 0, 10));
 
@@ -197,27 +229,26 @@ public class CodeInterface {
                         }
 
                         File openFile = (File) tabPane.getSelectionModel().getSelectedItem().getUserData();
-//                        LexicalAnalyzer lexicalAnalyzer = new LexicalAnalyzer(openFile.getPath());
-//                        lexicalAnalyzer.runAnalyzer();
+
 
                         wordList.clear();
-                        Lexer lexer = null;
-                        try {
-                            lexer = new Lexer(new FileReader(openFile.getPath()));
-                            lexer.next_token();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
+//                        Lexer lexer = null;
+//                        try {
+//                            lexer = new Lexer(new FileReader(openFile.getPath()));
+//                            lexer.next_token();
+//                        } catch (IOException e) {
+//                            e.printStackTrace();
+//                        }
 
-                        assert lexer != null;
-                        for (Word word : lexer.getWords()) {
+                        LexicalAnalyzer lexicalAnalyzer = new LexicalAnalyzer(openFile.getPath());
+                        lexicalAnalyzer.runAnalyzer();
+                        for (Word word : lexicalAnalyzer.getWords()) {
                             Platform.runLater(() -> wordList.addAll(new PropertyWord(word.getType(), String.valueOf(word.getTypenum()), word.getWord())));
-                            System.out.println(FinalAttribute.findString(word.getTypenum(), word.getWord()));
                         }
 
                         if (((BorderPane) rootBorderPane.getRight()).getLeft() != null) {
                             Platform.runLater(obList::clear);
-                            for (Word word : lexer.getErrorMsgList()) {
+                            for (Word word : lexicalAnalyzer.getErrorMsgList()) {
                                 Platform.runLater(() -> obList.add(word));
                             }
                         }
@@ -264,15 +295,17 @@ public class CodeInterface {
 //                                textArea.appendText(openFile.getName() + " is running!\n");
 //                            });
                             List<Word> list = new LinkedList<>();
-                            Lexer lexer = null;
-                            try {
-                                lexer = new Lexer(new FileReader(openFile.getPath()));
-                                lexer.next_token();
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                            assert lexer != null;
-                            for (Word word : lexer.getWords()) {
+//                            Lexer lexer = null;
+//                            try {
+//                                lexer = new Lexer(new FileReader(openFile.getPath()));
+//                                lexer.next_token();
+//                            } catch (IOException e) {
+//                                e.printStackTrace();
+//                            }
+//                            assert lexer != null;
+                            LexicalAnalyzer lexicalAnalyzer = new LexicalAnalyzer(openFile.getPath());
+                            lexicalAnalyzer.runAnalyzer();
+                            for (Word word : lexicalAnalyzer.getWords()) {
                                 word.setName(FinalAttribute.findString(word.getTypenum(), word.getWord()));
                                 list.add(word);
                             }
@@ -304,27 +337,58 @@ public class CodeInterface {
                                     }
                                 asmCodeTextArea.clear();
                                 if (results[1] != null) {
-                                    asmCodeTextArea.appendText("符号表：\n");
+                                    asmCodeTextArea.appendText("变量表：\n");
                                     for (Object s : (List) results[1]) {
                                         asmCodeTextArea.appendText(s.toString() + "\n");
                                     }
                                 }
                                 asmCodeTextArea.appendText("\n");
                                 if (results[2] != null) {
-                                    asmCodeTextArea.appendText("函数表：\n");
+                                    asmCodeTextArea.appendText("常量表：\n");
                                     for (Object s : (List) results[2]) {
                                         asmCodeTextArea.appendText(s.toString() + "\n");
                                     }
                                 }
+                                asmCodeTextArea.appendText("\n");
+                                if (results[3] != null) {
+                                    asmCodeTextArea.appendText("函数表：\n");
+                                    for (Object s : (List) results[3]) {
+                                        asmCodeTextArea.appendText(s.toString() + "\n");
+                                    }
+                                }
 
-                                for (String s : (List<String>)results[3]) {
-                                    code = "-1";
+                                if (results[4] != null) {
+                                    asmCodeTextArea.appendText("汇编代码：\n");
+                                    for (Object s : (List) results[4]) {
+                                        asmCodeTextArea.appendText(s.toString() + "\n");
+                                    }
+                                }
+
+                                for (String s : (List<String>)results[5]) {
+                                    code = "-2";
                                     Platform.runLater(() -> textArea.appendText("语义错误：" + s + "\n"));
                                 }
                             }
 
                             String finalCode = code;
                             Platform.runLater(() -> textArea.appendText("\nProcess finished with exit code " + finalCode +"\n"));
+
+                            TextArea RetextArea = textAreaMap.get("Result");
+                            RunAsm runAsm = new RunAsm();
+                            runAsm.bianyiAsm();
+                            runAsm.runAsm();
+                            Platform.runLater(() -> {
+                                RetextArea.setText("");
+                                RetextArea.appendText("执行结果:\n");
+                            });
+                            for (String s :runAsm.getResults()){
+                                if (s.equals("\\n") || s.equals("\n")){
+                                    Platform.runLater(() -> RetextArea.appendText("\n"));
+                                }else {
+                                    Platform.runLater(() -> RetextArea.appendText(s + " "));
+                                }
+                            }
+
 
                             long endTime = System.currentTimeMillis();
                             long useTime = endTime - startTime;
@@ -620,12 +684,12 @@ public class CodeInterface {
         problems.setStyle("-fx-focus-color:transparent;-fx-faint-focus-color: transparent;-fx-background-insets: 1");
         problems.setToggleGroup(group);
 
-        ToggleButton build = new ToggleButton("Build");
-        build.setUserData("Build");
-        build.setStyle("-fx-focus-color:transparent;-fx-faint-focus-color: transparent;-fx-background-insets: 1");
-        build.setToggleGroup(group);
+        ToggleButton result = new ToggleButton("Result");
+        result.setUserData("Result");
+        result.setStyle("-fx-focus-color:transparent;-fx-faint-focus-color: transparent;-fx-background-insets: 1");
+        result.setToggleGroup(group);
 
-        HBox hbox = new HBox(run, problems, build);
+        HBox hbox = new HBox(run, problems, result);
         hbox.setStyle("-fx-border-width: 0 0 1 0;-fx-border-color: lightgray");
         Label tips = new Label();
         tips.setPadding(new Insets(1, 0, 1, 30));

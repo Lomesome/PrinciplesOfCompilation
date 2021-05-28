@@ -8,7 +8,7 @@ import java.util.*;
 
 public class FinalAttribute {
     //关键字
-    private static final String[] keyword = new String[]{"char", "int", "float", "break", "const", "return", "void", "continue", "do", "while", "if", "else", "for", "auto", "case", "default", "double", "enum", "extern", "goto", "long", "register", "short", "signed", "sizeof", "static", "struct", "switch", "typedef", "union", "unsigned", "volatile"};
+    private static final String[] keyword = new String[]{"char", "int", "float", "break", "const", "return", "void", "continue", "do", "while", "if", "else", "for", "auto", "case", "default", "double", "enum", "extern", "goto", "long", "register", "short", "signed", "sizeof", "static", "struct", "switch", "typedef", "union", "unsigned", "volatile", "print"};
 
     //分界符
     private static final String[] delimiter ={"{", "}", ";", ","};
@@ -17,7 +17,7 @@ public class FinalAttribute {
     private static final String[] operator ={"(", ")", "[", "]", "!", "*", "/", "%", "+", "-", "++", "--", "<", "<=", ">", ">=", "==", "!=", "&&", "||", "=", "+=", "-=", "*=", "/=", "%=", "&=", "|=", "^=", ">>=", "<<=", "&", "|", "~", "^", "<<", ">>", "."};
 
     //语义标记
-    private static final String[] sem = {"PUSH", "GEQA", "GEQS", "GEQM", "GEQD", "ASSI", "GEQG", "GEQL", "GEQE", "GEQGE", "GEQLE", "IF", "EL", "IEFIR", "IESEC", "WH", "DO", "WE", "PUSHNUM", "LEVELA", "LEVELS", "ADDFUN", "DOW", "CALLFUN", "ADDARG"};
+    private static final String[] sem = {"PUSH", "GEQA", "GEQS", "GEQM", "GEQD", "ASSI", "GREA", "LESS", "EQUA", "GREQ", "LEEQ", "NOEQ", "IF", "EL", "IEFIR", "IESEC", "WH", "DO", "WE", "PUSHNUM", "LEVELA", "LEVELS", "ADDFUN", "DOW", "CALLFUN", "ADDARG", "RE", "RET", "CALLFUNARG", "PUSHARG", "CALLS", "ARG", "PRINT", "INDE"};
 
     private static final HashMap<String, Integer> tokenMap = new HashMap<>();
 
@@ -92,6 +92,9 @@ public class FinalAttribute {
     public static String findString(int token, String s){
         if(stringMap.get(token) == null)
             return s;
+        else if (token == 800 && s.equals("0")){
+            return stringMap.get(400);
+        }
         return stringMap.get(token);
     }
 

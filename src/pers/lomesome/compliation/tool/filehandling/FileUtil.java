@@ -1,7 +1,6 @@
 package pers.lomesome.compliation.tool.filehandling;
 
 import pers.lomesome.compliation.controller.OpenProject;
-
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;

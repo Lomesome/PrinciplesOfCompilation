@@ -1,5 +1,7 @@
 package pers.lomesome.compliation.model;
 
+import java.util.Objects;
+
 public class Pair<A, B> {
     private A first;
     private B second;
@@ -10,20 +12,18 @@ public class Pair<A, B> {
         this.second = second;
     }
 
-    public int hashCode() {
-        int hashFirst = first != null ? first.hashCode() : 0;
-        int hashSecond = second != null ? second.hashCode() : 0;
-        return (hashFirst + hashSecond) * hashSecond + hashFirst;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Pair<?, ?> pair = (Pair<?, ?>) o;
+        return Objects.equals(first, pair.first) &&
+                Objects.equals(second, pair.second);
     }
 
-    public boolean equals(Object other) {
-        if (other instanceof Pair) {
-            Pair otherPair = (Pair) other;
-            return ((this.first == otherPair.first ||
-                    (this.first != null && otherPair.first != null && this.first.equals(otherPair.first))) &&
-                    (this.second == otherPair.second || (this.second != null && otherPair.second != null && this.second.equals(otherPair.second))));
-        }
-        return false;
+    @Override
+    public int hashCode() {
+        return Objects.hash(first, second);
     }
 
     public String toString() {

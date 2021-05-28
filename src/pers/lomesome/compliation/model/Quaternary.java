@@ -1,11 +1,37 @@
 package pers.lomesome.compliation.model;
 
 public class Quaternary {
-    private Integer level;
+    private int id = 0;
+    private int level;
     private Word First;
     private Word Second;
     private Word Third;
     private Word Fourth;
+
+    public Quaternary(){}
+
+    public Quaternary(Word First, Word Second, Word Third, Word Fourth){
+        this.First = First;
+        this.Second = Second;
+        this.Third = Third;
+        this.Fourth = Fourth;
+    }
+
+    public Quaternary(int id, Word First, Word Second, Word Third, Word Fourth){
+        this.id = id;
+        this.First = First;
+        this.Second = Second;
+        this.Third = Third;
+        this.Fourth = Fourth;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     public Integer getLevel() {
         return level;
@@ -49,6 +75,6 @@ public class Quaternary {
 
     @Override
     public String toString(){
-        return " (" + First + "," + Second + "," + Third + "," + Fourth + ")";
+        return  id + " (" + First + "," + Second + "," + Third + "," + Fourth + ")";
     }
 }

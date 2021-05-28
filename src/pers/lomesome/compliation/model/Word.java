@@ -3,13 +3,33 @@ package pers.lomesome.compliation.model;
 import pers.lomesome.compliation.tool.finalattr.FinalAttribute;
 import java.io.Serializable;
 
+/**
+ * Word类包含经过词法分析得到的token
+ */
 public class Word implements Serializable {
-    private int token;    //种别码
-    private String word;    //扫描得到的词
-    private String type;    //类别
-    private String name;    //终结符名称
-    private String semSymbol = "";    //语义符号
+    /**
+     * 种别码
+     */
+    private int token;
+    /**
+     * 扫描得到的词
+     */
+    private String word;
+    /**
+     * 类别
+     */
+    private String type;
+    /**
+     * 内部表示名称
+     */
+    private String name;
+    /**
+     * 行号
+     */
     private int row;
+    /**
+     * 列号
+     */
     private int col;
 
     public Word() { }
@@ -86,14 +106,6 @@ public class Word implements Serializable {
 
     public void setCol(int col) {
         this.col = col;
-    }
-
-    public void setSemSymbol(String semSymbol) {
-        this.semSymbol = semSymbol;
-    }
-
-    public String getSemSymbol() {
-        return semSymbol;
     }
 
     @Override

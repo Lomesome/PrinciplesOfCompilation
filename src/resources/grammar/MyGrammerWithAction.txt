@@ -36,28 +36,63 @@ program
 	| '{' LEVELA expmaker '}' LEVELS
 	;
 
-expmaker
-	: type id idassignment ';' expmaker
-	| id var_func ';' expmaker
-	| 'if' '(' boolexp ')' IF program iselse expmaker
-	| 'while' '(' boolexp ')' DO program WE expmaker
-	| 'do' DOW program 'while' '(' boolexp ')' ';' expmaker
+loop_program
+	: '{' LEVELA expmaker break_loop '}' LEVELS
+	| ';'
+	;
+
+break_loop
+	: break ';'
+	| continue ';'
 	| ε
 	;
 
+isreturn
+	: return RE return_type ';'
+	| ε
+	;
+
+return_type
+	: cons_type PUSH RET
+	| id PUSH RET
+	| ε
+	;
+
+expmaker
+	: cons type id idassignment ';' expmaker
+	| id var_func ';' expmaker
+	| 'if' '(' boolexp ')' IF program iselse expmaker
+	| 'while' '(' boolexp ')' DO loop_program WE expmaker
+	| 'do' DOW loop_program 'while' '(' boolexp ')' ';' expmaker
+	| print '(' print_arg PUSH ')' ; PRINT expmaker
+	| 'for' '(' type id PUSH var_func ';' boolexp ';' id PUSH increment ')' DO loop_program INDE WE expmaker
+	| isreturn
+	| ε
+	;
+
+print_arg
+	: id
+	| cons_type
+	;
+
+increment
+	: '++' PUSH
+	| '--' PUSH
+	;
+
 _args
-	: id _arg
+	: id PUSHARG _arg ARG
 	| ε
 	;
 
 _arg
-	: , id _arg
+	: , id PUSHARG _arg ARG
 	| ε
 	;
 
 var_func
 	: grop exp ASSI
-	| CALLFUN '(' _args ')'
+	| CALLFUN '(' _args ')' CALLS
 	;
 
 iselse
@@ -96,11 +131,12 @@ beforexp
 	;
 
 afterexp
-	: '>' exp GEQG
-	| '<' exp GEQL
-	| '==' exp GEQE
-	| '>=' exp GEQGE
-	| '<=' exp GEQLE
+	: '>' exp GREA
+	| '<' exp LESS
+	| '==' exp EQUA
+	| '>=' exp GREQ
+	| '<=' exp LEEQ
+	| '!=' exp NOEQ
 	| ε
 	;
 
@@ -125,16 +161,31 @@ mult_exp
 	;
 
 primary_exp
-	: id PUSH
-	| float_const PUSH
-	| int_const PUSH
-	| string_const PUSH
-	| char_const PUSH
+	: id PUSH return_func
+	| cons_type PUSH
 	| '(' exp ')'
 	;
+
+return_func
+	: CALLFUN '(' _args ')' CALLS
+	| ε
+	;
+
 type
 	: 'int'
 	| 'char'
 	| 'float'
 	| 'string'
+	;
+
+cons_type
+	: float_const
+	| int_const
+	| string_const
+	| char_const
+	;
+
+cons
+	: 'const'
+	| ε
 	;

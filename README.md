@@ -1,9 +1,14 @@
 # PrinciplesOfCompilation
-## 编译原理课设
+## 重庆理工大学编译原理课设
 
-### 基于java开发
-#### （目前实现词法分析）
-  
+### 基于java开发(以及Python、NASM)
+#### 开发环境 Mac OS 、IDEA
+#### 目前实现词法分析(包含手动构造及JFLEX自动构造)、语法分析、语义分析、中间代码生成、四元式优化、汇编代码生成及执行
+#### 算法包含：LL(1)预测分析、算符优先、正规式转NFA、NFA转DFA、DFA转MFA、DAG优化
+##### 待实现LR分析……
+
+##### 有时间在来补充文档
+
 1.字符对应token表
 
 <table border=0 cellpadding=0 cellspacing=0 width=456 style='border-collapse:
@@ -287,3 +292,50 @@
 2.状态转换图
 
   ![Image text](https://github.com/Lomesome/PrinciplesOfCompilation/blob/master/StateTransitionDiagram.png)
+
+3.语义分析变量声明状态转移图
+
+  ![Image text](https://github.com/Lomesome/PrinciplesOfCompilation/blob/master/变量声明状态转移图.png)
+
+#界面介绍
+
+##打开工程
+
+  ![Image text](https://github.com/Lomesome/PrinciplesOfCompilation/blob/master/打开工程界面.png)
+  
+##新建工程
+
+  ![Image text](https://github.com/Lomesome/PrinciplesOfCompilation/blob/master/新建工程.png)
+  
+##词法分析
+
+  ![Image text](https://github.com/Lomesome/PrinciplesOfCompilation/blob/master/词法分析.png)
+  
+##语法分析
+
+  ![Image text](https://github.com/Lomesome/PrinciplesOfCompilation/blob/master/语法分析.png)
+  
+##语义分析
+
+  ![Image text](https://github.com/Lomesome/PrinciplesOfCompilation/blob/master/语义分析.png)
+  
+##语义分析及执行结果
+
+  ![Image text](https://github.com/Lomesome/PrinciplesOfCompilation/blob/master/语义分析及执行结果.png)
+ 
+##算符优先
+ 
+  ![Image text](https://github.com/Lomesome/PrinciplesOfCompilation/blob/master/算符优先.png)
+  
+##正规式转NFA
+ 
+  ![Image text](https://github.com/Lomesome/PrinciplesOfCompilation/blob/master/regtonfa.png)
+  
+##NFA转DFA
+ 
+  ![Image text](https://github.com/Lomesome/PrinciplesOfCompilation/blob/master/nfatodfa.png)
+  
+##DFA转MFA
+ 
+  ![Image text](https://github.com/Lomesome/PrinciplesOfCompilation/blob/master/dfatomfa.png)
+  

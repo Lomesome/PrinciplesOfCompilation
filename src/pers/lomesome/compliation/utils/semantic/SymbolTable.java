@@ -18,12 +18,13 @@ public class SymbolTable {
         public String value; // 变量值
         public int tp; // 若数组则为数组单元个数
         public int offset; // 偏移量
+        public boolean isTemp = false;
         @Override
         public String toString(){
             StringAlign align = new StringAlign(10, StringAlign.Alignment.CENTER);//调用构造方法，设置字符串对齐为居中对齐，最大长度为50
             if (value == null)
                 value = "null";
-            return name + "\t" + align.format(type) + "\t" + align.format(value) + "\t" + align.format(tp) + "\t" + scope;
+            return name + "\t" + align.format(type) + "\t" + align.format(value) + "\t" + align.format(offset) + "\t"+ align.format(tp) + "\t" + scope;
         }
     }
 
@@ -36,7 +37,10 @@ public class SymbolTable {
         public int offset; // 偏移量
         @Override
         public String toString(){
-            return name + "\t" + type + "\t" + tp + "\t" + offset;
+            StringAlign align = new StringAlign(10, StringAlign.Alignment.CENTER);//调用构造方法，设置字符串对齐为居中对齐，最大长度为50
+            if (value == null)
+                value = "null";
+            return name + "\t" + align.format(type) + "\t" + align.format(value)+ "\t" + align.format(offset)  + "\t" + align.format(tp) + "\t" + scope;
         }
     }
 
@@ -59,13 +63,14 @@ public class SymbolTable {
     public LiveStatu liveStatu;
 
 
-    private int state = 1;
+    private int state = 0;
     private String stype;
     private String sname;
     private Word sword;
     private int off = 0;
     private int offs = 0;
     private boolean isArr = false;
+    private boolean isCons = false;
     private int len = 0;
     public final String funcname;
     public final String functype;
@@ -77,17 +82,30 @@ public class SymbolTable {
         liveStatu = new LiveStatu();
     }
 
-    boolean SearchSynbl(String s) {
-        int count ;
+    boolean SearchExist(String s) {
+        int count;
         for (Var v : Synbl) {
-            if (v.name.equals(s) ){
+            if (v.name.equals(s)) {
                 count = 0;
-                for (int i = 0; i < v.scope.size(); i++){
-                    if (v.scope.get(i).equals(Analysis.actionscope.get(i))){
+                for (int i = 0; i < v.scope.size(); i++) {
+                    if (v.scope.get(i).equals(Analysis.actionscope.get(i))) {
                         count++;
                     }
                 }
-                if (count == Analysis.actionscope.size() && Analysis.actionscope.size() == v.scope.size()){
+                if (count == Analysis.actionscope.size() && Analysis.actionscope.size() == v.scope.size()) {
+                    return true;
+                }
+            }
+        }
+        for (Cons c : Const) {
+            if (c.name.equals(s)) {
+                count = 0;
+                for (int i = 0; i < c.scope.size(); i++) {
+                    if (c.scope.get(i).equals(Analysis.actionscope.get(i))) {
+                        count++;
+                    }
+                }
+                if (count == Analysis.actionscope.size() && Analysis.actionscope.size() == c.scope.size()) {
                     return true;
                 }
             }
@@ -95,55 +113,104 @@ public class SymbolTable {
         return false;
     }
 
-    void addSynbl() {
-        Var v = new Var();
-        v.name = sname;
-        v.type = stype;
-        int size = 0;
-        switch (stype) {
-            case "int":
-                size = 4;
-                break;
-            case "char":
-                size = 1;
-                break;
-            case "float":
-                size = 8;
-                break;
-            case "String":
-                size = 50;
-                break;
-        }
-        if (isArr) {
-            v.tp = len;
-            v.type = stype + "[]";
-        }
-        if (!SearchSynbl(sname)) {
-            off = offs;
-            v.offset = off;
-            offs = off + size * len;//加入该变量后末尾地址等于原偏移地址加上该变量的长度
-            v.scope = new ArrayList<>(Analysis.actionscope);
-            Synbl.add(v);
-        } else {
-            Analysis.flag = false;
-            Analysis.errorMsg.add("error: " + sword.getWord() + " 重定义 position (" + sword.getRow() + ", " + sword.getCol() + ")");
-            System.out.println("error: " + sword.getWord() + " 重定义 position (" + sword.getRow() + ", " + sword.getCol() + ")");
+    void addSymbol() {
+        if (isCons){
+            Cons c = new Cons();
+            c.name = sname;
+            c.type = stype;
+            int size = 0;
+            switch (stype) {
+                case "int":
+                    size = 4;
+                    break;
+                case "char":
+                    size = 1;
+                    break;
+                case "float":
+                    size = 8;
+                    break;
+                case "String":
+                    size = 50;
+                    break;
+            }
+            if (isArr) {
+                c.tp = len;
+                c.type = stype + "[]";
+            }
+            if (!SearchExist(sname)) {
+                off = offs;
+                c.offset = off;
+                offs = off + size * len;//加入该变量后末尾地址等于原偏移地址加上该变量的长度
+                c.scope = new ArrayList<>(Analysis.actionscope);
+                Const.add(c);
+            } else {
+                Analysis.flag = false;
+                Analysis.errorMsg.add("error: " + sword.getWord() + " 重定义 position (" + sword.getRow() + ", " + sword.getCol() + ")");
+                System.out.println("error: " + sword.getWord() + " 重定义 position (" + sword.getRow() + ", " + sword.getCol() + ")");
+            }
+        }else {
+            Var v = new Var();
+            v.name = sname;
+            v.type = stype;
+            int size = 0;
+            switch (stype) {
+                case "int":
+                    size = 4;
+                    break;
+                case "char":
+                    size = 1;
+                    break;
+                case "float":
+                    size = 8;
+                    break;
+                case "String":
+                    size = 50;
+                    break;
+            }
+            if (isArr) {
+                v.tp = len;
+                v.type = stype + "[]";
+            }
+            if (!SearchExist(sname)) {
+                off = offs;
+                v.offset = off;
+                offs = off + size * len;//加入该变量后末尾地址等于原偏移地址加上该变量的长度
+                v.scope = new ArrayList<>(Analysis.actionscope);
+                Synbl.add(v);
+            } else {
+                Analysis.flag = false;
+                Analysis.errorMsg.add("error: " + sword.getWord() + " 重定义 position (" + sword.getRow() + ", " + sword.getCol() + ")");
+                System.out.println("error: " + sword.getWord() + " 重定义 position (" + sword.getRow() + ", " + sword.getCol() + ")");
+            }
         }
     }
 
     public void setTable(Word word){
         state = changeState(word, state);//自动机状态变换
+
     }
 
     int changeState(Word s, int state) {
         String word = s.getWord();
         switch (state) {
+            case 0:
+                if (word.equals("int") || word.equals("char") || word.equals("String") || word.equals("float")) {
+                    stype = word;
+                    state = 2;
+                } else if (word.equals("const")){
+                    isCons = true;
+                    state = 1;
+                } else {
+                    isCons = false;
+                    state = 0;
+                }
+                break;
             case 1:
                 if (word.equals("int") || word.equals("char") || word.equals("String") || word.equals("float")) {
                     stype = word;
                     state = 2;
                 } else
-                    state = 1;
+                    state = 0;
                 break;
             case 2:
                 sname = word;
@@ -154,28 +221,32 @@ public class SymbolTable {
                 if (word.equals(",")) {
                     isArr = false;
                     len = 1;
-                    addSynbl();
+                    addSymbol();
                     state = 2;
                 } else if (word.equals("[")) {
                     state = 4;
                     isArr = true;
-                } else if (!(word.equals(";") || word.equals("(") || word.equals(")"))) {
+                    isCons = false;
+                } else if (!(word.equals(";"))) {
                     state = 3;
                 }
                 else {
                     isArr = false;
                     len = 1;
-                    addSynbl();
-                    state = 1;
+                    addSymbol();
+                    isCons = false;
+                    state = 0;
                 }
                 break;
             case 4:
                 len = Integer.parseInt(s.getWord());
+                isCons = false;
                 state = 5;
                 break;
             case 5:
                 if (word.equals("]")) {
-                    addSynbl();
+                    isCons = false;
+                    addSymbol();
                     state = 6;
                 }
                 break;
@@ -183,19 +254,36 @@ public class SymbolTable {
                 if (word.equals(",")) {
                     state = 2;
                 } else {
-                    state = 1;
+                    isCons = false;
+                    state = 0;
                 }
                 break;
         }
+
         return state;
     }
 
     public List<List<Object>> printTable() {
         List<List<Object>> results = new ArrayList<>();
-        System.out.println("符号表：");
+        System.out.println("变量表：");
         List<Object> synblList = new ArrayList<>();
         for (Var v : Synbl) {
-            synblList.add(v);
+            if (!v.isTemp) {
+                synblList.add(v);
+                System.out.printf("%10s", v.name);
+                System.out.printf("%10s", v.type);
+                System.out.printf("%10s", v.value);
+                System.out.printf("%10s", v.offset);
+                System.out.printf("%10s", v.tp);
+                System.out.printf("\t\t\t%-10s", v.scope);
+                System.out.println();
+            }
+        }
+
+        System.out.println("常量表：");
+        List<Object> constList = new ArrayList<>();
+        for (Cons v : Const) {
+            constList.add(v);
             System.out.printf("%10s", v.name);
             System.out.printf("%10s", v.type);
             System.out.printf("%10s", v.value);
@@ -204,6 +292,7 @@ public class SymbolTable {
             System.out.printf("\t\t\t%-10s", v.scope);
             System.out.println();
         }
+
         System.out.println("函数表：");
         List<Object> funclList = new ArrayList<>();
         for (Fun f : Func) {
@@ -214,6 +303,7 @@ public class SymbolTable {
             System.out.println();
         }
         results.add(synblList);
+        results.add(constList);
         results.add(funclList);
         return results;
     }
@@ -245,6 +335,32 @@ public class SymbolTable {
                     stack.pop();
             }while (stack.size() > 0);
         }
+
+        for (Cons c : Const) {
+            Stack<Integer> stack = new Stack<>();
+            for (Integer integer : Analysis.actionscope){
+                stack.push(integer);
+            }
+
+            if (c.name.equals(word.getWord()) && isScope(c.scope, stack)) {
+                value = c.value ;
+                return value;
+            }
+        }
+        for (Cons c : Const) {
+            Stack<Integer> stack = new Stack<>();
+            for (Integer integer : Analysis.actionscope){
+                stack.push(integer);
+            }
+            do {
+                if (c.name.equals(word.getWord()) && isScope(c.scope, stack)) {
+                    value = c.value ;
+                    return value;
+                }
+                if (stack.size() > 0)
+                    stack.pop();
+            }while (stack.size() > 0);
+        }
         return value;
     }
 
@@ -259,7 +375,6 @@ public class SymbolTable {
         }
         return true;
     }
-
 
     public LiveStatu getLiveStatu() {
         return liveStatu;

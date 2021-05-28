@@ -37,18 +37,18 @@ public class SelectSet {
                 Set<String> checkNull = getSelect(singleInfer, newVnFirst);
                 vnSelect.addAll(checkNull);
                 vnSelect.remove("ε");
-                if (singleInfer.equals("ε")){  //可以推导出空串
+                if (singleInfer.equals("ε")){
                     nullFlag = true;
                 }
-                if (checkNull.contains("ε") && grammars.containsKey(singleInfer)){ //判断推导内容全为非终结符
+                if (checkNull.contains("ε") && grammars.containsKey(singleInfer)){
                     count++;
                 }
-                else if (!checkNull.contains("ε")) {  //若当前非终结符不包含空串,则不进行下一个非终结符的分析
+                else if (!checkNull.contains("ε")) {
                     break;
                 }
             }
         }
-        if (count == grammars.get(vn).size() || nullFlag) { //推导内容全为非终结符且都推导出空串
+        if (count == grammars.get(vn).size() || nullFlag) {
             vnSelect.add("ε");
         }
         return vnSelect;
@@ -67,16 +67,16 @@ public class SelectSet {
             Set<String> checkNull = getSelect(singleInfer, newVnFirst);
             vnSelect.addAll(checkNull);
             vnSelect.remove("ε");
-            if (singleInfer.equals("ε")) {  //可以推导出空串
+            if (singleInfer.equals("ε")) {
                 nullFlag = true;
             }
-            if (checkNull.contains("ε") && grammars.containsKey(singleInfer)) { //判断推导内容全为非终结符
+            if (checkNull.contains("ε") && grammars.containsKey(singleInfer)) {
                 count++;
-            } else if (!checkNull.contains("ε")) {  //若当前非终结符不包含空串,则不进行下一个非终结符的分析
+            } else if (!checkNull.contains("ε")) {
                 break;
             }
         }
-        if (count == grammars.get(vn).size() || nullFlag) { //推导内容全为非终结符且都推导出空串
+        if (count == grammars.get(vn).size() || nullFlag) {
             vnSelect.add("ε");
         }
     }

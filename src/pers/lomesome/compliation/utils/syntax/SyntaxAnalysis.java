@@ -25,10 +25,6 @@ public class SyntaxAnalysis {
         eliminateBT.eliminate();
         eliminateBT.eliminate();
 
-        FinalAttribute.getAllGrammer().getGrammarMap().forEach((k, v)->{
-            System.out.println(k + " " + v);
-        });
-
         FinalAttribute.getAllGrammer().getGrammarMap().forEach((k, v)-> FinalAttribute.getAllVn().add(k));
         FinalAttribute.getAllGrammer().getGrammarMap().forEach((k, v)->{
             for (List<String> stringList:v){
@@ -58,7 +54,7 @@ public class SyntaxAnalysis {
     public static List<List<String>> analysis(List<Word> list) {
         LinkedHashMap<String, LinkedHashMap<String, List<MakeJson>>> map = FinalAttribute.getPredictMap();
         Stack<MakeJson> makeJsonStack = new MyStack<>();
-        boolean errorflag = false;
+        boolean errorflag = true;
         List<List<String>> result = new ArrayList<>();
         List<String> analysisResult = new ArrayList<>();
         List<String> error = new ArrayList<>();
@@ -79,17 +75,17 @@ public class SyntaxAnalysis {
             } else if (FinalAttribute.getAllVt().contains(X.getName())){
                 error.add("error: " +" position : (" + list.get(IP- 1).getRow() + "," + list.get(IP- 1).getCol() + ") 缺少 '" + X.getName()+"'\n");
                 System.out.println("error: " +" position : (" + list.get(IP- 1).getRow() + "," + list.get(IP- 1).getCol() + ") 缺少 '" + X.getName()+"'\n");
-                errorflag = true;
+                errorflag = false;
             } else if (FinalAttribute.getAllVn().contains(X.getName())){
                 if (map.get(X.getName()).get(a.getName()).size() == 0){
                     System.out.println("遇到SYNCH，从栈顶弹出非终结符" + X);
 //                    error.add("error: position line : " + a.getCol() + "\n");
-                    errorflag = true;
+                    errorflag = false;
                     X = makeJsonStack.pop();
                     continue;
                 }else if (map.get(X.getName()).get(a.getName()).get(0).getName().equals("synch")) {
                     System.out.println("遇到SYNCH，从栈顶弹出非终结符" + X);
-                    errorflag = true;
+                    errorflag = false;
                     X = makeJsonStack.pop();
                     continue;
                 } else {
@@ -102,8 +98,10 @@ public class SyntaxAnalysis {
                     makeJsonList.add(X);
                     Collections.reverse(makeJsons);
                     for (MakeJson s : makeJsons){
-                        if (!s.getName().equals("ε") || !s.getName().equals("synch")) {
-                            makeJsonStack.push(s);
+                        if (!s.getName().equals("ε")) {
+                            if (!s.getName().equals("synch")) {
+                                makeJsonStack.push(s);
+                            }
                         }
                     }
                 }
@@ -112,7 +110,7 @@ public class SyntaxAnalysis {
             System.out.println(makeJsonStack + " " + list.subList(IP, list.size()));
             X = makeJsonStack.pop();
         }
-        if (list.size() - 1 != IP  || errorflag){
+        if (list.size() - 1 != IP  || !errorflag){
             System.out.println("该语句不符合该文法");
             analysisResult.add("该语句不符合该文法\n");
         }else {

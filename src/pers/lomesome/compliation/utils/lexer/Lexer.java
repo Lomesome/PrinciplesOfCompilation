@@ -17,7 +17,7 @@ import java.util.List;
 
 // See https://github.com/jflex-de/jflex/issues/222
 @SuppressWarnings("FallThrough")
-public class Lexer implements java_cup.runtime.Scanner {
+public class Lexer  {
 
   /** This character denotes the end of file. */
   public static final int YYEOF = -1;
@@ -594,7 +594,8 @@ public class Lexer implements java_cup.runtime.Scanner {
    * @return the next token.
    * @exception java.io.IOException if any I/O-Error occurs.
    */
-  @Override  public java_cup.runtime.Symbol next_token() throws java.io.IOException {
+
+  public void next_token() throws java.io.IOException {
     int zzInput;
     int zzAction;
 
@@ -733,7 +734,7 @@ public class Lexer implements java_cup.runtime.Scanner {
       if (zzInput == YYEOF && zzStartRead == zzCurrentPos) {
         zzAtEOF = true;
             zzDoEOF();
-          { return new java_cup.runtime.Symbol(sym.EOF); }
+          { return ; }
       }
       else {
         switch (zzAction < 0 ? zzAction : ZZ_ACTION[zzAction]) {

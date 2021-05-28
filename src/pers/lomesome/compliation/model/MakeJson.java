@@ -5,8 +5,17 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import java.util.List;
 
+/**
+ * 该类是JSON类对象用于语法分析定义父子节点
+ */
 public class MakeJson {
+    /**
+     * 节点名称
+     */
     private String name;
+    /**
+     * 子节点链表
+     */
     private List<MakeJson> children;
 
     public MakeJson(){}
