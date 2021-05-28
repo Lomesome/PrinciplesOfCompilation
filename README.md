@@ -297,47 +297,46 @@
 
   ![Image text](https://github.com/Lomesome/PrinciplesOfCompilation/blob/master/变量声明状态转移图.png)
 
+-----------------
+# 界面介绍
 
-
-#界面介绍
-
-##打开工程
+## 打开工程
 
   ![Image text](https://github.com/Lomesome/PrinciplesOfCompilation/blob/master/打开工程界面.png)
   
-##新建工程
+## 新建工程
 
   ![Image text](https://github.com/Lomesome/PrinciplesOfCompilation/blob/master/新建工程.png)
   
-##词法分析
+## 词法分析
 
   ![Image text](https://github.com/Lomesome/PrinciplesOfCompilation/blob/master/词法分析.png)
   
-##语法分析
+## 语法分析
 
   ![Image text](https://github.com/Lomesome/PrinciplesOfCompilation/blob/master/语法分析.png)
   
-##语义分析
+## 语义分析
 
   ![Image text](https://github.com/Lomesome/PrinciplesOfCompilation/blob/master/语义分析.png)
   
-##语义分析及执行结果
+## 语义分析及执行结果
 
   ![Image text](https://github.com/Lomesome/PrinciplesOfCompilation/blob/master/语义分析及执行结果.png)
  
-##算符优先
+## 算符优先
  
   ![Image text](https://github.com/Lomesome/PrinciplesOfCompilation/blob/master/算符优先.png)
   
-##正规式转NFA
+## 正规式转NFA
  
   ![Image text](https://github.com/Lomesome/PrinciplesOfCompilation/blob/master/regtonfa.png)
   
-##NFA转DFA
+## NFA转DFA
  
   ![Image text](https://github.com/Lomesome/PrinciplesOfCompilation/blob/master/nfatodfa.png)
   
-##DFA转MFA
+## DFA转MFA
  
   ![Image text](https://github.com/Lomesome/PrinciplesOfCompilation/blob/master/dfatomfa.png)
   
