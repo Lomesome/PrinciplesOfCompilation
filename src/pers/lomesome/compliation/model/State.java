@@ -1,42 +1,104 @@
 package pers.lomesome.compliation.model;
 
-import java.util.Objects;
+import java.util.ArrayList;
+import java.util.List;
 
 public class State {
-    private String stateName;
-    public static int ID = 0;
+    /**
+     * 当前状态编号
+     */
+    private int num;
 
-    public State(){
-        this.stateName = String.valueOf(ID++);
+    /**
+     * 后继状态的编号
+     */
+    private List<Integer> SubState = new ArrayList<>();
+
+    /**
+     * 读到某个字符转换状态
+     */
+    private List<Character> SubChar = new ArrayList<>();
+
+    /**
+     * NFA图中的后序状态
+     */
+    private List<State> sub = new ArrayList<>();
+
+    /**
+     * 代表当前未被访问过
+     */
+    private int visit = 0;
+
+    /**
+     * 初始化不是终态//用于DFA
+     */
+    private boolean isEnd = false;
+
+    /**
+     * 是不是开始状态
+     */
+    private boolean isStart = false;
+
+    public State(int num) {
+        this.num = num;
     }
 
-    public State(String stateName){
-        this.stateName = stateName;
+    /**
+     * 图中链接下一个
+     * @param s
+     * @param c
+     */
+    public void setNext(State s, char c) {
+        SubChar.add(c);
+        sub.add(s);
     }
 
-    public String getStateName() {
-        return stateName;
+    public State getNext(char c) {
+        for (int i = 0; i < SubChar.size(); i++) {
+            if (SubChar.get(i) == c)
+                return sub.get(i);
+        }
+        return new State(-1);
     }
 
-    public void setStateName(String stateName) {
-        this.stateName = stateName;
+    public void setEnd(boolean end) {
+        isEnd = end;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        State state = (State) o;
-        return Objects.equals(stateName, state.stateName);
+    public boolean getIsEnd(){
+        return isEnd;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(stateName);
+    public void setStart() {
+        isStart = true;
     }
 
-    @Override
-    public String toString() {
-        return stateName;
+    public boolean IsStart() {
+        return isStart;
     }
+
+    public List<Character> getSubChar() {
+        return this.SubChar;
+    }
+
+    public List<Integer> getSubState() {
+        return this.SubState;
+    }
+
+    public List<State> getNext() {
+        return sub;
+    }
+
+    public void setVisit() {
+        visit = 1;
+    }
+
+    public int getVisit() {
+        return visit;
+    }
+
+    public int getNum() {
+        return this.num;
+    }
+
 }

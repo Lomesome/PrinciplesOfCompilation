@@ -4,7 +4,6 @@ import pers.lomesome.compliation.model.LiveStatu;
 import pers.lomesome.compliation.model.Pair;
 import pers.lomesome.compliation.model.Word;
 import pers.lomesome.compliation.tool.filehandling.StringAlign;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;

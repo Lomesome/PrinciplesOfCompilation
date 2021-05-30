@@ -2,24 +2,6 @@
   <library name="javacpu">
     <CLASSES />
     <JAVADOC />
-    <SOURCES>
-      <root url="file://$USER_HOME$/Desktop/jflex-1.8.2/examples/cup-interpreter/src/main/java" />
-      <root url="file://$USER_HOME$/Desktop/jflex-1.8.2/examples/cup-interpreter/src/test/java" />
-      <root url="file://$USER_HOME$/Desktop/jflex-1.8.2/examples/cup-java-minijava/src/main/java" />
-      <root url="file://$USER_HOME$/Desktop/jflex-1.8.2/examples/cup-java-minijava/src/test/java" />
-      <root url="file://$USER_HOME$/Desktop/jflex-1.8.2/examples/cup-java/src/main/java" />
-      <root url="file://$USER_HOME$/Desktop/jflex-1.8.2/examples/cup-java/src/test/java" />
-      <root url="file://$USER_HOME$/Desktop/jflex-1.8.2/examples/cup-lcalc/src/main/java" />
-      <root url="file://$USER_HOME$/Desktop/jflex-1.8.2/examples/cup-lcalc/src/test/java" />
-      <root url="file://$USER_HOME$/Desktop/jflex-1.8.2/examples/simple/src/main/java" />
-      <root url="file://$USER_HOME$/Desktop/jflex-1.8.2/examples/simple/src/test/java" />
-      <root url="file://$USER_HOME$/Desktop/jflex-1.8.2/examples/standalone/src/test/java" />
-      <root url="file://$USER_HOME$/Desktop/jflex-1.8.2/examples/zero-reader/src/main/java" />
-      <root url="file://$USER_HOME$/Desktop/jflex-1.8.2/examples/zero-reader/src/test/java" />
-      <root url="file://$USER_HOME$/Desktop/jflex-1.8.2/src/generated/cup" />
-      <root url="file://$USER_HOME$/Desktop/jflex-1.8.2/src/generated/jflex" />
-      <root url="file://$USER_HOME$/Desktop/jflex-1.8.2/src/main/java" />
-      <root url="file://$USER_HOME$/Desktop/jflex-1.8.2/src/test/java" />
-    </SOURCES>
+    <SOURCES />
   </library>
 </component>

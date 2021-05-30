@@ -2,7 +2,6 @@ package pers.lomesome.compliation.utils.operatorpriority;
 
 import pers.lomesome.compliation.model.Word;
 import pers.lomesome.compliation.tool.filehandling.StringAlign;
-
 import java.util.*;
 
 public class OperatorAnalyze {
@@ -17,10 +16,9 @@ public class OperatorAnalyze {
 
     private Set<String> vnSet = new LinkedHashSet<>();  //非终结符
 
-
     private Map<String, Map<String, String>> matrixMap = new LinkedHashMap<>();  //算符矩阵
 
-    private Map<String, List<List<String>>> produce = new LinkedHashMap<>();  //文法的左右分割一一对应
+    private Map<String, List<List<String>>> produce = new LinkedHashMap<>();  //文法及其产生式
 
     private StringAlign align5 = new StringAlign(5, StringAlign.Alignment.LEFT);
 
@@ -29,8 +27,6 @@ public class OperatorAnalyze {
     private StringAlign align30 = new StringAlign(30, StringAlign.Alignment.LEFT);
 
     private List<String> result = new ArrayList<>();
-
-    private List<String> error = new ArrayList<>();
 
     private void getEndAndNoEnd() {
         vnSet.addAll(produce.keySet());
@@ -122,12 +118,16 @@ public class OperatorAnalyze {
         matrixMap.put(s1, map);
     }
 
+    /**
+     *
+     * @param list 需要查找的产生式
+     * @return String 规约符号
+     */
     private String findLeft(List<String> list) {
-        String ch = null;
+        String s = null;
         for (Map.Entry<String, List<List<String>>> map : produce.entrySet()) {
-            ch = map.getKey();
+            s = map.getKey();
             for (List<String> value : map.getValue()) {
-
                 if (value.size() != list.size()) {
                     continue;
                 }
@@ -140,13 +140,17 @@ public class OperatorAnalyze {
                     }
                 }
                 if (!flag){
-                    return ch;
+                    return s;
                 }
             }
         }
-        return ch;
+        return s;
     }
 
+    /**
+     *
+     * @param wordList 需要分析的word列表
+     */
     public void analysis(List<Word> wordList) {
         int status = 0;
         int count = 0;
@@ -157,7 +161,7 @@ public class OperatorAnalyze {
         wordList.add(new Word("#"));
         List<String> listStack = new ArrayList<>();
         listStack.add("#");
-        String a = String.valueOf(wordList.get(index++).getWord());
+        String a = wordList.get(index++).getWord();
         do {
             if (status == 0) {
                 if (count != 0) {
@@ -229,6 +233,11 @@ public class OperatorAnalyze {
         result.add(align10.format("分析成功"));
     }
 
+    /*
+    E->E+T|T
+    T->T*F|F
+    F->(E)|i
+    */
     public void doAna(List<Word> wordList) {
         input.add("E->E + T|T");
         input.add("T->T * F|F");
@@ -240,11 +249,7 @@ public class OperatorAnalyze {
         makeMatrix();
         analysis(wordList);
     }
-    /*
-    E->E+T|T
-    T->T*F|F
-    F->(E)|i
-    */
+
     public List<String> getResult() {
         return result;
     }

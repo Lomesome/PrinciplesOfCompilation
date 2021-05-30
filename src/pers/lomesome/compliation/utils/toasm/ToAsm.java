@@ -74,79 +74,79 @@ public class ToAsm {
 
         for (int i = 0; i < liveStatu.getQt().size(); i++) {
             Quaternary temp = liveStatu.getQt().get(i);
-            if (temp.getFirst().getWord().equals("+")) {//如果四元式的首符号是+
-                asmCode.add("    MOV AX," + temp.getSecond());
-                asmCode.add("    ADD AX," + temp.getThird());
-                asmCode.add("    MOV " + temp.getFourth() + ",AX");
+            if (temp.getOperator().getWord().equals("+")) {//如果四元式的首符号是+
+                asmCode.add("    MOV AX," + temp.getArg1());
+                asmCode.add("    ADD AX," + temp.getArg2());
+                asmCode.add("    MOV " + temp.getResult() + ",AX");
                 asmJump[i] = asmCount;
                 asmCount += 3;
-            } else if (temp.getFirst().getWord().equals("-")) {//如果四元式的首符号是-
-                asmCode.add("    MOV AX," + temp.getSecond());
-                asmCode.add("    SUB AX," + temp.getThird());
-                asmCode.add("    MOV " + temp.getFourth() + ",AX");
+            } else if (temp.getOperator().getWord().equals("-")) {//如果四元式的首符号是-
+                asmCode.add("    MOV AX," + temp.getArg1());
+                asmCode.add("    SUB AX," + temp.getArg2());
+                asmCode.add("    MOV " + temp.getResult() + ",AX");
                 asmJump[i] = asmCount;
                 asmCount += 3;
-            } else if (temp.getFirst().getWord().equals("*")) {//如果四元式的首符号是*
-                asmCode.add("    MOV AX," + temp.getSecond());
-                asmCode.add("    SUB BX," + temp.getThird());
+            } else if (temp.getOperator().getWord().equals("*")) {//如果四元式的首符号是*
+                asmCode.add("    MOV AX," + temp.getArg1());
+                asmCode.add("    SUB BX," + temp.getArg2());
                 asmCode.add("    MUL BX");
-                asmCode.add("    MOV " + temp.getFourth() + ",AX");
+                asmCode.add("    MOV " + temp.getResult() + ",AX");
                 asmJump[i] = asmCount;
                 asmCount += 4;
-            } else if (temp.getFirst().getWord().equals("/")) {//如果四元式的首符号是/
-                asmCode.add("    MOV AX," + temp.getSecond());
+            } else if (temp.getOperator().getWord().equals("/")) {//如果四元式的首符号是/
+                asmCode.add("    MOV AX," + temp.getArg1());
                 asmCode.add("    MOV DX,0");
-                asmCode.add("    MOV BX," + temp.getThird());
+                asmCode.add("    MOV BX," + temp.getArg2());
                 asmCode.add("    DIV BX");
-                asmCode.add("    MOV " + temp.getFourth() + ",DX");
+                asmCode.add("    MOV " + temp.getResult() + ",DX");
                 asmJump[i] = asmCount;
                 asmCount += 5;
-            } else if (liveStatu.getQt().get(i).getFirst().getWord().equals("=")) {//赋值语句
-                asmCode.add("    MOV AX," + liveStatu.getQt().get(i).getSecond());
-                asmCode.add("    MOV " + liveStatu.getQt().get(i).getFourth() + ",AX");
+            } else if (liveStatu.getQt().get(i).getOperator().getWord().equals("=")) {//赋值语句
+                asmCode.add("    MOV AX," + liveStatu.getQt().get(i).getArg1());
+                asmCode.add("    MOV " + liveStatu.getQt().get(i).getResult() + ",AX");
                 asmJump[i] = asmCount;
                 asmCount += 2;
-            } else if (temp.getFirst().getWord().equals("==")) {
+            } else if (temp.getOperator().getWord().equals("==")) {
                 asmCode.add("    MOV DX,1");
-                asmCode.add("    MOV AX," + temp.getSecond());
-                asmCode.add("    CMP AX," + temp.getThird());
-                asmCode.add("JE " + liveStatu.getQt().get(i).getFourth());
+                asmCode.add("    MOV AX," + temp.getArg1());
+                asmCode.add("    CMP AX," + temp.getArg2());
+                asmCode.add("JE " + liveStatu.getQt().get(i).getResult());
                 asmJump[i] = asmCount;
                 asmCount += 4;
-            } else if (temp.getFirst().getWord().equals(">")) {
+            } else if (temp.getOperator().getWord().equals(">")) {
                 asmCode.add("    MOV DX,1");
-                asmCode.add("    MOV AX," + temp.getSecond());
-                asmCode.add("    CMP AX," + temp.getThird());
-                asmCode.add("JG " + liveStatu.getQt().get(i).getFourth());
+                asmCode.add("    MOV AX," + temp.getArg1());
+                asmCode.add("    CMP AX," + temp.getArg2());
+                asmCode.add("JG " + liveStatu.getQt().get(i).getResult());
                 asmJump[i] = asmCount;
                 asmCount += 4;
-            } else if (temp.getFirst().getWord().equals("<")) {
+            } else if (temp.getOperator().getWord().equals("<")) {
                 asmCode.add("    MOV DX,1");
-                asmCode.add("    MOV AX," + temp.getSecond());
-                asmCode.add("    CMP AX," + temp.getThird());
-                asmCode.add("JL " + liveStatu.getQt().get(i).getFourth());
+                asmCode.add("    MOV AX," + temp.getArg1());
+                asmCode.add("    CMP AX," + temp.getArg2());
+                asmCode.add("JL " + liveStatu.getQt().get(i).getResult());
                 asmJump[i] = asmCount;
                 asmCount += 4;
-            } else if (temp.getFirst().getWord().equals(">=")) {
+            } else if (temp.getOperator().getWord().equals(">=")) {
                 asmCode.add("    MOV DX,1");
-                asmCode.add("    MOV AX," + temp.getSecond());
-                asmCode.add("    CMP AX," + temp.getThird());
-                asmCode.add("JGE " + liveStatu.getQt().get(i).getFourth());
+                asmCode.add("    MOV AX," + temp.getArg1());
+                asmCode.add("    CMP AX," + temp.getArg2());
+                asmCode.add("JGE " + liveStatu.getQt().get(i).getResult());
                 asmJump[i] = asmCount;
                 asmCount += 4;
-            } else if (temp.getFirst().getWord().equals("<=")) {
+            } else if (temp.getOperator().getWord().equals("<=")) {
                 asmCode.add("    MOV DX,1");
-                asmCode.add("    MOV AX," + temp.getSecond());
-                asmCode.add("    CMP AX," + temp.getThird());
-                asmCode.add("JLE " + liveStatu.getQt().get(i).getFourth());
+                asmCode.add("    MOV AX," + temp.getArg1());
+                asmCode.add("    CMP AX," + temp.getArg2());
+                asmCode.add("JLE " + liveStatu.getQt().get(i).getResult());
                 asmJump[i] = asmCount;
                 asmCount += 4;
-            } else if (temp.getFirst().getWord().equals("j")) {
-                asmCode.add("JMP " + temp.getFourth());
+            } else if (temp.getOperator().getWord().equals("j")) {
+                asmCode.add("JMP " + temp.getResult());
                 asmJump[i] = asmCount;
                 asmCount += 1;
-            } else if (temp.getFirst().getWord().equals("print")) {
-                asmCode.add("    MOV DL," + temp.getFourth());
+            } else if (temp.getOperator().getWord().equals("print")) {
+                asmCode.add("    MOV DL," + temp.getResult());
                 asmCode.add("    CALL PRINT_NUM_OF_DL");
                 asmCode.add("    MOV AH,2");
                 asmCode.add("    MOV DL,32");

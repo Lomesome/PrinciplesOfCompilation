@@ -3,46 +3,89 @@ package pers.lomesome.compliation.tool.finalattr;
 import pers.lomesome.compliation.model.MakeJson;
 import pers.lomesome.compliation.utils.semantic.SymbolTable;
 import pers.lomesome.compliation.utils.syntax.AllGrammer;
-
 import java.util.*;
 
 public class FinalAttribute {
-    //关键字
+    /**
+     * 关键字
+     */
     private static final String[] keyword = new String[]{"char", "int", "float", "break", "const", "return", "void", "continue", "do", "while", "if", "else", "for", "auto", "case", "default", "double", "enum", "extern", "goto", "long", "register", "short", "signed", "sizeof", "static", "struct", "switch", "typedef", "union", "unsigned", "volatile", "print"};
 
-    //分界符
+    /**
+     * 分界符
+     */
     private static final String[] delimiter ={"{", "}", ";", ","};
 
-    //运算符
+    /**
+     * 运算符
+     */
     private static final String[] operator ={"(", ")", "[", "]", "!", "*", "/", "%", "+", "-", "++", "--", "<", "<=", ">", ">=", "==", "!=", "&&", "||", "=", "+=", "-=", "*=", "/=", "%=", "&=", "|=", "^=", ">>=", "<<=", "&", "|", "~", "^", "<<", ">>", "."};
 
-    //语义标记
+    /**
+     * 语义标记
+     */
     private static final String[] sem = {"PUSH", "GEQA", "GEQS", "GEQM", "GEQD", "ASSI", "GREA", "LESS", "EQUA", "GREQ", "LEEQ", "NOEQ", "IF", "EL", "IEFIR", "IESEC", "WH", "DO", "WE", "PUSHNUM", "LEVELA", "LEVELS", "ADDFUN", "DOW", "CALLFUN", "ADDARG", "RE", "RET", "CALLFUNARG", "PUSHARG", "CALLS", "ARG", "PRINT", "INDE"};
 
+    /**
+     * word对应的token
+     */
     private static final HashMap<String, Integer> tokenMap = new HashMap<>();
 
+    /**
+     *
+     */
     private static final HashMap<Integer, String> stringMap = new HashMap<>();
 
     private static final HashMap<Integer, String> nameMap = new HashMap<>();
 
+    /**
+     * 预测分析first集
+     */
     private static Map<String, Set<String>> firstmap = new LinkedHashMap<>();
 
+    /**
+     * 预测分析follow集
+     */
     private static Map<String, Set<String>> followmap = new LinkedHashMap<>();
 
+    /**
+     * 预测分析select集
+     */
     private static Map<List<List<String>>, Set<String>> selectMap = new LinkedHashMap<>();
 
+    /**
+     * 预测表
+     */
     private static LinkedHashMap<String, LinkedHashMap<String, List<MakeJson>>> predictMap;
 
+    /**
+     * 带语义标记的预测分析表
+     */
     private static LinkedHashMap<String, LinkedHashMap<String, List<String>>> semPredictMap;
 
+    /**
+     * 所有非终结符
+     */
     private static Set<String> allVn = new LinkedHashSet<>();
 
+    /**
+     * 所有终结符
+     */
     private static Set<String> allVt = new LinkedHashSet<>();
 
+    /**
+     * 文法
+     */
     private static AllGrammer allGrammer;
 
+    /**
+     * 带语义动作的文法
+     */
     private static AllGrammer allGrammerWithAction;
 
+    /**
+     * 符号表
+     */
     private static Map<String, SymbolTable> symbolTableMap = new LinkedHashMap<>();
 
     //初始化关键字、分界符、运算符的token
@@ -61,7 +104,11 @@ public class FinalAttribute {
         }
     }
 
-    //查找token
+    /**
+     * 在tokenMap查找word对应的token
+     * @param word
+     * @return
+     */
     public static int findToken(String word){
         if(tokenMap.get(word) == null)
             return 700;
@@ -75,20 +122,17 @@ public class FinalAttribute {
         stringMap.put(800, "float_const");
         stringMap.put(400, "int_const");
         stringMap.put(600, "string_const");
-//        stringMap.put(700, "IDENTIFIER");
-//        stringMap.put(800, "CONSTANT");
-//        stringMap.put(400, "CONSTANT");
-//        stringMap.put(600, "STRING_LITERAL");
-//        stringMap.put(700, "x");
-//        stringMap.put(500, "z");
-//        stringMap.put(800, "y");
-//        stringMap.put(400, "y");
-//        stringMap.put(600, "y");
         for(String s : keyword){
             stringMap.put(start++, s);
         }
     }
 
+    /**
+     * 通过查找对应的内部表示名称
+     * @param token
+     * @param s
+     * @return
+     */
     public static String findString(int token, String s){
         if(stringMap.get(token) == null)
             return s;
@@ -126,18 +170,22 @@ public class FinalAttribute {
         return operator;
     }
 
+    //获取关键词
     public static String[] getKeyword() {
         return keyword;
     }
 
+    //获取tokenmap
     public static HashMap<String, Integer> getTokenMap() {
         return tokenMap;
     }
 
+    //获取预测分析表
     public static LinkedHashMap<String, LinkedHashMap<String, List<MakeJson>>> getPredictMap() {
         return predictMap;
     }
 
+    //保存预测分析表
     public static void setPredictMap(LinkedHashMap<String, LinkedHashMap<String, List<MakeJson>>> predictMap) {
         FinalAttribute.predictMap = predictMap;
     }
@@ -146,6 +194,7 @@ public class FinalAttribute {
         return firstmap;
     }
 
+    //保存first集
     public static void setFirstmap(Map<String, Set<String>> firstmap) {
         FinalAttribute.firstmap = firstmap;
     }
@@ -154,6 +203,7 @@ public class FinalAttribute {
         return followmap;
     }
 
+    //保存follow集
     public static void setFollowmap(Map<String, Set<String>> followmap) {
         FinalAttribute.followmap = followmap;
     }
@@ -163,6 +213,7 @@ public class FinalAttribute {
         return selectMap;
     }
 
+    //保存select集
     public static void setSelectMap(Map<List<List<String>>, Set<String>> selectMap) {
         FinalAttribute.selectMap = selectMap;
     }
@@ -171,6 +222,7 @@ public class FinalAttribute {
         return allVn;
     }
 
+    //保存文法中的非终结符
     public static void setAllVn(Set<String> allVn) {
         FinalAttribute.allVn = allVn;
     }
@@ -179,6 +231,7 @@ public class FinalAttribute {
         return allVt;
     }
 
+    //保存文法中的终结符
     public static void setAllVt(Set<String> allVt) {
         FinalAttribute.allVt = allVt;
     }
@@ -187,6 +240,7 @@ public class FinalAttribute {
         return allGrammer;
     }
 
+    //保存普通文法
     public static void setAllGrammer(AllGrammer allGrammer) {
         FinalAttribute.allGrammer = allGrammer;
     }
@@ -195,6 +249,7 @@ public class FinalAttribute {
         return allGrammerWithAction;
     }
 
+    //保存带语义动作的文法
     public static void setAllGrammerWithAction(AllGrammer allGrammerWithAction) {
         FinalAttribute.allGrammerWithAction = allGrammerWithAction;
     }

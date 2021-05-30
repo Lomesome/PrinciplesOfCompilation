@@ -3,10 +3,8 @@ package pers.lomesome.compliation.utils.semantic;
 import pers.lomesome.compliation.model.Quaternary;
 import pers.lomesome.compliation.model.Word;
 import pers.lomesome.compliation.tool.finalattr.FinalAttribute;
-import pers.lomesome.compliation.utils.dag.Optimizer;
-import pers.lomesome.compliation.utils.toasm.ToAsm;
+import pers.lomesome.compliation.utils.toasm.ObjectCode;
 import pers.lomesome.compliation.utils.toasm.ToNasmCode;
-
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -81,12 +79,22 @@ public class Analysis {
         }
         if (flag){
             Quaternary q = new Quaternary();
-            q.setFirst(new Word("sys"));
-            q.setSecond(new Word("_"));
-            q.setThird(new Word("_"));
-            q.setFourth(new Word("_"));
+            q.setOperator(new Word("sys"));
+            q.setArg1(new Word("_"));
+            q.setArg2(new Word("_"));
+            q.setResult(new Word("_"));
             FinalAttribute.getSymbolTable("main").getLiveStatu().getQt().add(q);
             SymbolTable s = FinalAttribute.getSymbolTableMap().get("main");
+
+            ObjectCode.Blocked(FinalAttribute.getSymbolTable("main").getLiveStatu());
+
+            FinalAttribute.getSymbolTable("main").getLiveStatu().getActiveLable().forEach(System.out::println);
+            AtomicInteger id1 = new AtomicInteger();
+            List<Quaternary> list1 =  FinalAttribute.getSymbolTable("main").getLiveStatu().getQt();
+            list1.forEach(quaternary -> {
+                quaternary.setId(id1.getAndIncrement());
+            });
+
             List<List<Object>> listList = s.printTable();
             results[1] = listList.get(0);
             results[2] = listList.get(1);
@@ -103,23 +111,7 @@ public class Analysis {
 
             }
         }
-        AtomicInteger id1 = new AtomicInteger();
-        List<Quaternary> list1 =  FinalAttribute.getSymbolTable("main").getLiveStatu().getQt();
-        list1.forEach(quaternary -> {
-            quaternary.setId(id1.getAndIncrement());
-        });
-        list1.forEach(System.out::println);
-        try {
-            Optimizer optimizer = new Optimizer(list1);
-            List<Quaternary> qtss = optimizer.optimize();
 
-            System.out.println("\n\n优化后的所有四元式:\n" + list1.size() + " -> " + qtss.size());
-            AtomicInteger id = new AtomicInteger();
-            qtss.forEach(quaternary -> {
-                quaternary.setId(id.getAndIncrement());
-            });
-            qtss.forEach(System.out::println);
-        }catch (Exception ignored){}
 
 
 //        DAG.doDAG(list1);

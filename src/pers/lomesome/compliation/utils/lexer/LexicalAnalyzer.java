@@ -125,6 +125,7 @@ public class LexicalAnalyzer {
     private char getNextChar() {
         col += 1; //当前列标加1
         return content[++index];//当前字符位置加1
+
     }
 
     //回退上一个字符

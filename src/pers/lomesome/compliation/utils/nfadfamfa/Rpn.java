@@ -1,26 +1,24 @@
-package pers.lomesome.compliation.utils.reg2nfa;
+package pers.lomesome.compliation.utils.nfadfamfa;
 
 import java.util.*;
 
 public class Rpn {
 
-    public Rpn() {
-    }
+    ArrayList<Character> words = new ArrayList<>();//用于保存正则式中出现的所有字符
+    public Rpn() { }
 
     /**
      * 将中缀表达式转化为后缀表达式
      *
      * @param expression 中缀表达式
-     * @return 转化得到的后缀表达式
+     * @return String 转化得到的后缀表达式
      */
     public String reverse2Rpn(String expression) {
         expression = prepareString(expression);
         StringBuilder postfix = new StringBuilder();
-        //存储操作符的栈
-        Stack<String> operatorStack = new Stack<>();
-        // 将操作符与操作数分开
-        StringTokenizer tokens = new StringTokenizer(expression, "()*|.", true);
-        // 阶段1: 扫描符号串
+        Stack<String> operatorStack = new Stack<>(); //存储操作符的栈
+        StringTokenizer tokens = new StringTokenizer(expression, "()*|.", true); // 将操作符与操作数分开
+        // 扫描符号串
         while (tokens.hasMoreTokens()) {
             String token = tokens.nextToken().trim();
             if (token.length() == 0) {  //空格
@@ -28,20 +26,20 @@ public class Rpn {
             }
             switch (token) {
                 case "|":
-                    // Process all * , . in the top of the operator stack
+                    // 处理符号栈顶部的所有 '*' 和 '.'
                     while (!operatorStack.isEmpty() && (operatorStack.peek().equals("*") || operatorStack.peek().equals("."))) {
                         postfix.append(operatorStack.pop());
                     }
-                    // Push the | operator into the operator stack
+                    // 把 | 放入符号栈
                     operatorStack.push(token);
 
                     break;
                 case ".":
-                    // Process all . in the top of the operator stack
+                    // 处理符号栈顶部的所有 '.'
                     while (!operatorStack.isEmpty() && operatorStack.peek().equals(".")) {
                         postfix.append(operatorStack.pop());
                     }
-                    // Push the . operator into the operator stack
+                    // 把 . 放入符号栈
                     operatorStack.push(token);
 
                     break;
@@ -53,7 +51,7 @@ public class Rpn {
 
                     break;
                 case ")":
-                    // Process all the operators in the stack until seeing '('
+                    // 处理符号栈顶部的所有符号直到遇到 '('
                     while (!operatorStack.peek().equals("(")) {
                         postfix.append(operatorStack.pop());
                     }
@@ -65,25 +63,29 @@ public class Rpn {
                     break;
             }
         }
-        // 阶段 2: process all the remaining operators in the stack
+        // 处理符号栈中所有剩余的运算符
         while (!operatorStack.isEmpty()) {
             postfix.append(operatorStack.pop());
         }
         return postfix.toString();
     }
 
-    public String[] getSymbol(String regex) {
+    public ArrayList<Character> getWords() {
+        return words;
+    }
+
+    public List<Character> getSymbol(String regex) {
         regex = replaceAll(regex, new String[]{"(", ")", "|", ".", "*"});
         char[] chars = regex.toCharArray();
-        Set<String> characterSet = new LinkedHashSet<>();
+        Set<Character> characterSet = new LinkedHashSet<>();
         for (char c : chars) {
-            characterSet.add(String.valueOf(c));
+            characterSet.add(c);
         }
-        String[] strings = new String[characterSet.size()];
+        List<Character> characters = new ArrayList<>();
         for (int i = 0; i < characterSet.size(); i++) {
-            strings[i] = (String) characterSet.toArray()[i];
+            characters.add((Character) characterSet.toArray()[i]);
         }
-        return strings;
+        return characters;
     }
 
     private String replaceAll(String string, String[] delete) {
@@ -112,5 +114,4 @@ public class Rpn {
         }
         return regex.toString();
     }
-
 }

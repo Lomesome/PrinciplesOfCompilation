@@ -6,7 +6,7 @@ import pers.lomesome.compliation.model.MyStack;
 import pers.lomesome.compliation.model.Word;
 import pers.lomesome.compliation.python.DrawTree;
 import pers.lomesome.compliation.tool.finalattr.FinalAttribute;
-import pers.lomesome.compliation.utils.semantic.SymbolTable;
+
 import java.util.*;
 
 public class SyntaxAnalysis {
@@ -37,8 +37,8 @@ public class SyntaxAnalysis {
         FirstSet firstSet = new FirstSet();
         FinalAttribute.setFirstmap(firstSet.getFirstSet());
 
-        SelectSet selectSet = new SelectSet(FinalAttribute.getAllGrammer().getGrammarMap());
-        FinalAttribute.setSelectMap(selectSet.getSelectSet());
+        SingleFirstSet singleFirstSet = new SingleFirstSet(FinalAttribute.getAllGrammer().getGrammarMap());
+        FinalAttribute.setSelectMap(singleFirstSet.getSelectSet());
 
         FollowSet followSet = new FollowSet();
         FinalAttribute.setFollowmap(followSet.getFollowSet());

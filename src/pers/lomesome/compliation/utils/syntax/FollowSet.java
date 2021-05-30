@@ -17,13 +17,9 @@ public class FollowSet {
     }
 
     public Map<String, Set<String>> getFollowSet() {
-//        System.out.println("first");
-//        firstSet.forEach((k, v) -> System.out.println(k +" " + v));
         do {
             grammars.forEach((k, v) -> getFollow(k));
         } while (followChange());
-//        System.out.println("follow");
-//        followSet.forEach((k, v) -> System.out.println(k +" " + v));
         return followSet;
     }
 

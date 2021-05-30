@@ -15,14 +15,14 @@ public class SemanticAnalysis {
     public static void call(String Action, int TokenIndex, Word word, SymbolTable table, LiveStatu liveStatu) {
         switch (Action) {
             case Constants.PUSH: { // PUSH动作
-                Pair<Word, Integer> _pair = new Pair<>(word, TokenIndex);
-                liveStatu.getSEM().push(_pair);
+                Pair<Word, Integer> pair = new Pair<>(word, TokenIndex);
+                liveStatu.getSEM().push(pair);
                 break;
             }
 
             case Constants.PUSHARG: { // PUSHARG动作
-                Pair<Word, Integer> _pair = new Pair<>(word, TokenIndex);
-                liveStatu.getArgsStack().push(_pair);
+                Pair<Word, Integer> pair = new Pair<>(word, TokenIndex);
+                liveStatu.getArgsStack().push(pair);
                 break;
             }
             case Constants.GEQA: { // GEQA动作
@@ -31,25 +31,25 @@ public class SemanticAnalysis {
                 Word str2 = liveStatu.getSEM().peek().getFirst();
                 liveStatu.getSEM().pop();
                 Quaternary tem = new Quaternary();
-                tem.setFirst(new Word("+"));
-                tem.setSecond(str2);
-                tem.setThird(str1);
+                tem.setOperator(new Word("+"));
+                tem.setArg1(str2);
+                tem.setArg2(str1);
 
-                if (!isDefined(tem.getSecond(), table)) {
+                if (!isDefined(tem.getArg1(), table)) {
                     Analysis.flag = false;
-                    Analysis.errorMsg.add("error: " + tem.getSecond() + " 未定义 position :("+tem.getSecond().getRow() +","+tem.getSecond().getCol()+")");
-                    System.out.println("error: " + tem.getSecond() + " 未定义 position :("+tem.getSecond().getRow() +","+tem.getSecond().getCol()+")");
-                } else if (!isDefined(tem.getThird(), table)) {
+                    Analysis.errorMsg.add("error: " + tem.getArg1() + " 未定义 position :("+tem.getArg1().getRow() +","+tem.getArg1().getCol()+")");
+                    System.out.println("error: " + tem.getArg1() + " 未定义 position :("+tem.getArg1().getRow() +","+tem.getArg1().getCol()+")");
+                } else if (!isDefined(tem.getArg2(), table)) {
                     Analysis.flag = false;
-                    Analysis.errorMsg.add("error: " + tem.getThird() + " 未定义 position :("+tem.getThird().getRow() +","+tem.getThird().getCol()+")");
-                    System.out.println("error: " + tem.getThird() + " 未定义 position :("+tem.getThird().getRow() +","+tem.getThird().getCol()+")");
+                    Analysis.errorMsg.add("error: " + tem.getArg2() + " 未定义 position :("+tem.getArg2().getRow() +","+tem.getArg2().getCol()+")");
+                    System.out.println("error: " + tem.getArg2() + " 未定义 position :("+tem.getArg2().getRow() +","+tem.getArg2().getCol()+")");
                 }
                 Word tempWord = new Word("t" + Analysis.i,"temp");
-                tem.setFourth(tempWord);
+                tem.setResult(tempWord);
                 liveStatu.getQt().add(tem);
                 getTemLable(tem, table);
-                Pair<Word, Integer> _pair = new Pair<>(tempWord, TokenIndex);
-                liveStatu.getSEM().push(_pair);
+                Pair<Word, Integer> pair = new Pair<>(tempWord, TokenIndex);
+                liveStatu.getSEM().push(pair);
                 Analysis.i++;
                 break;
             }
@@ -60,26 +60,26 @@ public class SemanticAnalysis {
                 Word str2 = liveStatu.getSEM().peek().getFirst();
                 liveStatu.getSEM().pop();
                 Quaternary tem = new Quaternary();
-                tem.setFirst(new Word("-"));
-                tem.setSecond(str2);
-                tem.setThird(str1);
+                tem.setOperator(new Word("-"));
+                tem.setArg1(str2);
+                tem.setArg2(str1);
 
-                if (!isDefined(tem.getSecond(), table)) {
+                if (!isDefined(tem.getArg1(), table)) {
                     Analysis.flag = false;
-                    System.out.println("error: " + tem.getSecond() + " 未定义 position :("+tem.getSecond().getRow() +","+tem.getSecond().getCol()+")");
-                    Analysis.errorMsg.add("error: " + tem.getSecond() + " 未定义 position :("+tem.getSecond().getRow() +","+tem.getSecond().getCol()+")");
+                    System.out.println("error: " + tem.getArg1() + " 未定义 position :("+tem.getArg1().getRow() +","+tem.getArg1().getCol()+")");
+                    Analysis.errorMsg.add("error: " + tem.getArg1() + " 未定义 position :("+tem.getArg1().getRow() +","+tem.getArg1().getCol()+")");
 
-                } else if (!isDefined(tem.getThird(), table)) {
+                } else if (!isDefined(tem.getArg2(), table)) {
                     Analysis.flag = false;
-                    System.out.println("error: " + tem.getThird() + " 未定义 position :("+tem.getThird().getRow() +","+tem.getThird().getCol()+")");
-                    Analysis.errorMsg.add("error: " + tem.getThird() + " 未定义 position :("+tem.getThird().getRow() +","+tem.getThird().getCol()+")");
+                    System.out.println("error: " + tem.getArg2() + " 未定义 position :("+tem.getArg2().getRow() +","+tem.getArg2().getCol()+")");
+                    Analysis.errorMsg.add("error: " + tem.getArg2() + " 未定义 position :("+tem.getArg2().getRow() +","+tem.getArg2().getCol()+")");
                 }
                 Word tempWord = new Word("t" + Analysis.i,"temp");
-                tem.setFourth(tempWord);
+                tem.setResult(tempWord);
                 liveStatu.getQt().add(tem);
                 getTemLable(tem, table);
-                Pair<Word, Integer> _pair = new Pair<>(tempWord, TokenIndex);
-                liveStatu.getSEM().push(_pair);
+                Pair<Word, Integer> pair = new Pair<>(tempWord, TokenIndex);
+                liveStatu.getSEM().push(pair);
                 Analysis.i++;
                 break;
             }
@@ -89,25 +89,25 @@ public class SemanticAnalysis {
                 Word str2 = liveStatu.getSEM().peek().getFirst();
                 liveStatu.getSEM().pop();
                 Quaternary tem = new Quaternary();
-                tem.setFirst(new Word("*"));
-                tem.setSecond(str2);
-                tem.setThird(str1);
+                tem.setOperator(new Word("*"));
+                tem.setArg1(str2);
+                tem.setArg2(str1);
 
-                if (!isDefined(tem.getSecond(), table)) {
+                if (!isDefined(tem.getArg1(), table)) {
                     Analysis.flag = false;
-                    System.out.println("error: " + tem.getSecond() + " 未定义 position :("+tem.getSecond().getRow() +","+tem.getSecond().getCol()+")");
-                    Analysis.errorMsg.add("error :" + tem.getSecond() + " 未定义 position :("+tem.getSecond().getRow() +","+tem.getSecond().getCol()+")");
-                } else if (!isDefined(tem.getThird(), table)) {
+                    System.out.println("error: " + tem.getArg1() + " 未定义 position :("+tem.getArg1().getRow() +","+tem.getArg1().getCol()+")");
+                    Analysis.errorMsg.add("error :" + tem.getArg1() + " 未定义 position :("+tem.getArg1().getRow() +","+tem.getArg1().getCol()+")");
+                } else if (!isDefined(tem.getArg2(), table)) {
                     Analysis.flag = false;
-                    System.out.println("error: " + tem.getThird() + " 未定义 position :("+tem.getThird().getRow() +","+tem.getThird().getCol()+")");
-                    Analysis.errorMsg.add("error: " + tem.getThird() + " 未定义 position :("+tem.getThird().getRow() +","+tem.getThird().getCol()+")");
+                    System.out.println("error: " + tem.getArg2() + " 未定义 position :("+tem.getArg2().getRow() +","+tem.getArg2().getCol()+")");
+                    Analysis.errorMsg.add("error: " + tem.getArg2() + " 未定义 position :("+tem.getArg2().getRow() +","+tem.getArg2().getCol()+")");
                 }
                 Word tempWord = new Word("t" + Analysis.i,"temp");
-                tem.setFourth(tempWord);
+                tem.setResult(tempWord);
                 liveStatu.getQt().add(tem);
                 getTemLable(tem, table);
-                Pair<Word, Integer> _pair = new Pair<>(tempWord, TokenIndex);
-                liveStatu.getSEM().push(_pair);
+                Pair<Word, Integer> pair = new Pair<>(tempWord, TokenIndex);
+                liveStatu.getSEM().push(pair);
                 Analysis.i++;
                 break;
             }
@@ -117,28 +117,28 @@ public class SemanticAnalysis {
                 Word str2 = liveStatu.getSEM().peek().getFirst();
                 liveStatu.getSEM().pop();
                 Quaternary tem = new Quaternary();
-                tem.setFirst(new Word("/"));
-                tem.setSecond(str2);
-                tem.setThird(str1);
+                tem.setOperator(new Word("/"));
+                tem.setArg1(str2);
+                tem.setArg2(str1);
                 if (str1.getWord().equals("0")){
                     Analysis.flag = false;
                     System.out.println("error:除数不能为零 position:(" + str1.getRow() + ", " + str1.getCol() + ")");
                     Analysis.errorMsg.add("除数不能为零");
-                } else if (!isDefined(tem.getSecond(), table)) {
+                } else if (!isDefined(tem.getArg1(), table)) {
                     Analysis.flag = false;
-                    System.out.println("error: " + tem.getSecond() + " 未定义 position :("+tem.getSecond().getRow() +","+tem.getSecond().getCol()+")");
-                    Analysis.errorMsg.add("error: " + tem.getSecond() + " 未定义 position :("+tem.getSecond().getRow() +","+tem.getSecond().getCol()+")");
-                } else if (!isDefined(tem.getThird(), table)) {
+                    System.out.println("error: " + tem.getArg1() + " 未定义 position :("+tem.getArg1().getRow() +","+tem.getArg1().getCol()+")");
+                    Analysis.errorMsg.add("error: " + tem.getArg1() + " 未定义 position :("+tem.getArg1().getRow() +","+tem.getArg1().getCol()+")");
+                } else if (!isDefined(tem.getArg2(), table)) {
                     Analysis.flag = false;
-                    System.out.println("error: " + tem.getThird() + " 未定义 position :("+tem.getThird().getRow() +","+tem.getThird().getCol()+")");
-                    Analysis.errorMsg.add("error: " + tem.getThird() + " 未定义 position :("+tem.getThird().getRow() +","+tem.getThird().getCol()+")");
+                    System.out.println("error: " + tem.getArg2() + " 未定义 position :("+tem.getArg2().getRow() +","+tem.getArg2().getCol()+")");
+                    Analysis.errorMsg.add("error: " + tem.getArg2() + " 未定义 position :("+tem.getArg2().getRow() +","+tem.getArg2().getCol()+")");
                 }
                 Word tempWord = new Word("t" + Analysis.i,"temp");
-                tem.setFourth(tempWord);
+                tem.setResult(tempWord);
                 liveStatu.getQt().add(tem);
                 getTemLable(tem, table);
-                Pair<Word, Integer> _pair = new Pair<>(tempWord, TokenIndex);
-                liveStatu.getSEM().push(_pair);
+                Pair<Word, Integer> pair = new Pair<>(tempWord, TokenIndex);
+                liveStatu.getSEM().push(pair);
                 Analysis.i++;
                 break;
             }
@@ -148,14 +148,14 @@ public class SemanticAnalysis {
                 Word tem2 = liveStatu.getSEM().peek().getFirst();
                 liveStatu.getSEM().pop();
                 Quaternary tem = new Quaternary();
-                tem.setFirst(new Word("="));
-                tem.setSecond(tem1);
-                tem.setThird(new Word("_"));
+                tem.setOperator(new Word("="));
+                tem.setArg1(tem1);
+                tem.setArg2(new Word("_"));
                 if (!arrNum.equals("")) {
                     tem2.setWord(tem2.getWord() + "[" + arrNum + "]");
                 }
-                tem.setFourth(tem2);
-                if((tem1.getName().contains("const") || tem1.getName().contains("temp"))&& (tem2.getName().contains("const") || tem2.getName().contains("temp"))){
+                tem.setResult(tem2);
+                if((tem1.getName().contains("const") || tem1.getName().contains("temp")) && (tem2.getName().contains("const") || tem2.getName().contains("temp")) || tem2.getName().equals("id")){
                     setValue(new Word(""), tem2, table);
                 } else if (tem1.getName().equals("temp") || tem2.getName().equals("temp")){
                     if (!cheackType(tem2, table).equals(cheackType(tem1, table))){
@@ -164,11 +164,11 @@ public class SemanticAnalysis {
 //                        System.out.println(tem1.getWord() +  cheackType(tem1, table)+ "类型错误");
 //                        Analysis.errorMsg.add(tem2.getWord() + "类型错误");
                     }
-                } else if (!isDefined(tem.getSecond(), table)) {
+                } else if (!isDefined(tem.getArg1(), table)) {
                     Analysis.flag = false;
-                    System.out.println("error: " + tem.getSecond() + " 未定义 position :("+tem.getSecond().getRow() +","+tem.getSecond().getCol()+")");
-                    Analysis.errorMsg.add("error: " + tem.getSecond() + " 未定义 position :("+tem.getSecond().getRow() +","+tem.getSecond().getCol()+")");
-                } else if (!isDefined(tem.getFourth(), table)) {
+                    System.out.println("error: " + tem.getArg1() + " 未定义 position :("+tem.getArg1().getRow() +","+tem.getArg1().getCol()+")");
+                    Analysis.errorMsg.add("error: " + tem.getArg1() + " 未定义 position :("+tem.getArg1().getRow() +","+tem.getArg1().getCol()+")");
+                } else if (!isDefined(tem.getResult(), table)) {
                     Analysis.flag = false;
                 } else if (!isAssignmentRight(tem1.getName(), cheackType(tem2, table))){
 //                    Analysis.flag = false;
@@ -187,25 +187,25 @@ public class SemanticAnalysis {
                 Word str2 = liveStatu.getSEM().peek().getFirst();
                 liveStatu.getSEM().pop();
                 Quaternary tem = new Quaternary();
-                tem.setFirst(new Word(">"));
-                tem.setSecond(str2);
-                tem.setThird(str1);
-                tem.setFourth(new Word(String.valueOf(liveStatu.getQt().size() + 2)));
+                tem.setOperator(new Word(">"));
+                tem.setArg1(str2);
+                tem.setArg2(str1);
+                tem.setResult(new Word(String.valueOf(liveStatu.getQt().size() + 2)));
                 if (liveStatu.getSIGNHEAD().size() != 0) {
                     String[] strings = liveStatu.getSIGNHEAD().peek();
                     if (strings[0].equals("dow") && strings[1].equals(String.valueOf(thelevel))) {
-                        tem.setFourth(new Word(String.valueOf(strings[2])));
+                        tem.setResult(new Word(String.valueOf(strings[2])));
                         liveStatu.getSIGNHEAD().pop();
                     }
                 }
-                if (!isDefined(tem.getSecond(), table)) {
+                if (!isDefined(tem.getArg1(), table)) {
                     Analysis.flag = false;
-                    System.out.println("error: " + tem.getSecond() + " 未定义 position :("+tem.getSecond().getRow() +","+tem.getSecond().getCol()+")");
-                    Analysis.errorMsg.add("error: " + tem.getSecond() + " 未定义 position :("+tem.getSecond().getRow() +","+tem.getSecond().getCol()+")");
-                } else if (!isDefined(tem.getThird(), table)) {
+                    System.out.println("error: " + tem.getArg1() + " 未定义 position :("+tem.getArg1().getRow() +","+tem.getArg1().getCol()+")");
+                    Analysis.errorMsg.add("error: " + tem.getArg1() + " 未定义 position :("+tem.getArg1().getRow() +","+tem.getArg1().getCol()+")");
+                } else if (!isDefined(tem.getArg2(), table)) {
                     Analysis.flag = false;
-                    System.out.println("error: " + tem.getThird() + " 未定义 position :("+tem.getThird().getRow() +","+tem.getThird().getCol()+")");
-                    Analysis.errorMsg.add("error: " + tem.getThird() + " 未定义 position :("+tem.getThird().getRow() +","+tem.getThird().getCol()+")");
+                    System.out.println("error: " + tem.getArg2() + " 未定义 position :("+tem.getArg2().getRow() +","+tem.getArg2().getCol()+")");
+                    Analysis.errorMsg.add("error: " + tem.getArg2() + " 未定义 position :("+tem.getArg2().getRow() +","+tem.getArg2().getCol()+")");
                 }
                 liveStatu.getQt().add(tem);
                 break;
@@ -216,25 +216,25 @@ public class SemanticAnalysis {
                 Word str2 = liveStatu.getSEM().peek().getFirst();
                 liveStatu.getSEM().pop();
                 Quaternary tem = new Quaternary();
-                tem.setFirst(new Word("<"));
-                tem.setSecond(str2);
-                tem.setThird(str1);
-                tem.setFourth(new Word(String.valueOf(liveStatu.getQt().size() + 2)));
+                tem.setOperator(new Word("<"));
+                tem.setArg1(str2);
+                tem.setArg2(str1);
+                tem.setResult(new Word(String.valueOf(liveStatu.getQt().size() + 2)));
                 if (liveStatu.getSIGNHEAD().size() != 0) {
                     String[] strings = liveStatu.getSIGNHEAD().peek();
                     if (strings[0].equals("dow") && strings[1].equals(String.valueOf(thelevel))) {
-                        tem.setFourth(new Word(String.valueOf(strings[2])));
+                        tem.setResult(new Word(String.valueOf(strings[2])));
                         liveStatu.getSIGNHEAD().pop();
                     }
                 }
-                if (!isDefined(tem.getSecond(), table)) {
+                if (!isDefined(tem.getArg1(), table)) {
                     Analysis.flag = false;
-                    System.out.println("error: " + tem.getSecond() + " 未定义 position :("+tem.getSecond().getRow() +","+tem.getSecond().getCol()+")");
-                    Analysis.errorMsg.add("error: " + tem.getSecond() + " 未定义 position :("+tem.getSecond().getRow() +","+tem.getSecond().getCol()+")");
-                } else if (!isDefined(tem.getThird(), table)) {
+                    System.out.println("error: " + tem.getArg1() + " 未定义 position :("+tem.getArg1().getRow() +","+tem.getArg1().getCol()+")");
+                    Analysis.errorMsg.add("error: " + tem.getArg1() + " 未定义 position :("+tem.getArg1().getRow() +","+tem.getArg1().getCol()+")");
+                } else if (!isDefined(tem.getArg2(), table)) {
                     Analysis.flag = false;
-                    System.out.println("error: " + tem.getThird() + " 未定义 position :("+tem.getThird().getRow() +","+tem.getThird().getCol()+")");
-                    Analysis.errorMsg.add("error: " + tem.getThird() + " 未定义 position :("+tem.getThird().getRow() +","+tem.getThird().getCol()+")");
+                    System.out.println("error: " + tem.getArg2() + " 未定义 position :("+tem.getArg2().getRow() +","+tem.getArg2().getCol()+")");
+                    Analysis.errorMsg.add("error: " + tem.getArg2() + " 未定义 position :("+tem.getArg2().getRow() +","+tem.getArg2().getCol()+")");
                 }
                 liveStatu.getQt().add(tem);
                 break;
@@ -245,26 +245,26 @@ public class SemanticAnalysis {
                 Word str2 = liveStatu.getSEM().peek().getFirst();
                 liveStatu.getSEM().pop();
                 Quaternary tem = new Quaternary();
-                tem.setFirst(new Word("=="));
-                tem.setSecond(str2);
-                tem.setThird(str1);
-                tem.setFourth(new Word(String.valueOf(liveStatu.getQt().size() + 2)));
+                tem.setOperator(new Word("=="));
+                tem.setArg1(str2);
+                tem.setArg2(str1);
+                tem.setResult(new Word(String.valueOf(liveStatu.getQt().size() + 2)));
                 if (liveStatu.getSIGNHEAD().size() != 0) {
                     String[] strings = liveStatu.getSIGNHEAD().peek();
                     if (strings[0].equals("dow") && strings[1].equals(String.valueOf(thelevel))) {
-                        tem.setFourth(new Word(String.valueOf(strings[2])));
+                        tem.setResult(new Word(String.valueOf(strings[2])));
                         liveStatu.getSIGNHEAD().pop();
                     }
 
                 }
-                if (!isDefined(tem.getSecond(), table)) {
+                if (!isDefined(tem.getArg1(), table)) {
                     Analysis.flag = false;
-                    System.out.println("error: " + tem.getSecond() + " 未定义 position :("+tem.getSecond().getRow() +","+tem.getSecond().getCol()+")");
-                    Analysis.errorMsg.add("error: " + tem.getSecond() + " 未定义 position :("+tem.getSecond().getRow() +","+tem.getSecond().getCol()+")");
-                } else if (!isDefined(tem.getThird(), table)) {
+                    System.out.println("error: " + tem.getArg1() + " 未定义 position :("+tem.getArg1().getRow() +","+tem.getArg1().getCol()+")");
+                    Analysis.errorMsg.add("error: " + tem.getArg1() + " 未定义 position :("+tem.getArg1().getRow() +","+tem.getArg1().getCol()+")");
+                } else if (!isDefined(tem.getArg2(), table)) {
                     Analysis.flag = false;
-                    System.out.println("error: " + tem.getThird() + " 未定义 position :("+tem.getThird().getRow() +","+tem.getThird().getCol()+")");
-                    Analysis.errorMsg.add("error: " + tem.getThird() + " 未定义 position :("+tem.getThird().getRow() +","+tem.getThird().getCol()+")");
+                    System.out.println("error: " + tem.getArg2() + " 未定义 position :("+tem.getArg2().getRow() +","+tem.getArg2().getCol()+")");
+                    Analysis.errorMsg.add("error: " + tem.getArg2() + " 未定义 position :("+tem.getArg2().getRow() +","+tem.getArg2().getCol()+")");
                 }
                 liveStatu.getQt().add(tem);
                 break;
@@ -275,25 +275,25 @@ public class SemanticAnalysis {
                 Word str2 = liveStatu.getSEM().peek().getFirst();
                 liveStatu.getSEM().pop();
                 Quaternary tem = new Quaternary();
-                tem.setFirst(new Word(">="));
-                tem.setSecond(str2);
-                tem.setThird(str1);
-                tem.setFourth(new Word(String.valueOf(liveStatu.getQt().size() + 2)));
+                tem.setOperator(new Word(">="));
+                tem.setArg1(str2);
+                tem.setArg2(str1);
+                tem.setResult(new Word(String.valueOf(liveStatu.getQt().size() + 2)));
                 if (liveStatu.getSIGNHEAD().size() != 0) {
                     String[] strings = liveStatu.getSIGNHEAD().peek();
                     if (strings[0].equals("dow") && strings[1].equals(String.valueOf(thelevel))) {
-                        tem.setFourth(new Word(String.valueOf(strings[2])));
+                        tem.setResult(new Word(String.valueOf(strings[2])));
                         liveStatu.getSIGNHEAD().pop();
                     }
                 }
-                if (!isDefined(tem.getSecond(), table)) {
+                if (!isDefined(tem.getArg1(), table)) {
                     Analysis.flag = false;
-                    System.out.println("error: " + tem.getSecond() + " 未定义 position :("+tem.getSecond().getRow() +","+tem.getSecond().getCol()+")");
-                    Analysis.errorMsg.add("error: " + tem.getSecond() + " 未定义 position :("+tem.getSecond().getRow() +","+tem.getSecond().getCol()+")");
-                } else if (!isDefined(tem.getThird(), table)) {
+                    System.out.println("error: " + tem.getArg1() + " 未定义 position :("+tem.getArg1().getRow() +","+tem.getArg1().getCol()+")");
+                    Analysis.errorMsg.add("error: " + tem.getArg1() + " 未定义 position :("+tem.getArg1().getRow() +","+tem.getArg1().getCol()+")");
+                } else if (!isDefined(tem.getArg2(), table)) {
                     Analysis.flag = false;
-                    System.out.println("error: " + tem.getThird() + " 未定义 position :("+tem.getThird().getRow() +","+tem.getThird().getCol()+")");
-                    Analysis.errorMsg.add("error: " + tem.getThird() + " 未定义 position :("+tem.getThird().getRow() +","+tem.getThird().getCol()+")");
+                    System.out.println("error: " + tem.getArg2() + " 未定义 position :("+tem.getArg2().getRow() +","+tem.getArg2().getCol()+")");
+                    Analysis.errorMsg.add("error: " + tem.getArg2() + " 未定义 position :("+tem.getArg2().getRow() +","+tem.getArg2().getCol()+")");
                 }
                 liveStatu.getQt().add(tem);
                 break;
@@ -304,25 +304,25 @@ public class SemanticAnalysis {
                 Word str2 = liveStatu.getSEM().peek().getFirst();
                 liveStatu.getSEM().pop();
                 Quaternary tem = new Quaternary();
-                tem.setFirst(new Word("<="));
-                tem.setSecond(str2);
-                tem.setThird(str1);
-                tem.setFourth(new Word(String.valueOf(liveStatu.getQt().size() + 2)));
+                tem.setOperator(new Word("<="));
+                tem.setArg1(str2);
+                tem.setArg2(str1);
+                tem.setResult(new Word(String.valueOf(liveStatu.getQt().size() + 2)));
                 if (liveStatu.getSIGNHEAD().size() != 0) {
                     String[] strings = liveStatu.getSIGNHEAD().peek();
                     if (strings[0].equals("dow") && strings[1].equals(String.valueOf(thelevel))) {
-                        tem.setFourth(new Word(String.valueOf(strings[2])));
+                        tem.setResult(new Word(String.valueOf(strings[2])));
                         liveStatu.getSIGNHEAD().pop();
                     }
                 }
-                if (!isDefined(tem.getSecond(), table)) {
+                if (!isDefined(tem.getArg1(), table)) {
                     Analysis.flag = false;
-                    System.out.println("error: " + tem.getSecond() + " 未定义 position :("+tem.getSecond().getRow() +","+tem.getSecond().getCol()+")");
-                    Analysis.errorMsg.add("error: " + tem.getSecond() + " 未定义 position :("+tem.getSecond().getRow() +","+tem.getSecond().getCol()+")");
-                } else if (!isDefined(tem.getThird(), table)) {
+                    System.out.println("error: " + tem.getArg1() + " 未定义 position :("+tem.getArg1().getRow() +","+tem.getArg1().getCol()+")");
+                    Analysis.errorMsg.add("error: " + tem.getArg1() + " 未定义 position :("+tem.getArg1().getRow() +","+tem.getArg1().getCol()+")");
+                } else if (!isDefined(tem.getArg2(), table)) {
                     Analysis.flag = false;
-                    System.out.println("error: " + tem.getThird() + " 未定义 position :("+tem.getThird().getRow() +","+tem.getThird().getCol()+")");
-                    Analysis.errorMsg.add("error: " + tem.getThird() + " 未定义 position :("+tem.getThird().getRow() +","+tem.getThird().getCol()+")");
+                    System.out.println("error: " + tem.getArg2() + " 未定义 position :("+tem.getArg2().getRow() +","+tem.getArg2().getCol()+")");
+                    Analysis.errorMsg.add("error: " + tem.getArg2() + " 未定义 position :("+tem.getArg2().getRow() +","+tem.getArg2().getCol()+")");
                 }
                 liveStatu.getQt().add(tem);
                 break;
@@ -334,25 +334,25 @@ public class SemanticAnalysis {
                 Word str2 = liveStatu.getSEM().peek().getFirst();
                 liveStatu.getSEM().pop();
                 Quaternary tem = new Quaternary();
-                tem.setFirst(new Word("!="));
-                tem.setSecond(str2);
-                tem.setThird(str1);
-                tem.setFourth(new Word(String.valueOf(liveStatu.getQt().size() + 2)));
+                tem.setOperator(new Word("!="));
+                tem.setArg1(str2);
+                tem.setArg2(str1);
+                tem.setResult(new Word(String.valueOf(liveStatu.getQt().size() + 2)));
                 if (liveStatu.getSIGNHEAD().size() != 0) {
                     String[] strings = liveStatu.getSIGNHEAD().peek();
                     if (strings[0].equals("dow") && strings[1].equals(String.valueOf(thelevel))) {
-                        tem.setFourth(new Word(String.valueOf(strings[2])));
+                        tem.setResult(new Word(String.valueOf(strings[2])));
                         liveStatu.getSIGNHEAD().pop();
                     }
                 }
-                if (!isDefined(tem.getSecond(), table)) {
+                if (!isDefined(tem.getArg1(), table)) {
                     Analysis.flag = false;
-                    System.out.println("error: " + tem.getSecond() + " 未定义 position :("+tem.getSecond().getRow() +","+tem.getSecond().getCol()+")");
-                    Analysis.errorMsg.add("error: " + tem.getSecond() + " 未定义 position :("+tem.getSecond().getRow() +","+tem.getSecond().getCol()+")");
-                } else if (!isDefined(tem.getThird(), table)) {
+                    System.out.println("error: " + tem.getArg1() + " 未定义 position :("+tem.getArg1().getRow() +","+tem.getArg1().getCol()+")");
+                    Analysis.errorMsg.add("error: " + tem.getArg1() + " 未定义 position :("+tem.getArg1().getRow() +","+tem.getArg1().getCol()+")");
+                } else if (!isDefined(tem.getArg2(), table)) {
                     Analysis.flag = false;
-                    System.out.println("error: " + tem.getThird() + " 未定义 position :("+tem.getThird().getRow() +","+tem.getThird().getCol()+")");
-                    Analysis.errorMsg.add("error: " + tem.getThird() + " 未定义 position :("+tem.getThird().getRow() +","+tem.getThird().getCol()+")");
+                    System.out.println("error: " + tem.getArg2() + " 未定义 position :("+tem.getArg2().getRow() +","+tem.getArg2().getCol()+")");
+                    Analysis.errorMsg.add("error: " + tem.getArg2() + " 未定义 position :("+tem.getArg2().getRow() +","+tem.getArg2().getCol()+")");
                 }
                 liveStatu.getQt().add(tem);
                 break;
@@ -360,29 +360,29 @@ public class SemanticAnalysis {
 
             case Constants.IF: { // IF动作
                 Quaternary tem = new Quaternary();
-                tem.setFirst(new Word("if"));
-                tem.setSecond(new Word("_"));
-                tem.setThird(new Word("_"));
-                tem.setFourth(new Word("_"));
+                tem.setOperator(new Word("if"));
+                tem.setArg1(new Word("_"));
+                tem.setArg2(new Word("_"));
+                tem.setResult(new Word("_"));
                 tem.setLevel(thelevel);
                 liveStatu.getQt().add(tem);
                 break;
             }
             case Constants.EL: { // EL动作
                 Quaternary tem = new Quaternary();
-                tem.setFirst(new Word("el"));
-                tem.setSecond(new Word("_"));
-                tem.setThird(new Word("_"));
-                tem.setFourth(new Word("_"));
+                tem.setOperator(new Word("el"));
+                tem.setArg1(new Word("_"));
+                tem.setArg2(new Word("_"));
+                tem.setResult(new Word("_"));
                 tem.setLevel(thelevel);
                 liveStatu.getQt().add(tem);
                 for (int i = liveStatu.getQt().size() - 1; i >= 0; i--) {
-                    if (liveStatu.getQt().get(i).getFirst().equals(new Word("if")) && liveStatu.getQt().get(i).getFourth().equals(new Word("_")) && liveStatu.getQt().get(i).getLevel() == thelevel) {
+                    if (liveStatu.getQt().get(i).getOperator().equals(new Word("if")) && liveStatu.getQt().get(i).getResult().equals(new Word("_")) && liveStatu.getQt().get(i).getLevel() == thelevel) {
                         Quaternary tem1 = new Quaternary();
-                        tem1.setFirst(new Word("j"));
-                        tem1.setSecond(new Word("_"));
-                        tem1.setThird(new Word("_"));
-                        tem1.setFourth(new Word(String.valueOf(liveStatu.getQt().size())));
+                        tem1.setOperator(new Word("j"));
+                        tem1.setArg1(new Word("_"));
+                        tem1.setArg2(new Word("_"));
+                        tem1.setResult(new Word(String.valueOf(liveStatu.getQt().size())));
                         liveStatu.getQt().set(i, tem1);
                         break;
                     }
@@ -391,12 +391,12 @@ public class SemanticAnalysis {
             }
             case Constants.IEFIR: { // IEFIR动作
                 for (int i = liveStatu.getQt().size() - 1; i >= 0; i--) {
-                    if (liveStatu.getQt().get(i).getFirst().equals(new Word("if")) && liveStatu.getQt().get(i).getFourth().equals(new Word("_")) && liveStatu.getQt().get(i).getLevel() == thelevel) {
+                    if (liveStatu.getQt().get(i).getOperator().equals(new Word("if")) && liveStatu.getQt().get(i).getResult().equals(new Word("_")) && liveStatu.getQt().get(i).getLevel() == thelevel) {
                         Quaternary tem1 = new Quaternary();
-                        tem1.setFirst(new Word("j"));
-                        tem1.setSecond(new Word("_"));
-                        tem1.setThird(new Word("_"));
-                        tem1.setFourth( new Word(String.valueOf(liveStatu.getQt().size())));
+                        tem1.setOperator(new Word("j"));
+                        tem1.setArg1(new Word("_"));
+                        tem1.setArg2(new Word("_"));
+                        tem1.setResult( new Word(String.valueOf(liveStatu.getQt().size())));
                         liveStatu.getQt().set(i, tem1);
                         break;
                     }
@@ -406,12 +406,12 @@ public class SemanticAnalysis {
 
             case Constants.IESEC: { // IESEC动作
                 for (int i = liveStatu.getQt().size() - 1; i >= 0; i--) {
-                    if (liveStatu.getQt().get(i).getFirst().equals(new Word("el")) && liveStatu.getQt().get(i).getFourth().equals(new Word("_")) && liveStatu.getQt().get(i).getLevel() == thelevel) {
+                    if (liveStatu.getQt().get(i).getOperator().equals(new Word("el")) && liveStatu.getQt().get(i).getResult().equals(new Word("_")) && liveStatu.getQt().get(i).getLevel() == thelevel) {
                         Quaternary tem1 = new Quaternary();
-                        tem1.setFirst(new Word("j"));
-                        tem1.setSecond(new Word("_"));
-                        tem1.setThird(new Word("_"));
-                        tem1.setFourth(new Word(String.valueOf(liveStatu.getQt().size())));
+                        tem1.setOperator(new Word("j"));
+                        tem1.setArg1(new Word("_"));
+                        tem1.setArg2(new Word("_"));
+                        tem1.setResult(new Word(String.valueOf(liveStatu.getQt().size())));
                         liveStatu.getQt().set(i, tem1);
                     }
                 }
@@ -420,10 +420,10 @@ public class SemanticAnalysis {
 
             case Constants.DO: { // DO动作
                 Quaternary tem = new Quaternary();
-                tem.setFirst(new Word("do"));
-                tem.setSecond(new Word("_"));
-                tem.setThird(new Word("_"));
-                tem.setFourth(new Word("_"));
+                tem.setOperator(new Word("do"));
+                tem.setArg1(new Word("_"));
+                tem.setArg2(new Word("_"));
+                tem.setResult(new Word("_"));
                 liveStatu.getQt().add(tem);
                 break;
             }
@@ -431,21 +431,21 @@ public class SemanticAnalysis {
             case Constants.WE: { // WE动作
                 int isFindDo = 0;//如果找到空DO则变为1
                 for (int i = liveStatu.getQt().size() - 1; i >= 0; i--) {
-                    if (liveStatu.getQt().get(i).getFirst().equals(new Word("do")) && liveStatu.getQt().get(i).getFourth().equals(new Word("_")) && isFindDo == 0) {
+                    if (liveStatu.getQt().get(i).getOperator().equals(new Word("do")) && liveStatu.getQt().get(i).getResult().equals(new Word("_")) && isFindDo == 0) {
                         isFindDo = 1;
                         Quaternary tem1 = new Quaternary();
-                        tem1.setFirst(new Word("j"));
-                        tem1.setSecond(new Word("_"));
-                        tem1.setThird(new Word("_"));
-                        tem1.setFourth( new Word(String.valueOf(liveStatu.getQt().size() + 1)));
+                        tem1.setOperator(new Word("j"));
+                        tem1.setArg1(new Word("_"));
+                        tem1.setArg2(new Word("_"));
+                        tem1.setResult( new Word(String.valueOf(liveStatu.getQt().size() + 1)));
                         liveStatu.getQt().set(i, tem1);
                     }
-                    if (isFindDo == 1 && liveStatu.getQt().get(i).getFirst().equals(new Word("j"))) {
+                    if (isFindDo == 1 && liveStatu.getQt().get(i).getOperator().equals(new Word("j"))) {
                         Quaternary tem1 = new Quaternary();
-                        tem1.setFirst(new Word("j"));
-                        tem1.setSecond(new Word("_"));
-                        tem1.setThird(new Word("_"));
-                        tem1.setFourth(new Word(String.valueOf(i - 1)));
+                        tem1.setOperator(new Word("j"));
+                        tem1.setArg1(new Word("_"));
+                        tem1.setArg2(new Word("_"));
+                        tem1.setResult(new Word(String.valueOf(i - 1)));
                         liveStatu.getQt().add(tem1);
                         break;
                     }
@@ -470,10 +470,10 @@ public class SemanticAnalysis {
                     f.args = FinalAttribute.getSymbolTableMap().get(word.getWord()).argsList;
                     table.Func.add(f);
                     Quaternary q = new Quaternary();
-                    q.setFirst(new Word("call"));
-                    q.setSecond(new Word(f.name));
-                    q.setThird(new Word("_"));
-                    q.setFourth(new Word("_"));
+                    q.setOperator(new Word("call"));
+                    q.setArg1(new Word(f.name));
+                    q.setArg2(new Word("_"));
+                    q.setResult(new Word("_"));
                     q.setLevel(thelevel);
                     liveStatu.getQt().add(q);
                 }
@@ -502,10 +502,10 @@ public class SemanticAnalysis {
                 FinalAttribute.addSymbolTable(Analysis.nowFunc, symbolTable);
                 if (word.getWord().equals("main")){
                     Quaternary q = new Quaternary();
-                    q.setFirst(new Word("main"));
-                    q.setSecond(new Word("_"));
-                    q.setThird(new Word("_"));
-                    q.setFourth(new Word("_"));
+                    q.setOperator(new Word("main"));
+                    q.setArg1(new Word("_"));
+                    q.setArg2(new Word("_"));
+                    q.setResult(new Word("_"));
                     FinalAttribute.getSymbolTable(word.getWord()).getLiveStatu().getQt().add(q);
                 }
             }
@@ -523,10 +523,10 @@ public class SemanticAnalysis {
 
             case Constants.RE: {
                 Quaternary tem = new Quaternary();
-                tem.setFirst(new Word("ret"));
-                tem.setSecond(new Word("_"));
-                tem.setThird(new Word("_"));
-                tem.setFourth(new Word("_"));
+                tem.setOperator(new Word("ret"));
+                tem.setArg1(new Word("_"));
+                tem.setArg2(new Word("_"));
+                tem.setResult(new Word("_"));
                 tem.setLevel(thelevel);
                 liveStatu.getQt().add(tem);
             }
@@ -536,12 +536,12 @@ public class SemanticAnalysis {
                 Word str = liveStatu.getSEM().peek().getFirst();
                 liveStatu.getSEM().pop();
                 for (int i = liveStatu.getQt().size() - 1; i >= 0; i--) {
-                    if (liveStatu.getQt().get(i).getFirst().equals(new Word("ret")) && liveStatu.getQt().get(i).getFourth().equals(new Word("_")) && liveStatu.getQt().get(i).getLevel() == thelevel) {
+                    if (liveStatu.getQt().get(i).getOperator().equals(new Word("ret")) && liveStatu.getQt().get(i).getResult().equals(new Word("_")) && liveStatu.getQt().get(i).getLevel() == thelevel) {
                         Quaternary tem1 = new Quaternary();
-                        tem1.setFirst(new Word("ret"));
-                        tem1.setSecond(new Word("_"));
-                        tem1.setThird(new Word("_"));
-                        tem1.setFourth(new Word(str.getWord()));
+                        tem1.setOperator(new Word("ret"));
+                        tem1.setArg1(new Word("_"));
+                        tem1.setArg2(new Word("_"));
+                        tem1.setResult(new Word(str.getWord()));
                         liveStatu.getQt().set(i, tem1);
                     }
                 }
@@ -554,8 +554,8 @@ public class SemanticAnalysis {
                     list.add(0, liveStatu.getArgsStack().pop().getFirst());
                 }
                 for (int i = liveStatu.getQt().size() - 1; i >= 0; i--) {
-                    if (liveStatu.getQt().get(i).getFirst().equals(new Word("call")) && liveStatu.getQt().get(i).getFourth().equals(new Word("_")) && liveStatu.getQt().get(i).getLevel() == thelevel) {
-                        liveStatu.getQt().get(i).setThird(new Word(list.toString()));
+                    if (liveStatu.getQt().get(i).getOperator().equals(new Word("call")) && liveStatu.getQt().get(i).getResult().equals(new Word("_")) && liveStatu.getQt().get(i).getLevel() == thelevel) {
+                        liveStatu.getQt().get(i).setArg2(new Word(list.toString()));
                     }
                 }
             }
@@ -564,10 +564,10 @@ public class SemanticAnalysis {
             case Constants.PRINT: {
                 Word word1 = liveStatu.getSEM().peek().getFirst();
                 Quaternary quaternary = new Quaternary();
-                quaternary.setFirst(new Word("print"));
-                quaternary.setSecond(new Word("_"));
-                quaternary.setThird(new Word("_"));
-                quaternary.setFourth(word1);
+                quaternary.setOperator(new Word("print"));
+                quaternary.setArg1(new Word("_"));
+                quaternary.setArg2(new Word("_"));
+                quaternary.setResult(word1);
                 liveStatu.getQt().add(quaternary);
             }
             break;
@@ -579,13 +579,13 @@ public class SemanticAnalysis {
                 liveStatu.getSEM().pop();
                 Quaternary quaternary = new Quaternary();
                 if (word1.getWord().equals("++")){
-                    quaternary.setFirst(new Word("+"));
+                    quaternary.setOperator(new Word("+"));
                 }else if (word1.getWord().equals("--")){
-                    quaternary.setFirst(new Word("-"));
+                    quaternary.setOperator(new Word("-"));
                 }
-                quaternary.setSecond(word2);
-                quaternary.setThird(new Word("1"));
-                quaternary.setFourth(word2);
+                quaternary.setArg1(word2);
+                quaternary.setArg2(new Word("1"));
+                quaternary.setResult(word2);
                 liveStatu.getQt().add(quaternary);
             }
             break;
@@ -595,13 +595,13 @@ public class SemanticAnalysis {
 
     public static void getTemLable(Quaternary tem, SymbolTable table) {
         SymbolTable.Var newtemp = new SymbolTable.Var();
-        if (tem.getFirst().equals(new Word("+")) || tem.getFirst().equals(new Word("-")) || tem.getFirst().equals(new Word("*")) || tem.getFirst().equals(new Word("/"))) {
-            newtemp.name = tem.getFourth().getWord();
+        if (tem.getOperator().equals(new Word("+")) || tem.getOperator().equals(new Word("-")) || tem.getOperator().equals(new Word("*")) || tem.getOperator().equals(new Word("/"))) {
+            newtemp.name = tem.getResult().getWord();
             newtemp.offset = 0;
             newtemp.tp = 0;
             String type1 = "";
             String type2 = "";
-            switch (tem.getSecond().getName()) {
+            switch (tem.getArg1().getName()) {
                 case "int_const":
                     type1 = "int";
                     break;
@@ -613,20 +613,20 @@ public class SemanticAnalysis {
                     break;
                 default:
                     for (SymbolTable.Var v : table.Synbl) {
-                        if (v.name.equals(tem.getSecond().getWord())) {
+                        if (v.name.equals(tem.getArg1().getWord())) {
                             type1 = v.type;
                             break;
                         }
                     }
                     for (SymbolTable.Cons c : table.Const) {
-                        if (c.name.equals(tem.getSecond().getWord())) {
+                        if (c.name.equals(tem.getArg1().getWord())) {
                             type1 = c.type;
                             break;
                         }
                     }
                     break;
             }
-            switch (tem.getThird().getName()) {
+            switch (tem.getArg2().getName()) {
                 case "int_const":
                     type2 = "int";
                     break;
@@ -638,13 +638,13 @@ public class SemanticAnalysis {
                     break;
                 default:
                     for (SymbolTable.Var v : table.Synbl) {
-                        if (v.name.equals(tem.getThird().getWord())) {
+                        if (v.name.equals(tem.getArg2().getWord())) {
                             type2 = v.type;
                             break;
                         }
                     }
                     for (SymbolTable.Cons c : table.Const) {
-                        if (c.name.equals(tem.getThird().getWord())) {
+                        if (c.name.equals(tem.getArg2().getWord())) {
                             type2 = c.type;
                             break;
                         }
@@ -662,39 +662,39 @@ public class SemanticAnalysis {
             } else if ((type1.contains("float") && type2.contains("float"))) {
                 newtemp.type = "float";
             } else {
-                if (isDefined(tem.getSecond(), table) && !tem.getSecond().getName().equals("temp") ) {
+                if (isDefined(tem.getArg1(), table) && !tem.getArg1().getName().equals("temp") ) {
                     Analysis.flag = false;
-                    System.out.println("error: "+ tem.getSecond().getWord()  + " 类型不匹配 position: ("+ tem.getSecond().getRow() + ", "+ tem.getSecond().getCol() +")");
-                    Analysis.errorMsg.add("error: "+ tem.getSecond().getWord()  + " 类型不匹配 position: ("+ tem.getSecond().getRow() + ", "+ tem.getSecond().getCol() +")");
-                }else if (isDefined(tem.getThird(), table) && !tem.getThird().getName().equals("temp")){
+                    System.out.println("error: "+ tem.getArg1().getWord()  + " 类型不匹配 position: ("+ tem.getArg1().getRow() + ", "+ tem.getArg1().getCol() +")");
+                    Analysis.errorMsg.add("error: "+ tem.getArg1().getWord()  + " 类型不匹配 position: ("+ tem.getArg1().getRow() + ", "+ tem.getArg1().getCol() +")");
+                }else if (isDefined(tem.getArg2(), table) && !tem.getArg2().getName().equals("temp")){
                     Analysis.flag = false;
-                    System.out.println("error: " + tem.getThird().getWord() + " 类型不匹配 position: ("+ tem.getThird().getRow() + ", "+ tem.getThird().getCol() +")");
-                    Analysis.errorMsg.add("error: " + tem.getThird().getWord() + " 类型不匹配 position: ("+ tem.getThird().getRow() + ", "+ tem.getThird().getCol() +")");
+                    System.out.println("error: " + tem.getArg2().getWord() + " 类型不匹配 position: ("+ tem.getArg2().getRow() + ", "+ tem.getArg2().getCol() +")");
+                    Analysis.errorMsg.add("error: " + tem.getArg2().getWord() + " 类型不匹配 position: ("+ tem.getArg2().getRow() + ", "+ tem.getArg2().getCol() +")");
                 }
                 newtemp.type = "";
             }
             if (!newtemp.type.equals("")) {
                 int size = 0;
-                String num1 = tem.getSecond().getWord();
-                String num2 = tem.getThird().getWord();
+                String num1 = tem.getArg1().getWord();
+                String num2 = tem.getArg2().getWord();
 
-                if (tem.getSecond().getName().equals("id") || tem.getSecond().getName().equals("temp")){
-                    num1 = table.getValue(tem.getSecond());
+                if (tem.getArg1().getName().equals("id") || tem.getArg1().getName().equals("temp")){
+                    num1 = table.getValue(tem.getArg1());
                 }
-                if (tem.getThird().getName().equals("id") || tem.getThird().getName().equals("temp")){
-                    num2 = table.getValue(tem.getThird());
+                if (tem.getArg2().getName().equals("id") || tem.getArg2().getName().equals("temp")){
+                    num2 = table.getValue(tem.getArg2());
                 }
 
                 if (num1 == null){
                     Analysis.flag = false;
-                    System.out.println("error: "+tem.getSecond().getWord() +" 值未初始化 positon: (" + tem.getSecond().getRow() +", " + tem.getSecond().getCol() +")");
-                    Analysis.errorMsg.add("error: "+tem.getSecond().getWord() +" 值未初始化 positon: (" + tem.getSecond().getRow() +", " + tem.getSecond().getCol() +")");
+                    System.out.println("error: "+tem.getArg1().getWord() +" 值未初始化 positon: (" + tem.getArg1().getRow() +", " + tem.getArg1().getCol() +")");
+                    Analysis.errorMsg.add("error: "+tem.getArg1().getWord() +" 值未初始化 positon: (" + tem.getArg1().getRow() +", " + tem.getArg1().getCol() +")");
                     return;
                 }
                 if (num2 == null){
                     Analysis.flag = false;
-                    System.out.println("error: "+tem.getThird().getWord() +" 值未初始化 positon: (" + tem.getThird().getRow() +", " + tem.getThird().getCol() +")");
-                    Analysis.errorMsg.add("error: "+tem.getThird().getWord() +" 值未初始化 positon: (" + tem.getThird().getRow() +", " + tem.getThird().getCol() +")");
+                    System.out.println("error: "+tem.getArg2().getWord() +" 值未初始化 positon: (" + tem.getArg2().getRow() +", " + tem.getArg2().getCol() +")");
+                    Analysis.errorMsg.add("error: "+tem.getArg2().getWord() +" 值未初始化 positon: (" + tem.getArg2().getRow() +", " + tem.getArg2().getCol() +")");
                     return;
                 }
                 switch (newtemp.type) {

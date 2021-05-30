@@ -45,169 +45,172 @@ public class ToNasmCode {
         preAsmCode.add("    push rbp");
 
         for (int i = 0; i < liveStatu.getQt().size(); i++) {
+            if (i == 6 || i ==7 ){
+                System.out.println(111);
+            }
             Quaternary temp = liveStatu.getQt().get(i);
-            if (temp.getFirst().getWord().equals("+")) {//如果四元式的首符号是+
-                if (temp.getSecond().getName().contains("const")){
-                    asmCode.add("    mov rax, " + temp.getSecond());
+            if (temp.getOperator().getWord().equals("+")) {//如果四元式的首符号是+
+                if (temp.getArg1().getName().contains("const")){
+                    asmCode.add("    mov rax, " + temp.getArg1());
                 }else {
-                    asmCode.add("    mov rax, [rel " + temp.getSecond()+"]");
+                    asmCode.add("    mov rax, [rel " + temp.getArg1()+"]");
                 }
-                if (temp.getThird().getName().contains("const")){
-                    asmCode.add("    mov rbx, " + temp.getThird());
+                if (temp.getArg2().getName().contains("const")){
+                    asmCode.add("    mov rbx, " + temp.getArg2());
                 }else {
-                    asmCode.add("    mov rbx, [rel " + temp.getThird()+"]");
+                    asmCode.add("    mov rbx, [rel " + temp.getArg2()+"]");
                 }
                 asmCode.add("    add rax, rbx");
-                asmCode.add("    mov [rel " + temp.getFourth() + "], rax");
+                asmCode.add("    mov [rel " + temp.getResult() + "], rax");
                 asmJump[i] = asmCount;
                 asmCount += 4;
-            } else if (temp.getFirst().getWord().equals("-")) {//如果四元式的首符号是-
-                if (temp.getSecond().getName().contains("const")){
-                    asmCode.add("    mov rax, " + temp.getSecond());
+            } else if (temp.getOperator().getWord().equals("-")) {//如果四元式的首符号是-
+                if (temp.getArg1().getName().contains("const")){
+                    asmCode.add("    mov rax, " + temp.getArg1());
                 }else {
-                    asmCode.add("    mov rax, [rel " + temp.getSecond()+"]");
+                    asmCode.add("    mov rax, [rel " + temp.getArg1()+"]");
                 }
-                if (temp.getThird().getName().contains("const")){
-                    asmCode.add("    mov rbx, " + temp.getThird());
+                if (temp.getArg2().getName().contains("const")){
+                    asmCode.add("    mov rbx, " + temp.getArg2());
                 }else {
-                    asmCode.add("    mov rbx, [rel " + temp.getThird()+"]");
+                    asmCode.add("    mov rbx, [rel " + temp.getArg2()+"]");
                 }
                 asmCode.add("    sub rax, rbx");
-                asmCode.add("    mov [rel " + temp.getFourth() + "], rax");
+                asmCode.add("    mov [rel " + temp.getResult() + "], rax");
                 asmJump[i] = asmCount;
                 asmCount += 4;
-            } else if (temp.getFirst().getWord().equals("*")) {//如果四元式的首符号是*
-                if (temp.getSecond().getName().contains("const")){
-                    asmCode.add("    mov rax, " + temp.getSecond());
+            } else if (temp.getOperator().getWord().equals("*")) {//如果四元式的首符号是*
+                if (temp.getArg1().getName().contains("const")){
+                    asmCode.add("    mov rax, " + temp.getArg1());
                 }else {
-                    asmCode.add("    mov rax, [rel " + temp.getSecond()+"]");
+                    asmCode.add("    mov rax, [rel " + temp.getArg1()+"]");
                 }
-                if (temp.getThird().getName().contains("const")){
-                    asmCode.add("    mov rbx, " + temp.getThird());
+                if (temp.getArg2().getName().contains("const")){
+                    asmCode.add("    mov rbx, " + temp.getArg2());
                 }else {
-                    asmCode.add("    mov rbx, [rel " + temp.getThird()+"]");
+                    asmCode.add("    mov rbx, [rel " + temp.getArg2()+"]");
                 }
                 asmCode.add("    mul rbx");
-                asmCode.add("    mov [rel " + temp.getFourth() + "], rax");
+                asmCode.add("    mov [rel " + temp.getResult() + "], rax");
                 asmJump[i] = asmCount;
                 asmCount += 4;
-            } else if (temp.getFirst().getWord().equals("/")) {//如果四元式的首符号是/
+            } else if (temp.getOperator().getWord().equals("/")) {//如果四元式的首符号是/
                 asmCode.add("    mov rdx, 0");
-                if (temp.getSecond().getName().contains("const")){
-                    asmCode.add("    mov rax, " + temp.getSecond());
+                if (temp.getArg1().getName().contains("const")){
+                    asmCode.add("    mov rax, " + temp.getArg1());
                 }else {
-                    asmCode.add("    mov rax, [rel " + temp.getSecond()+"]");
+                    asmCode.add("    mov rax, [rel " + temp.getArg1()+"]");
                 }
-                if (temp.getThird().getName().contains("const")){
-                    asmCode.add("    mov rbx, " + temp.getThird());
+                if (temp.getArg2().getName().contains("const")){
+                    asmCode.add("    mov rbx, " + temp.getArg2());
                 }else {
-                    asmCode.add("    mov rbx, [rel " + temp.getThird()+"]");
+                    asmCode.add("    mov rbx, [rel " + temp.getArg2()+"]");
                 }
                 asmCode.add("    div rbx");
                 asmCode.add("    mov rdx, rcx");
-                asmCode.add("    mov [rel " + temp.getFourth() + "], rax");
+                asmCode.add("    mov [rel " + temp.getResult() + "], rax");
                 asmJump[i] = asmCount;
                 asmCount += 6;
-            } else if (liveStatu.getQt().get(i).getFirst().getWord().equals("=")) {//赋值语句
-                if (liveStatu.getQt().get(i).getSecond().getName().contains("const")){
-                    asmCode.add("    mov rax, " + liveStatu.getQt().get(i).getSecond());
-                    asmCode.add("    mov [rel " + liveStatu.getQt().get(i).getFourth() + "], rax");
+            } else if (liveStatu.getQt().get(i).getOperator().getWord().equals("=")) {//赋值语句
+                if (liveStatu.getQt().get(i).getArg1().getName().contains("const")){
+                    asmCode.add("    mov rax, " + liveStatu.getQt().get(i).getArg1());
+                    asmCode.add("    mov [rel " + liveStatu.getQt().get(i).getResult() + "], rax");
                 }else {
-                    asmCode.add("    mov rax, [rel " + liveStatu.getQt().get(i).getSecond() + "]");
-                    asmCode.add("    mov [rel " + liveStatu.getQt().get(i).getFourth() + "], rax");
+                    asmCode.add("    mov rax, [rel " + liveStatu.getQt().get(i).getArg1() + "]");
+                    asmCode.add("    mov [rel " + liveStatu.getQt().get(i).getResult() + "], rax");
                 }
                 asmJump[i] = asmCount;
                 asmCount += 2;
-            } else if (temp.getFirst().getWord().equals("==")) {
-                if (temp.getSecond().getName().contains("const")){
-                    asmCode.add("    mov rax, " + temp.getSecond());
+            } else if (temp.getOperator().getWord().equals("==")) {
+                if (temp.getArg1().getName().contains("const")){
+                    asmCode.add("    mov rax, " + temp.getArg1());
                 }else {
-                    asmCode.add("    mov rax, [rel " + temp.getSecond()+"]");
+                    asmCode.add("    mov rax, [rel " + temp.getArg1()+"]");
                 }
-                if (temp.getThird().getName().contains("const")){
-                    asmCode.add("    mov rbx, " + temp.getThird());
+                if (temp.getArg2().getName().contains("const")){
+                    asmCode.add("    mov rbx, " + temp.getArg2());
                 }else {
-                    asmCode.add("    mov rbx, [rel " + temp.getThird()+"]");
-                }
-                asmCode.add("    cmp rax, rbx");
-                asmCode.add("je " + liveStatu.getQt().get(i).getFourth());
-                asmJump[i] = asmCount;
-                asmCount += 4;
-            } else if (temp.getFirst().getWord().equals(">")) {
-                if (temp.getSecond().getName().contains("const")){
-                    asmCode.add("    mov rax, " + temp.getSecond());
-                }else {
-                    asmCode.add("    mov rax, [rel " + temp.getSecond()+"]");
-                }
-                if (temp.getThird().getName().contains("const")){
-                    asmCode.add("    mov rbx, " + temp.getThird());
-                }else {
-                    asmCode.add("    mov rbx, [rel " + temp.getThird()+"]");
+                    asmCode.add("    mov rbx, [rel " + temp.getArg2()+"]");
                 }
                 asmCode.add("    cmp rax, rbx");
-                asmCode.add("jg " + liveStatu.getQt().get(i).getFourth());
+                asmCode.add("je " + liveStatu.getQt().get(i).getResult());
                 asmJump[i] = asmCount;
                 asmCount += 4;
-            } else if (temp.getFirst().getWord().equals("<")) {
-                if (temp.getSecond().getName().contains("const")){
-                    asmCode.add("    mov rax, " + temp.getSecond());
+            } else if (temp.getOperator().getWord().equals(">")) {
+                if (temp.getArg1().getName().contains("const")){
+                    asmCode.add("    mov rax, " + temp.getArg1());
                 }else {
-                    asmCode.add("    mov rax, [rel " + temp.getSecond()+"]");
+                    asmCode.add("    mov rax, [rel " + temp.getArg1()+"]");
                 }
-                if (temp.getThird().getName().contains("const")){
-                    asmCode.add("    mov rbx, " + temp.getThird());
+                if (temp.getArg2().getName().contains("const")){
+                    asmCode.add("    mov rbx, " + temp.getArg2());
                 }else {
-                    asmCode.add("    mov rbx, [rel " + temp.getThird()+"]");
+                    asmCode.add("    mov rbx, [rel " + temp.getArg2()+"]");
                 }
                 asmCode.add("    cmp rax, rbx");
-                asmCode.add("jl " + liveStatu.getQt().get(i).getFourth());
+                asmCode.add("jg " + liveStatu.getQt().get(i).getResult());
                 asmJump[i] = asmCount;
                 asmCount += 4;
-            } else if (temp.getFirst().getWord().equals(">=")) {
-                if (temp.getSecond().getName().contains("const")){
-                    asmCode.add("    mov rax, " + temp.getSecond());
+            } else if (temp.getOperator().getWord().equals("<")) {
+                if (temp.getArg1().getName().contains("const")){
+                    asmCode.add("    mov rax, " + temp.getArg1());
                 }else {
-                    asmCode.add("    mov rax, [rel " + temp.getSecond()+"]");
+                    asmCode.add("    mov rax, [rel " + temp.getArg1()+"]");
                 }
-                if (temp.getThird().getName().contains("const")){
-                    asmCode.add("    mov rbx, " + temp.getThird());
+                if (temp.getArg2().getName().contains("const")){
+                    asmCode.add("    mov rbx, " + temp.getArg2());
                 }else {
-                    asmCode.add("    mov rbx, [rel " + temp.getThird()+"]");
+                    asmCode.add("    mov rbx, [rel " + temp.getArg2()+"]");
                 }
                 asmCode.add("    cmp rax, rbx");
-                asmCode.add("jge " + liveStatu.getQt().get(i).getFourth());
+                asmCode.add("jl " + liveStatu.getQt().get(i).getResult());
                 asmJump[i] = asmCount;
                 asmCount += 4;
-            } else if (temp.getFirst().getWord().equals("<=")) {
-                if (temp.getSecond().getName().contains("const")){
-                    asmCode.add("    mov rax, " + temp.getSecond());
+            } else if (temp.getOperator().getWord().equals(">=")) {
+                if (temp.getArg1().getName().contains("const")){
+                    asmCode.add("    mov rax, " + temp.getArg1());
                 }else {
-                    asmCode.add("    mov rax, [rel " + temp.getSecond()+"]");
+                    asmCode.add("    mov rax, [rel " + temp.getArg1()+"]");
                 }
-                if (temp.getThird().getName().contains("const")){
-                    asmCode.add("    mov rbx, " + temp.getThird());
+                if (temp.getArg2().getName().contains("const")){
+                    asmCode.add("    mov rbx, " + temp.getArg2());
                 }else {
-                    asmCode.add("    mov rbx, [rel " + temp.getThird()+"]");
+                    asmCode.add("    mov rbx, [rel " + temp.getArg2()+"]");
                 }
                 asmCode.add("    cmp rax, rbx");
-                asmCode.add("jle " + liveStatu.getQt().get(i).getFourth());
+                asmCode.add("jge " + liveStatu.getQt().get(i).getResult());
                 asmJump[i] = asmCount;
                 asmCount += 4;
-            } else if (temp.getFirst().getWord().equals("j")) {
-                asmCode.add("jmp " + temp.getFourth());
+            } else if (temp.getOperator().getWord().equals("<=")) {
+                if (temp.getArg1().getName().contains("const")){
+                    asmCode.add("    mov rax, " + temp.getArg1());
+                }else {
+                    asmCode.add("    mov rax, [rel " + temp.getArg1()+"]");
+                }
+                if (temp.getArg2().getName().contains("const")){
+                    asmCode.add("    mov rbx, " + temp.getArg2());
+                }else {
+                    asmCode.add("    mov rbx, [rel " + temp.getArg2()+"]");
+                }
+                asmCode.add("    cmp rax, rbx");
+                asmCode.add("jle " + liveStatu.getQt().get(i).getResult());
+                asmJump[i] = asmCount;
+                asmCount += 4;
+            } else if (temp.getOperator().getWord().equals("j")) {
+                asmCode.add("jmp " + temp.getResult());
                 asmJump[i] = asmCount;
                 asmCount += 1;
-            } else if (temp.getFirst().getWord().equals("print")) {
-                if (temp.getFourth().getName().contains("const")){
+            } else if (temp.getOperator().getWord().equals("print")) {
+                if (temp.getResult().getName().contains("const")){
                     asmCode.add("   mov rax, 0x2000004");
                     asmCode.add("   mov rdi, 1");
                     asmCode.add("   mov rsi, msg" + msgCount);
                     asmCode.add("   mov rdx, msg_len" + msgCount);
                     asmCode.add("   syscall");
-                    addMsg("msg" + msgCount + ": db " + temp.getFourth() + ",10\nmsg_len" + msgCount + ": equ $ - msg" + msgCount);
+                    addMsg("msg" + msgCount + ": db " + temp.getResult() + ",10\nmsg_len" + msgCount + ": equ $ - msg" + msgCount);
                 }else {
                     asmCode.add("    mov rdi, fmt");
-                    asmCode.add("    mov rax, [rel " + temp.getFourth() + "]");
+                    asmCode.add("    mov rax, [rel " + temp.getResult() + "]");
                     asmCode.add("    mov rsi, rax");
                     asmCode.add("    mov rax, 0");
                     asmCode.add("    call _printf");

@@ -17,10 +17,7 @@ import javafx.scene.text.Text;
 import javafx.stage.*;
 import javafx.util.Callback;
 import org.fxmisc.flowless.VirtualizedScrollPane;
-import pers.lomesome.compliation.model.LiveStatu;
-import pers.lomesome.compliation.model.ProPertyQuaternary;
-import pers.lomesome.compliation.model.PropertyWord;
-import pers.lomesome.compliation.model.Word;
+import pers.lomesome.compliation.model.*;
 import pers.lomesome.compliation.controller.*;
 import pers.lomesome.compliation.tool.filehandling.FileUtil;
 import pers.lomesome.compliation.tool.filehandling.ReadAndWriteFile;
@@ -29,14 +26,11 @@ import pers.lomesome.compliation.utils.lexer.LexicalAnalyzer;
 import pers.lomesome.compliation.utils.operatorpriority.OperatorAnalyze;
 import pers.lomesome.compliation.utils.semantic.Analysis;
 import pers.lomesome.compliation.utils.syntax.SyntaxAnalysis;
-import pers.lomesome.compliation.utils.lexer.Lexer;
 //import pers.lomesome.compliation.utils.lexer.LexicalAnalyzer;
 import pers.lomesome.compliation.utils.toasm.RunAsm;
-import pers.lomesome.compliation.utils.toasm.ToNasmCode;
-import pers.lomesome.compliation.view.mystage.RegToNfaStage;
+import pers.lomesome.compliation.view.mystage.Reg2Dfa2Mfa;
 import pers.lomesome.compliation.view.mywidgets.*;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -104,9 +98,11 @@ public class CodeInterface {
         Menu view = new Menu("View");
         Menu tools = new Menu("Tools");
         Menu algorithms = new Menu("Algorithms");
+        Menu optimization = new Menu("Optimization");
+
 
         //Menu键入到MenuBar
-        menuBar.getMenus().addAll(idea, file, edit, view, tools, algorithms);
+        menuBar.getMenus().addAll(idea, file, edit, view, tools, algorithms, optimization);
         //创建MenuItem类
         //还可以对MenuItem设置图标
         Menu newFile = new Menu("New");
@@ -150,7 +146,7 @@ public class CodeInterface {
         MenuItem reg2nfa = new MenuItem("REG to NFA");
 
         reg2nfa.setOnAction(event -> {
-            new RegToNfaStage();
+            new Reg2Dfa2Mfa();
         });
 
         MenuItem operator = new MenuItem("Operator Priority");
@@ -214,6 +210,15 @@ public class CodeInterface {
             }
         });
 
+        MenuItem dag = new MenuItem("DAG optimization");
+        dag.setOnAction(event -> {
+
+            try {
+
+            }catch (Exception ignored){ }
+        });
+        optimization.getItems().add(dag);
+
         Service<Integer> lexicalAnalyzerService = new Service<Integer>() {
             @Override
             protected Task<Integer> createTask() {
@@ -229,7 +234,6 @@ public class CodeInterface {
                         }
 
                         File openFile = (File) tabPane.getSelectionModel().getSelectedItem().getUserData();
-
 
                         wordList.clear();
 //                        Lexer lexer = null;
@@ -252,7 +256,6 @@ public class CodeInterface {
                                 Platform.runLater(() -> obList.add(word));
                             }
                         }
-
 
                         if (areaflag) {
                             textArea.appendText("Lexical Analyzer finished!!!");
@@ -312,8 +315,6 @@ public class CodeInterface {
                             list.add(new Word("#", "end", -1,-1));
                             list.get(list.size() - 1).setName("#");
 
-//                            SymbolTable Table = new SymbolTable();
-//                            Table.getTable(list);
                             List<List<String>> listList = SyntaxAnalysis.analysis(list);
 
                             for (String s : listList.get(0)){
@@ -328,12 +329,11 @@ public class CodeInterface {
                             }
                             if (code.equals("0")){
                                 quaternaryList.clear();
-//                                Table.printTable();
                                 Object[] results = Analysis.analysis(list);
                                 LiveStatu liveStatu = (LiveStatu) results[0];
                                 if (liveStatu != null)
                                     for (int i = 0; i < liveStatu.getQt().size(); i++) {
-                                        quaternaryList.add(new ProPertyQuaternary(i, liveStatu.getQt().get(i).getFirst().getWord(), liveStatu.getQt().get(i).getSecond().getWord(), liveStatu.getQt().get(i).getThird().getWord(),liveStatu.getQt().get(i).getFourth().getWord()));
+                                        quaternaryList.add(new ProPertyQuaternary(i, liveStatu.getQt().get(i).getOperator().getWord(), liveStatu.getQt().get(i).getArg1().getWord(), liveStatu.getQt().get(i).getArg2().getWord(),liveStatu.getQt().get(i).getResult().getWord()));
                                     }
                                 asmCodeTextArea.clear();
                                 if (results[1] != null) {

@@ -2,10 +2,10 @@ package pers.lomesome.compliation.utils.syntax;
 
 import java.util.*;
 
-public class SelectSet {
+public class SingleFirstSet {
     private final Map<String, List<List<String>>> grammars;
 
-    public SelectSet(Map<String, List<List<String>>> grammars){
+    public SingleFirstSet(Map<String, List<List<String>>> grammars){
         this.grammars = grammars;
     }
 

@@ -3,76 +3,74 @@ package pers.lomesome.compliation.model;
 import java.util.LinkedHashSet;
 
 /**
- * DAG图中的一个节点的类（只在package内可用)
+ * DAG图中的一个节点的类
  */
 public class Node {
-    private Word main_label;
-    private LinkedHashSet<Word> extra_labels;
+    private int id;
+    private Word mainLabel;
+    private LinkedHashSet<Word> extraLabels;
     private Word operator;
-    private Node left_child;
-    private Node middle_child;
-    private Node right_child;
+    private Node leftChild;
+    private Node middleChild;
+    private Node rightChild;
 
     /**
-     * 有三个子节点的
-     * 构造方法
+     * 三个子节点的构造方法
      *
-     * @param main_label 主标记
+     * @param mainLabel 主标记
      * @param operator 操作符(如果是常数这一项为null)
-     * @param left_child 左子节点
-     * @param middle_child 中子节点
-     * @param right_child 右子节点
+     * @param leftChild 左子节点
+     * @param middleChild 中子节点
+     * @param rightChild 右子节点
      */
-    public Node(Word main_label, Word operator, Node left_child, Node middle_child, Node right_child) {
-        this.extra_labels = new LinkedHashSet<>();
-        this.main_label = main_label;
+    public Node(Word mainLabel, Word operator, Node leftChild, Node middleChild, Node rightChild) {
+        this.extraLabels = new LinkedHashSet<>();
+        this.mainLabel = mainLabel;
         this.operator = operator;
-        this.left_child = left_child;
-        this.middle_child = middle_child;
-        this.right_child = right_child;
+        this.leftChild = leftChild;
+        this.middleChild = middleChild;
+        this.rightChild = rightChild;
     }
 
     /**
-     * 只有两个子节点的
-     * 构造方法
+     * 两个子节点的构造方法
      *
-     * @param main_label 主标记
+     * @param mainLabel 主标记
      * @param operator 操作符(如果是常数这一项为null)
-     * @param left_child 左子节点
-     * @param right_child 右子节点
+     * @param leftChild 左子节点
+     * @param rightChild 右子节点
      */
-    public Node(Word main_label, Word operator, Node left_child, Node right_child) {
-        this.extra_labels = new LinkedHashSet<>();
-        this.main_label = main_label;
+    public Node(Word mainLabel, Word operator, Node leftChild, Node rightChild) {
+        this.extraLabels = new LinkedHashSet<>();
+        this.mainLabel = mainLabel;
         this.operator = operator;
-        this.left_child = left_child;
-        this.middle_child = null;
-        this.right_child = right_child;
+        this.leftChild = leftChild;
+        this.middleChild = null;
+        this.rightChild = rightChild;
     }
 
-
-    public Word getMain_label() {
-        return main_label;
+    public Word getMainLabel() {
+        return mainLabel;
     }
 
-    public LinkedHashSet<Word> getExtra_labels() {
-        return extra_labels;
+    public LinkedHashSet<Word> getExtraLabels() {
+        return extraLabels;
     }
 
     public Word getOperator() {
         return operator;
     }
 
-    public Node getLeft_child() {
-        return left_child;
+    public Node getLeftChild() {
+        return leftChild;
     }
 
-    public Node getMiddle_child() {
-        return middle_child;
+    public Node getMiddleChild() {
+        return middleChild;
     }
 
-    public Node getRight_child() {
-        return right_child;
+    public Node getRightChild() {
+        return rightChild;
     }
 
 
@@ -83,15 +81,23 @@ public class Node {
      * @return boolean
      */
     public boolean containLabel(Word s) {
-        if (main_label.getWord().equals(s.getWord())) {
+        if (mainLabel.getWord().equals(s.getWord())) {
             return true;
         }
-        for (Word label : extra_labels) {
+        for (Word label : extraLabels) {
             if (label.getWord().equals(s.getWord())) {
                 return true;
             }
         }
         return false;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     /**
@@ -101,17 +107,7 @@ public class Node {
      * @return boolean
      */
     public boolean isMainLabel(Word label) {
-        return main_label.getWord().equals(label.getWord());
-    }
-
-    @Override
-    public String toString() {
-        StringBuilder r = new StringBuilder("(" + operator + ")  " + main_label + " | ");
-        for (Word label : extra_labels) {
-            r.append(label).append(",  ");
-        }
-
-        return r.toString();
+        return mainLabel.getWord().equals(label.getWord());
     }
 
     /**
@@ -121,17 +117,27 @@ public class Node {
      */
     public void addLabel(Word label) {
         if (label.getName().startsWith("const")) {
-            extra_labels.add(main_label);
-            main_label = label;
+            extraLabels.add(mainLabel);
+            mainLabel = label;
         } else if (label.getName().startsWith("temp")) {
-            extra_labels.add(label);
+            extraLabels.add(label);
         } else {
-            if (main_label.getName().startsWith("temp")) {
-                extra_labels.add(main_label);
-                main_label = label;
+            if (mainLabel.getName().startsWith("temp")) {
+                extraLabels.add(mainLabel);
+                mainLabel = label;
             } else {
-                extra_labels.add(label);
+                extraLabels.add(label);
             }
         }
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder r = new StringBuilder("(" + operator + ")  " + mainLabel + " | ");
+        for (Word label : extraLabels) {
+            r.append(label).append(",  ");
+        }
+
+        return r.toString();
     }
 }

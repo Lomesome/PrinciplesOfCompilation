@@ -3,26 +3,26 @@ package pers.lomesome.compliation.model;
 public class Quaternary {
     private int id = 0;
     private int level;
-    private Word First;
-    private Word Second;
-    private Word Third;
-    private Word Fourth;
+    private Word operator;
+    private Word arg1;
+    private Word arg2;
+    private Word result;
 
     public Quaternary(){}
 
-    public Quaternary(Word First, Word Second, Word Third, Word Fourth){
-        this.First = First;
-        this.Second = Second;
-        this.Third = Third;
-        this.Fourth = Fourth;
+    public Quaternary(Word operator, Word arg1, Word arg2, Word result){
+        this.operator = operator;
+        this.arg1 = arg1;
+        this.arg2 = arg2;
+        this.result = result;
     }
 
-    public Quaternary(int id, Word First, Word Second, Word Third, Word Fourth){
+    public Quaternary(int id, Word operator, Word arg1, Word arg2, Word result){
         this.id = id;
-        this.First = First;
-        this.Second = Second;
-        this.Third = Third;
-        this.Fourth = Fourth;
+        this.operator = operator;
+        this.arg1 = arg1;
+        this.arg2 = arg2;
+        this.result = result;
     }
 
     public Integer getId() {
@@ -41,40 +41,40 @@ public class Quaternary {
         this.level = level;
     }
 
-    public Word getFirst() {
-        return First;
+    public Word getOperator() {
+        return operator;
     }
 
-    public void setFirst(Word first) {
-        First = first;
+    public void setOperator(Word operator) {
+        this.operator = operator;
     }
 
-    public Word getSecond() {
-        return Second;
+    public Word getArg1() {
+        return arg1;
     }
 
-    public void setSecond(Word second) {
-        Second = second;
+    public void setArg1(Word arg1) {
+        this.arg1 = arg1;
     }
 
-    public Word getThird() {
-        return Third;
+    public Word getArg2() {
+        return arg2;
     }
 
-    public void setThird(Word third) {
-        Third = third;
+    public void setArg2(Word arg2) {
+        this.arg2 = arg2;
     }
 
-    public Word getFourth() {
-        return Fourth;
+    public Word getResult() {
+        return result;
     }
 
-    public void setFourth(Word fourth) {
-        Fourth = fourth;
+    public void setResult(Word result) {
+        this.result = result;
     }
 
     @Override
     public String toString(){
-        return  id + " (" + First + "," + Second + "," + Third + "," + Fourth + ")";
+        return  id + " (" + operator + "," + arg1 + "," + arg2 + "," + result + ")";
     }
 }
