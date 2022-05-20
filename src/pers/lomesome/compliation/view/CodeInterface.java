@@ -293,6 +293,7 @@ public class CodeInterface {
                         if (textAreaMap.get("Run") != null) {
                             File openFile = (File) tabPane.getSelectionModel().getSelectedItem().getUserData();
                             TextArea textArea = textAreaMap.get("Run");
+                            textArea.setText("");
 //                            Platform.runLater(() -> {
 //                                textArea.setText("");
 //                                textArea.appendText(openFile.getName() + " is running!\n");
@@ -335,7 +336,7 @@ public class CodeInterface {
                                     for (int i = 0; i < liveStatu.getQt().size(); i++) {
                                         quaternaryList.add(new ProPertyQuaternary(i, liveStatu.getQt().get(i).getOperator().getWord(), liveStatu.getQt().get(i).getArg1().getWord(), liveStatu.getQt().get(i).getArg2().getWord(),liveStatu.getQt().get(i).getResult().getWord()));
                                     }
-                                asmCodeTextArea.clear();
+                                asmCodeTextArea.setText("");
                                 if (results[1] != null) {
                                     asmCodeTextArea.appendText("变量表：\n");
                                     for (Object s : (List) results[1]) {

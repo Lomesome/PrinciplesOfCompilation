@@ -39,7 +39,7 @@ public class Rpn {
                     while (!operatorStack.isEmpty() && operatorStack.peek().equals(".")) {
                         postfix.append(operatorStack.pop());
                     }
-                    // 把 . 放入符号栈
+                    // 把 '.' 放入符号栈
                     operatorStack.push(token);
 
                     break;
@@ -47,7 +47,8 @@ public class Rpn {
                     postfix.append(token);
                     break;
                 case "(":
-                    operatorStack.push("("); // Push '(' to stack
+                    // 把 '(' 放入符号栈
+                    operatorStack.push("(");
 
                     break;
                 case ")":

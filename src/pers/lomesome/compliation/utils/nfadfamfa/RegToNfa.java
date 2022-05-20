@@ -37,25 +37,25 @@ public class RegToNfa {
                 State end = new State(dataTransfer.count++);  //终结状态
                 NFA now = new NFA(nfa.pop(), nfa.pop(), start, end);  //弹出两个nfa
                 nfa.add(now);  //加入栈
-                dataTransfer.statesOfNFA.add(now.getStart());
-                dataTransfer.statesOfNFA.add(now.getEnd());
+                dataTransfer.nfaStates.add(now.getStart());
+                dataTransfer.nfaStates.add(now.getEnd());
             } else if (s.charAt(i) == '*') {//取闭包
                 State start = new State(dataTransfer.count++); //开始状态
                 State end = new State(dataTransfer.count++);  //终结状态
                 NFA now = new NFA(nfa.pop(), start, end);
                 nfa.add(now);//加入栈
-                dataTransfer.statesOfNFA.add(now.getStart());
-                dataTransfer.statesOfNFA.add(now.getEnd());
+                dataTransfer.nfaStates.add(now.getStart());
+                dataTransfer.nfaStates.add(now.getEnd());
             } else if (s.charAt(i) == '.') {//取链接
                 NFA now = new NFA(nfa.pop(), nfa.pop());
                 nfa.add(now);
-            } else {//此时单边 O -> O
+            } else {//此时单边
                 State start = new State(dataTransfer.count++); //开始状态
                 State end = new State(dataTransfer.count++); //终结状态
                 NFA now = new NFA(start, end, s.charAt(i));
                 nfa.add(now);//创造一个nfa加入栈
-                dataTransfer.statesOfNFA.add(now.getStart());
-                dataTransfer.statesOfNFA.add(now.getEnd());
+                dataTransfer.nfaStates.add(now.getStart());
+                dataTransfer.nfaStates.add(now.getEnd());
             }
         }
         return nfa.pop();

@@ -28,6 +28,7 @@ public class Reg2Dfa2Mfa {
         Label label = new Label("正规式");
         label.setStyle("-fx-padding: 8px 0 0 10px");
         TextField textField = new TextField();
+        textField.setText("(a|b)*");
         Button reg2nfa = new Button("reg to nfa");
         Button nfa2dfa = new Button("nfa to dfa");
         Button mindfa = new Button("min dfa");

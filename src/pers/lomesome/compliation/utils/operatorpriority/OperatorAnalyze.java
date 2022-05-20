@@ -28,17 +28,25 @@ public class OperatorAnalyze {
 
     private List<String> result = new ArrayList<>();
 
+    /**
+     * 获取文法中终结符和非终结符
+     * 左边的都为非终结符
+     * 右边中左边没有出现的为终结符
+     */
     private void getEndAndNoEnd() {
-        vnSet.addAll(produce.keySet());
-        produce.forEach((k, v)->{
+        vnSet.addAll(produce.keySet());  //把文法左边加入非终结符集
+        produce.forEach((k, v)->{  //遍历文法把文法右边加入终结符集
             v.forEach(s -> {
                 vtSet.addAll(s);
             });
         });
-        vtSet.removeAll(vnSet);
+        vtSet.removeAll(vnSet);  //从终结符集中删除所有非终结符
         vtSet.add("#");
     }
 
+    /**
+     * 分割产生式
+     */
     private void getProduce() {
         for (String s : input) {
             String[] splitProduce = s.split("->");
@@ -54,6 +62,9 @@ public class OperatorAnalyze {
         }
     }
 
+    /**
+     * 构建算符优先表
+     */
     private void makeMatrix() {
         produce.forEach((k, v)->{
             for (List<String> list : v) {

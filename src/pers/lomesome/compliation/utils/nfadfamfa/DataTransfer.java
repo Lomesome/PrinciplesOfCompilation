@@ -40,27 +40,27 @@ public class DataTransfer {
     /**
      * 用来保存NFA中所有的状态
      */
-    List<State> statesOfNFA = new ArrayList<>();
+    List<State> nfaStates = new ArrayList<>();
 
     /**
      * 用来保存DFA中所有的状态
      */
-    List<State> statesOfDFA = new ArrayList<>();
+    List<State> dfaStates = new ArrayList<>();
 
     /**
      * 用来保存MFA中所有的状态
      */
-    List<State> statesOfMFA = new ArrayList<>();
+    List<State> mfaStates = new ArrayList<>();
 
     /**
      * DFA的开始状态集合
      */
-    List<Integer> DFAstart = new ArrayList<>();
+    List<Integer> dfaBegins = new ArrayList<>();
 
     /**
      * DFA的结束状态集合
      */
-    List<Integer> DFAend = new ArrayList<>();
+    List<Integer> dfaEnds = new ArrayList<>();
 
     /**
      * 构建的NFA

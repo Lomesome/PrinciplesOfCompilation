@@ -27,8 +27,8 @@ public class NfaToDfa {
         State end = new State(dataTransfer.count++);
         start.setNext(dataTransfer.nfa.getStart(), 'ε');
         dataTransfer.nfa.getEnd().setNext(end, 'ε'); //连接
-        dataTransfer.statesOfNFA.add(start);
-        dataTransfer.statesOfNFA.add(end);  //加入现有状态集合
+        dataTransfer.nfaStates.add(start);
+        dataTransfer.nfaStates.add(end);  //加入现有状态集合
         List<Integer> s = getEncloure(start);  //求开始状态的闭包
         dataTransfer.DFAI.add(s); //加入已有NFA
         Ique.add(s);  //加入队列
@@ -48,20 +48,20 @@ public class NfaToDfa {
         for (int i = 0; i < dataTransfer.DFAI.size(); i++) { //访问定义列的第一个
             State state = new State(i); //新建状态
             if (i == 0) { //那么当前状态为dfa的开始状态
-                dataTransfer.DFAstart.add(state.getNum());
+                dataTransfer.dfaBegins.add(state.getNum());
                 state.setStart();
             }
-            dataTransfer.statesOfDFA.add(state);
+            dataTransfer.dfaStates.add(state);
         }
         //链接状态
         //判断第一个状态是不是终态
         List<Integer> startInfor = table.get(0);  //得到开始状态
         State startState = getNextState(startInfor, table);
         if (startInfor.contains(dataTransfer.nfa.getEnd().getNum()) && !startState.getIsEnd()) {//当前状态包含nfa的终态，并且还未被设置成终态过
-            dataTransfer.DFAend.add(startState.getNum());
+            dataTransfer.dfaEnds.add(startState.getNum());
             startState.setEnd(true);  //设为DFA的终态
         }
-        for (int i = 0; i < dataTransfer.statesOfDFA.size(); i++) {
+        for (int i = 0; i < dataTransfer.dfaStates.size(); i++) {
             for (int j = 0; j < dataTransfer.words.size(); j++) {
                 char subchar = dataTransfer.words.get(j);
                 List<Integer> nextStateInfor = table.get(i * (dataTransfer.words.size() + 1) + j + 1);  //得到状态信息
@@ -69,18 +69,18 @@ public class NfaToDfa {
                     continue;
                 State nextState = getNextState(nextStateInfor, table);
                 if (nextStateInfor.contains(dataTransfer.nfa.getEnd().getNum()) && !nextState.getIsEnd()) { //当前状态包含nfa的终态，并且还未被设置成终态过
-                    dataTransfer.DFAend.add(nextState.getNum());
+                    dataTransfer.dfaEnds.add(nextState.getNum());
                     nextState.setEnd(true); //设为DFA的终态
                 }
-                dataTransfer.statesOfDFA.get(i).setNext(nextState, subchar);
-                dataTransfer.dfaEdges.add(new Edge("" + dataTransfer.statesOfDFA.get(i).getNum(), "" + subchar, "" + nextState.getNum()));
+                dataTransfer.dfaStates.get(i).setNext(nextState, subchar);
+                dataTransfer.dfaEdges.add(new Edge("" + dataTransfer.dfaStates.get(i).getNum(), "" + subchar, "" + nextState.getNum()));
             }
         }
     }
 
     //得到DNF下一个状态
     public State getNextState(List<Integer> state, List<List<Integer>> table) {
-        for (int i = 0; i < dataTransfer.statesOfDFA.size(); i++) {
+        for (int i = 0; i < dataTransfer.dfaStates.size(); i++) {
             int count = 0;
             List<Integer> s = table.get(i * (dataTransfer.words.size() + 1));
             if (s.size() != state.size())
@@ -89,7 +89,7 @@ public class NfaToDfa {
                 if (s.contains(state.get(j)))
                     count++;
             if (count == s.size())
-                return dataTransfer.statesOfDFA.get(i);
+                return dataTransfer.dfaStates.get(i);
         }
         return new State(-1);
     }
@@ -165,7 +165,7 @@ public class NfaToDfa {
      */
     private State getStateFromNum(int num) {
         State r = new State(0);
-        for (State state : dataTransfer.statesOfNFA) {
+        for (State state : dataTransfer.nfaStates) {
             r = state;
             if (r.getNum() == num)
                 return r;

@@ -27,7 +27,7 @@ public class DfaToMfa {
         List<List<Integer>> mfas = new ArrayList<>(); //用来保存MFA读取信息
         List<Integer> end = new ArrayList<>(); //终态集合
         List<Integer> nonEnd = new ArrayList<>(); //非终态集合
-        for (State state : dataTransfer.statesOfDFA) {
+        for (State state : dataTransfer.dfaStates) {
             if (state.getIsEnd()) {//是终态
                 end.add(state.getNum());//加入终态集合
                 continue;
@@ -82,21 +82,21 @@ public class DfaToMfa {
         RemoveRepeat(needRemove, mfas);
         for (int i = 0; i < mfas.size(); i++) {
             State s = new State(i);//每一个MFAS都是一个状态
-            for (Integer integer : dataTransfer.DFAstart) {
+            for (Integer integer : dataTransfer.dfaBegins) {
                 if (mfas.get(i).contains(integer)) {
                     s.setStart();//设为开始
                     break;
                 }
             }
-            for (Integer integer : dataTransfer.DFAend) {
+            for (Integer integer : dataTransfer.dfaEnds) {
                 if (mfas.get(i).contains(integer)) {
                     s.setEnd(true);//设为终结
                     break;
                 }
             }
-            dataTransfer.statesOfMFA.add(s);
+            dataTransfer.mfaStates.add(s);
         }
-        for (int i = 0; i < dataTransfer.statesOfMFA.size(); i++) {//链接
+        for (int i = 0; i < dataTransfer.mfaStates.size(); i++) {//链接
             List<Integer> g = mfas.get(i);//当前MFAS对应所包含的所有DFA元素
             State inGState = getStateFromNum_DFA(g.get(0));//选g中的第一个作为代表
             //链接
@@ -106,7 +106,7 @@ public class DfaToMfa {
                 if (next.getNum() == -1) {
                     isend++;
                     if (isend == dataTransfer.words.size()) {//终态
-                        dataTransfer.statesOfMFA.get(i).setEnd(true);
+                        dataTransfer.mfaStates.get(i).setEnd(true);
                     }
                     continue;
                 }
@@ -116,11 +116,11 @@ public class DfaToMfa {
                         break;
                     }
                 }
-                dataTransfer.statesOfMFA.get(i).setNext(dataTransfer.statesOfMFA.get(k), dataTransfer.words.get(j));
+                dataTransfer.mfaStates.get(i).setNext(dataTransfer.mfaStates.get(k), dataTransfer.words.get(j));
             }
         }
 
-        for (State s : dataTransfer.statesOfMFA) {
+        for (State s : dataTransfer.mfaStates) {
             for (char subchar : dataTransfer.words) {
                 State next = s.getNext(subchar);
                 if (next.getNum() != -1) {//有下一状态
@@ -209,7 +209,7 @@ public class DfaToMfa {
     //得到当前编号在NFA中对应状态
     private State getStateFromNum_DFA(int num) {
         State r = new State(-1);
-        for (State state : dataTransfer.statesOfDFA) {
+        for (State state : dataTransfer.dfaStates) {
             r = state;
             if (r.getNum() == num)
                 return r;
